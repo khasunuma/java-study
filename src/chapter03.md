@@ -243,7 +243,7 @@ return <戻り値>;  // 戻り値の型が void 以外
 return;  // 戻り値の型が void (強制的にメソッドを終了する場合)
 ```
 
-break 文、continue 文、return 文は C/C++ から引き継いだ構文です。Visual Basic では、break 文に対応する Exit Do/Exit For 構文、return 文に対応する Exit Function/End Function は存在しますが、continue 文に対応する構文は存在しません。一方で、C/C++ の goto 文や Visual Basic の GoTo 構文に対応する Java の構文は存在しません (近い構文としてラベル付き break 文が存在しますが、ほとんど使用されず、また推奨されないため割愛します)。 
+break 文、continue 文、return 文は C/C++ から引き継いだ構文です。Visual Basic では、break 文に対応する Exit Do/Exit For 構文、return 文に対応する Exit Function/End Function は存在しますが、continue 文に対応する構文は存在しません。一方で、C/C++ の goto 文や Visual Basic の GoTo 構文に対応する Java の構文は存在しません (近い構文としてラベル付き break 文が存在しますが、ほとんど使用されないため割愛します)。 
 
 ## 3.7. switch 文
 
