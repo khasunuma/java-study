@@ -36,6 +36,7 @@ throw new IllegalArgumentException();  // 引数に不正な値が渡された
 |----|----|
 |NullPointerException|引数が null である (*1)|
 |IllegalArgumentException|引数に不正な値が渡された (引数が null の場合にも用いる場合がある)|
+|NumberFormatException|文字列が数値に変換できない書式になっている|
 |UnsupportedOperationException|メソッドの実行はサポートされていない (サブクラスでサポートする場合、未完成のメソッドで処理を仮置きする場合、等)|
 |UncatchedIOException|(後述の catch 節にて) IOException を非チェック例外に変換する|
 |WebApplicationException|Java EE の RESTful Web サービス API (JAX-RS) でエラーを返す|
@@ -122,14 +123,26 @@ try {
 
 ### 4.3.2. throws 句
 
-throws 句は、スローする例外を呼び出し元で処理してほしい場合に使用します。具体的には、以下のようにメソッドに対して `throws 例外クラス` を宣言します。
+throws 句は、スローする例外を呼び出し元で処理してほしい場合に使用します。具体的には、以下のようにメソッド `throws 例外クラス` を宣言します。
 
+(例) メソッドに対する throws 句
 ```
 public int read(byte[] buf) throws IOException {
     ...
     // エラー発生のため IOException をスローする
     throw new IOException();
     ...
+}
+```
+
+メソッド同様に、コンストラクタに対しても throws 句を用いることができます。
+
+(例) コンストラクタに対する throws 句
+```
+public Integer(String s) throws NumberFormatException {
+    ...
+    // エラー発生のため NumberFormatException をスローする
+    throw new NumberFormatException();
 }
 ```
 
