@@ -239,3 +239,4 @@ public final class Singleton {
 
 ## 5.4. java.lang.Object クラス
 
+## 5.5. インタフェース
