@@ -208,8 +208,8 @@ public int read(byte[] buf) throws Exception {
         ...
     } catch (IOException e) {
         ...
-        // 
-        throw new Exception();
+        // アプリケーション独自の ApplicationException に付け替える
+        throw new ApplicationException("ERROR-00600");
     }
     ...
 }
@@ -251,6 +251,56 @@ public void doProcess() {
             e.getCause().printStackTrace();
         }
     }
+    ...
+}
+```
+
+## 4.4. 例外処理で避けたいこと
+
+### 4.4.1. catch 節で何もしない
+
+try-catch 文で例外をキャッチしても、catch 節で何も処理をしないと、原因をわからなくするどころか例外自体をなかったことにしてしまいます。これを俗に「例外を握りつぶす」行為といい、Java の開発現場で最も忌避される手法です (その割に例外を握りつぶしてしまう人が後を絶たないのは困りものですが)。例外を握りつぶすことは、例外処理の機構そのものを破壊することとほぼ等しいため、絶対に行わないようにしましょう。
+
+```
+try {
+    ...
+} catch (Exception e) {
+    // 何もしない (俗に「例外を握りつぶす」という)
+}
+```
+
+### 4.4.2. RuntimeException の濫用と例外連鎖の不使用の組み合わせ
+
+`RuntimeException` は標準で用意されている汎用の非チェック例外であり、呼び出し元で try-catch 文を使用する必要がなくなるため、使い方によっては非常に便利です。しかし、みだりに使用するのも考え物です。特にチェック例外を catch 節で `RuntimeException` に付け替え、その際に原因例外を設定しない場合、スタックトレースでは `RuntimeException` に付け替えたところまでしか追跡することができず、エラーの原因を示す例外を特定できなくなってしまいます。そもそも `RuntimeException` は非チェック例外すべてのスーパークラスであり、何が原因で例外スローに至ったのかクラス名だけではわからない欠点があります。非チェック例外をスローする場合は `RuntimeException` のスローはできるだけ減らし、原因を示すような名前を持つ非チェック例外 (`RuntimeException` のサブクラス) を必要に応じて作成してスローするのが良いでしょう。
+
+```
+try {
+    ...
+} catch (IOException e) {
+    // RuntimeException の濫用 + 例外連鎖の不使用
+    // 原因例外がないためこれ以上エラーを追跡できなくなる
+    throw new RuntimeException();
+}
+```
+
+### 4.4.3. Throwable のキャッチおよびスロー
+
+try-catch 文で `Throwable` をキャッチするようなコーディングは避けてください。`Exception`、`RuntimeException` だけでなく `Error` までキャッチしてしまう恐れがあるためです。`Error` は Java VM のエラー等深刻な状態を表すため、特別な理由がなければキャッチすべきではない例外オブジェクトです。ごく一部の例外を除いて、`Error` をキャッチしてもアプリケーションで対処できることはありません。
+
+try {
+    ...
+} catch (Throwable t) {
+    // 本来キャッチすべきでない Error もキャッチしてしまう
+    // Error は Java VM のエラー等深刻な状態を表すため、特別な理由がなければキャッチすべきではない
+    ...
+}
+```
+
+同じ理由で、throws 句に `Throwable` を指定するのもいけません。呼び出し元が `Throwable` をキャッチせざるを得なくなり、先に挙げた「`Error` をキャッチしてしまう可能性」が発生するためです。
+
+```
+// 呼び出し元が Throwable をキャッチせざるを得なくなる 
+public final void doProcess() throws Throwable {
     ...
 }
 ```
