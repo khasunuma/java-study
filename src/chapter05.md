@@ -213,7 +213,7 @@ public final class LocalDate {
 
 なお、`Byte`、`Integer`、`Long`、`Float`、`Double` の各クラスは `public` なコンストラクタと `valueOf` ファクトリ・メソッドの両方を持つ特殊な例です。これらのクラスの `valueOf` ファクトリ・メソッドは値の全部または一部をキャッシュするため、コンストラクタでインスタンスを生成する場合と比較して効率が良いとされます。
 
->歴史的には、`Byte`、`Integer`、`Long`、`Float`、`Double` の `valueOf` ファクトリ・メソッドは、`byte`、`int`、`long`、`float`、`double` との自動相互変換機能 (オートボクシング) を実現するために Java SE 5.0 から追加されたメソッドです。将来の Java では `Byte`、`Integer`、`Long`、`Float`、`Double` の `public` なコンストラクタは廃止される (`private` スコープに変更される) 予定になっています。
+>【バージョン】`Byte`、`Integer`、`Long`、`Float`、`Double` の `valueOf` ファクトリ・メソッドは、`byte`、`int`、`long`、`float`、`double` との自動相互変換機能 (オートボクシング) を実現するために Java SE 5.0 以降で追加されたメソッドです。将来の Java では `Byte`、`Integer`、`Long`、`Float`、`Double` の `public` なコンストラクタは廃止される (`private` スコープに変更される) 予定になっています。
 
 シングルトンは、インスタンスを 1 つしか生成しないクラスを実現するためのテクニックです。アプリケーション全体で共有しておきたいような情報を保持するために使用します。Java EE では CDI や EJB などのコンテナ (サーバー側機能) でインスタンスが 1 つだけになるように制御できますが、Java SE にはそのような機能が備わっていないため、代わりに `private` コンストラクタを中心に実装します。Java SE におけるシングルトンの実現方法は複数ありますが、最も簡単なものを以下に示します。
 
