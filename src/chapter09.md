@@ -163,3 +163,13 @@ list.sort((s1, s2) -> s1.length() - s2.length());
 
 ## 9.3. Stream API
 
+### 9.3.1. Stream API の概要
+
+### 9.3.2. Stream の生成
+
+### 9.3.3. 中間操作
+
+### 9.3.4. 終端操作
+
+## 9.4. Optional
+
