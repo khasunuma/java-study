@@ -158,8 +158,20 @@ list.sort((s1, s2) -> s1.length() - s2.length());
 
 ラムダ式の処理は比較的自由に記述できますが、いくつかの注意点があります。
 
-* 外側の変数を参照することは可能ですが、変更することはできません。これは匿名クラスと同じ仕様です。Java SE 7 までは、匿名クラスが外側の変数を参照する場合、参照する変数に `final` を付加して読み取り専用であることを明示する必要がありました。Java SE 8 では `final` 自体は省略可能です (実質的 `final`) が、読み取り専用でなければならない点は変わりません。
-* ラムダ式の内部で変数を宣言することは可能ですが、外側の変数と同じ名前を使うことはできません。一方で、匿名クラスでは外側の変数と同じ名前を使うことができます。これは、ラムダ式はクラスではないためです。
+- 外側の変数を参照することは可能ですが、変更することはできません。これは匿名クラスと同じ仕様です。Java SE 7 までは、匿名クラスが外側の変数を参照する場合、参照する変数に `final` を付加して読み取り専用であることを明示する必要がありました。Java SE 8 では `final` 自体は省略可能です (実質的 `final`) が、読み取り専用でなければならない点は変わりません。
+- ラムダ式の内部で変数を宣言することは可能ですが、外側の変数と同じ名前を使うことはできません。一方で、匿名クラスでは外側の変数と同じ名前を使うことができます。これは、ラムダ式はクラスではないためです。
+
+### 12.2.4. メソッド参照
+
+ラムダ式には「メソッド参照」という略記が存在します。ラムダ式の引数をそのままメソッド、`static` メソッド、コンストラクタの引数として渡す場合には、下表に示すようにインスタンス名/クラス名とメソッド名 (コンストラクタの場合は `new`) を `::` でつなぎ、引数の記述を省略することができます。
+
+|参照する対象|ラムダ式|メソッド参照|
+|--------|--------|--------|
+|インスタンスのメソッド|`e -> list.add(e)`|`list::add`|
+|クラスの `static` メソッド|`s -> System.out.println(s)`|`System.out::println`|
+|クラスのコンストラクタ|`() -> new ArrayList()`|`ArrayList::new`|
+
+メソッド参照と Stream API を組み合わせて使用することにより処理記述を大幅に簡略化できる場合があります。メソッド参照はラムダ式本体と異なり必ず覚えなければいけないものではありませんが、知っていると便利な記法です。
 
 ## 12.3. Stream API
 
@@ -167,9 +179,50 @@ list.sort((s1, s2) -> s1.length() - s2.length());
 
 ### 12.3.2. Stream の生成
 
+|ソース|クラス|生成するメソッド|生成されるストリーム|
+|----|----|----|----|
+|配列|`Arrays`|`<T>stream(T[])`|`Stream<T>`|
+| |`Arrays`|`stream(int[])`|`IntStream`|
+|コレクション|`Collection<T>`|`stream()`|`Stream<T>`|
+|任意の要素|Stream|<T>of(T...)|Stream<T>|
+| |IntStream|of(int...)|IntStream|
+|n から m|IntStream|rangeClosed(int n, int m)|IntStream|
+|n から m - 1|IntStream|range(int n, int m)|IntStream|
+|文字列|String|chars()|IntStream|
+|ランダムな整数|Random|ints()|IntStream|
+|ファイルの各行|BufferedReader|lines()|Stream<String>|
+| |Files|lines(Path)|Stream<String>|
+|ディレクトリ内の要素|Files|list(Path)|Stream<Path>|
+| |Files|walk(Path, TODO)|Stream<Path>|
+
 ### 12.3.3. 中間操作
 
+|メソッド名|引数|概要|プリミティブ|
+|----|----|----|----|
+|filter()|T -> boolean|フィルタリングする|○|
+|map()|T -> U|Stream<U>へ変換する|○|
+|flatMap()|T -> Stream<U>|Stream<U>へ変換する|○|
+|distinct()|なし|同一の要素を除外する|○|
+|sorted()|なし|自然順序で並び替える|○|
+|sorted()|(T, T) -> int|並び替える|×|
+|peek()|T -> void|デバッグ用途の forEach()|○|
+|limit()|long|引数の件数に要素数を制限する|○|
+|skip()|long|引数の件数文を読み飛ばす|○|
+
 ### 12.3.4. 終端操作
+
+|メソッド名|引数|戻り値|概要|プリミティブ|
+|----|----|----|----|----|
+|forEach()|T -> void|void|要素ごとに何らかの処理を行う|○|
+|findAny()|なし|T|任意の要素を 1 つだけ取得する|○|
+|findFirst()|なし|T|最初の要素を取得する|○|
+|anyMatch()|T -> boolean|boolean|いずれかの要素が条件に沿うか|○|
+|allMatch()|T -> boolean|boolean|すべての要素が条件に沿うか|○|
+|noneMatch()|T -> boolean|boolean|すべての要素が条件に沿わないか|○|
+|reduce()|(T, T) -> T|Optional<T>|各要素から 1 つの要素に畳み込む|○|
+|collect()|Collector<? super T, A, R>|R|各要素から 1 つのオブジェクトに集計する|○|
+|toArray()|int -> A[]|A[]|すべての要素を含む配列を生成する|○|
+|count()|なし|int|要素数を取得する|○|
 
 ## 12.4. Optional
 

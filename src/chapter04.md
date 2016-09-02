@@ -1,4 +1,701 @@
-# 4. 文
+# 4. 式と文
+
+Block:
+    { [BlockStatements] }
+
+BlockStatements:
+    BlockStatement {BlockStatement}
+
+BlockStatement:
+    LocalVariableDeclarationStatement 
+    ClassDeclaration 
+    Statement
+
+LocalVariableDeclarationStatement:
+    LocalVariableDeclaration ;
+
+LocalVariableDeclaration:
+    {VariableModifier} UnannType VariableDeclaratorList
+
+Statement:
+    StatementWithoutTrailingSubstatement 
+    LabeledStatement 
+    IfThenStatement 
+    IfThenElseStatement 
+    WhileStatement 
+    ForStatement
+
+StatementNoShortIf:
+    StatementWithoutTrailingSubstatement 
+    LabeledStatementNoShortIf 
+    IfThenElseStatementNoShortIf 
+    WhileStatementNoShortIf 
+    ForStatementNoShortIf
+
+StatementWithoutTrailingSubstatement:
+    Block 
+    EmptyStatement 
+    ExpressionStatement 
+    AssertStatement 
+    SwitchStatement 
+    DoStatement 
+    BreakStatement 
+    ContinueStatement 
+    ReturnStatement 
+    SynchronizedStatement 
+    ThrowStatement 
+    TryStatement
+
+IfThenStatement:
+    if ( Expression ) Statement
+
+IfThenElseStatement:
+    if ( Expression ) StatementNoShortIf else Statement
+
+IfThenElseStatementNoShortIf:
+    if ( Expression ) StatementNoShortIf else StatementNoShortIf
+
+EmptyStatement:
+    ;
+
+LabeledStatement:
+    Identifier : Statement
+
+LabeledStatementNoShortIf:
+    Identifier : StatementNoShortIf
+
+ExpressionStatement:
+    StatementExpression ;
+
+StatementExpression:
+    Assignment 
+    PreIncrementExpression 
+    PreDecrementExpression 
+    PostIncrementExpression 
+    PostDecrementExpression 
+    MethodInvocation 
+    ClassInstanceCreationExpression
+
+IfThenStatement:
+    if ( Expression ) Statement
+
+IfThenElseStatement:
+    if ( Expression ) StatementNoShortIf else Statement
+
+IfThenElseStatementNoShortIf:
+    if ( Expression ) StatementNoShortIf else StatementNoShortIf
+
+AssertStatement:
+    assert Expression ; 
+    assert Expression : Expression ;
+
+SwitchStatement:
+    switch ( Expression ) SwitchBlock
+
+SwitchBlock:
+    { {SwitchBlockStatementGroup} {SwitchLabel} }
+
+SwitchBlockStatementGroup:
+    SwitchLabels BlockStatements
+
+SwitchLabels:
+    SwitchLabel {SwitchLabel}
+
+SwitchLabel:
+    case ConstantExpression : 
+    case EnumConstantName : 
+    default :
+
+EnumConstantName:
+    Identifier
+
+WhileStatement:
+    while ( Expression ) Statement
+
+WhileStatementNoShortIf:
+    while ( Expression ) StatementNoShortIf
+
+DoStatement:
+    do Statement while ( Expression ) ;
+
+ForStatement:
+    BasicForStatement 
+    EnhancedForStatement
+
+ForStatementNoShortIf:
+    BasicForStatementNoShortIf 
+    EnhancedForStatementNoShortIf
+
+BasicForStatement:
+    for ( [ForInit] ; [Expression] ; [ForUpdate] ) Statement
+
+BasicForStatementNoShortIf:
+    for ( [ForInit] ; [Expression] ; [ForUpdate] ) StatementNoShortIf
+
+ForInit:
+    StatementExpressionList 
+
+LocalVariableDeclaration
+    ForUpdate:
+    StatementExpressionList
+
+StatementExpressionList:
+    StatementExpression {, StatementExpression}
+
+EnhancedForStatement:
+    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) Statement
+
+EnhancedForStatementNoShortIf:
+    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) StatementNoShortIf
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+BreakStatement:
+    break [Identifier] ;
+
+ContinueStatement:
+    continue [Identifier] ;
+
+ReturnStatement:
+    return [Expression] ;
+
+ThrowStatement:
+    throw Expression ;
+
+SynchronizedStatement:
+    synchronized ( Expression ) Block
+
+TryStatement:
+    try Block Catches 
+    try Block [Catches] Finally 
+    TryWithResourcesStatement
+
+Catches:
+    CatchClause {CatchClause}
+
+CatchClause:
+    catch ( CatchFormalParameter ) Block
+
+CatchFormalParameter:
+    {VariableModifier} CatchType VariableDeclaratorId
+
+CatchType:
+    UnannClassType {| ClassType}
+
+Finally:
+    finally Block
+
+TryWithResourcesStatement:
+    try ResourceSpecification Block [Catches] [Finally]
+
+ResourceSpecification:
+    ( ResourceList [;] )
+
+ResourceList:
+    Resource {; Resource}
+
+Resource:
+    {VariableModifier} UnannType VariableDeclaratorId = Expression
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+A variable (in C, this would be called an lvalue)
+A value
+Nothing (the expression is said to be void)
+
+Expression:
+    LambdaExpression 
+    AssignmentExpression
+
+Primary:
+    PrimaryNoNewArray 
+    ArrayCreationExpression
+
+PrimaryNoNewArray:
+    Literal 
+    ClassLiteral 
+    this 
+    TypeName . this 
+    ( Expression ) 
+    ClassInstanceCreationExpression 
+    FieldAccess 
+    ArrayAccess 
+    MethodInvocation 
+    MethodReference
+
+Literal:
+    IntegerLiteral 
+    FloatingPointLiteral 
+    BooleanLiteral 
+    CharacterLiteral 
+    StringLiteral 
+    NullLiteral
+
+IntegerLiteral:
+    DecimalIntegerLiteral 
+    HexIntegerLiteral 
+    OctalIntegerLiteral 
+    BinaryIntegerLiteral
+DecimalIntegerLiteral:
+    DecimalNumeral [IntegerTypeSuffix]
+HexIntegerLiteral:
+    HexNumeral [IntegerTypeSuffix]
+OctalIntegerLiteral:
+    OctalNumeral [IntegerTypeSuffix]
+BinaryIntegerLiteral:
+    BinaryNumeral [IntegerTypeSuffix]
+IntegerTypeSuffix:
+    (one of) 
+    l L
+
+UnicodeInputCharacter:
+    UnicodeEscape 
+    RawInputCharacter
+UnicodeEscape:
+    \ UnicodeMarker HexDigit HexDigit HexDigit HexDigit
+UnicodeMarker:
+    u {u}
+HexDigit:
+    (one of) 
+    0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F
+RawInputCharacter:
+    any Unicode character
+
+LineTerminator:
+    the ASCII LF character, also known as "newline" 
+    the ASCII CR character, also known as "return" 
+    the ASCII CR character followed by the ASCII LF character
+InputCharacter:
+    UnicodeInputCharacter but not CR or LF
+
+WhiteSpace:
+    the ASCII SP character, also known as "space" 
+    the ASCII HT character, also known as "horizontal tab" 
+    the ASCII FF character, also known as "form feed" 
+    LineTerminator
+
+リテラル
+
+整数リテラル
+
+整数リテラルは 10 進数、16 進数、8 進数および 2 進数の各表記があります。
+
+10 進数
+
+DecimalNumeral:
+    0 
+    NonZeroDigit [Digits] 
+    NonZeroDigit Underscores Digits
+NonZeroDigit:
+    (one of) 
+    1 2 3 4 5 6 7 8 9
+Digits:
+    Digit 
+    Digit [DigitsAndUnderscores] Digit
+Digit:
+    0 
+    NonZeroDigit
+DigitsAndUnderscores:
+    DigitOrUnderscore {DigitOrUnderscore}
+DigitOrUnderscore:
+    Digit 
+    _
+Underscores:
+    _ {_}
+
+16 進数
+
+HexNumeral:
+    0 x HexDigits 
+    0 X HexDigits
+HexDigits:
+    HexDigit 
+    HexDigit [HexDigitsAndUnderscores] HexDigit
+HexDigit:
+    (one of) 
+    0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F
+HexDigitsAndUnderscores:
+    HexDigitOrUnderscore {HexDigitOrUnderscore}
+HexDigitOrUnderscore:
+    HexDigit 
+    _
+
+8 進数
+
+OctalNumeral:
+    0 OctalDigits 
+    0 Underscores OctalDigits
+OctalDigits:
+    OctalDigit 
+    OctalDigit [OctalDigitsAndUnderscores] OctalDigit
+OctalDigit:
+    (one of) 
+    0 1 2 3 4 5 6 7
+OctalDigitsAndUnderscores:
+    OctalDigitOrUnderscore {OctalDigitOrUnderscore}
+OctalDigitOrUnderscore:
+    OctalDigit 
+    _
+
+2 進数
+
+BinaryNumeral:
+    0 b BinaryDigits 
+    0 B BinaryDigits
+BinaryDigits:
+    BinaryDigit 
+    BinaryDigit [BinaryDigitsAndUnderscores] BinaryDigit
+BinaryDigit:
+    (one of) 
+    0 1
+BinaryDigitsAndUnderscores:
+    BinaryDigitOrUnderscore {BinaryDigitOrUnderscore}
+BinaryDigitOrUnderscore:
+    BinaryDigit 
+    _
+
+浮動小数点数リテラル
+
+FloatingPointLiteral:
+    DecimalFloatingPointLiteral 
+    HexadecimalFloatingPointLiteral
+DecimalFloatingPointLiteral:
+    Digits . [Digits] [ExponentPart] [FloatTypeSuffix] 
+    . Digits [ExponentPart] [FloatTypeSuffix] 
+    Digits ExponentPart [FloatTypeSuffix] 
+    Digits [ExponentPart] FloatTypeSuffix
+ExponentPart:
+    ExponentIndicator SignedInteger
+ExponentIndicator:
+    (one of) 
+    e E
+SignedInteger:
+    [Sign] Digits
+Sign:
+    (one of) 
+    + -
+FloatTypeSuffix:
+    (one of) 
+    f F d D
+
+HexadecimalFloatingPointLiteral:
+    HexSignificand BinaryExponent [FloatTypeSuffix]
+HexSignificand:
+    HexNumeral [.] 
+    0 x [HexDigits] . HexDigits 
+    0 X [HexDigits] . HexDigits
+BinaryExponent:
+    BinaryExponentIndicator SignedInteger
+BinaryExponentIndicator:
+    (one of) 
+    p P
+
+論理リテラル
+
+BooleanLiteral:
+    (one of) 
+    true false
+
+文字リテラル
+
+CharacterLiteral:
+    ' SingleCharacter ' 
+    ' EscapeSequence '
+SingleCharacter:
+    InputCharacter but not ' or \
+
+文字列リテラル
+
+StringLiteral:
+    " {StringCharacter} "
+StringCharacter:
+    InputCharacter but not " or \ 
+    EscapeSequence
+
+EscapeSequence:
+    \ b (backspace BS, Unicode \u0008) 
+    \ t (horizontal tab HT, Unicode \u0009) 
+    \ n (linefeed LF, Unicode \u000a) 
+    \ f (form feed FF, Unicode \u000c) 
+    \ r (carriage return CR, Unicode \u000d) 
+    \ " (double quote ", Unicode \u0022) 
+    \ ' (single quote ', Unicode \u0027) 
+    \ \ (backslash \, Unicode \u005c) 
+    OctalEscape (octal value, Unicode \u0000 to \u00ff)
+OctalEscape:
+    \ OctalDigit 
+    \ OctalDigit OctalDigit 
+    \ ZeroToThree OctalDigit OctalDigit 
+OctalDigit:
+    (one of) 
+    0 1 2 3 4 5 6 7
+ZeroToThree:
+    (one of) 
+    0 1 2 3
+
+Null リテラル
+
+NullLiteral:
+    null
+
+ClassLiteral:
+    TypeName {[ ]} . class 
+    NumericType {[ ]} . class 
+    boolean {[ ]} . class 
+    void . class
+
+Separator:
+    (one of) 
+    (   )   {   }   [   ]   ;   ,   .   ...   @   ::
+
+Operator:
+    (one of)
+    =   >   <   !   ~   ?   :   ->
+    ==  >=  <=  !=  &&  ||  ++  --
+    +   -   *   /   &   |   ^   %   <<   >>   >>>
+    +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
+
+ClassInstanceCreationExpression:
+    UnqualifiedClassInstanceCreationExpression 
+    ExpressionName . UnqualifiedClassInstanceCreationExpression 
+    Primary . UnqualifiedClassInstanceCreationExpression
+
+UnqualifiedClassInstanceCreationExpression:
+    new [TypeArguments] ClassOrInterfaceTypeToInstantiate ( [ArgumentList] ) [ClassBody]
+
+ClassOrInterfaceTypeToInstantiate:
+    {Annotation} Identifier {. {Annotation} Identifier} [TypeArgumentsOrDiamond]
+
+TypeArgumentsOrDiamond:
+    TypeArguments 
+    <>
+
+ArgumentList:
+    Expression {, Expression}
+
+ArrayCreationExpression:
+    new PrimitiveType DimExprs [Dims] 
+    new ClassOrInterfaceType DimExprs [Dims] 
+    new PrimitiveType Dims ArrayInitializer 
+    new ClassOrInterfaceType Dims ArrayInitializer
+
+DimExprs:
+    DimExpr {DimExpr}
+
+DimExpr:
+    {Annotation} [ Expression ]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+ArrayAccess:
+    ExpressionName [ Expression ] 
+    PrimaryNoNewArray [ Expression ]
+
+FieldAccess:
+    Primary . Identifier 
+    super . Identifier 
+    TypeName . super . Identifier
+
+MethodInvocation:
+    MethodName ( [ArgumentList] ) 
+    TypeName . [TypeArguments] Identifier ( [ArgumentList] ) 
+    ExpressionName . [TypeArguments] Identifier ( [ArgumentList] ) 
+    Primary . [TypeArguments] Identifier ( [ArgumentList] ) 
+    super . [TypeArguments] Identifier ( [ArgumentList] ) 
+    TypeName . super . [TypeArguments] Identifier ( [ArgumentList] )
+
+ArgumentList:
+    Expression {, Expression}
+
+MethodReference:
+    ExpressionName :: [TypeArguments] Identifier 
+    ReferenceType :: [TypeArguments] Identifier 
+    Primary :: [TypeArguments] Identifier 
+    super :: [TypeArguments] Identifier 
+    TypeName . super :: [TypeArguments] Identifier 
+    ClassType :: [TypeArguments] new 
+    ArrayType :: new
+
+PostfixExpression:
+    Primary 
+    ExpressionName 
+    PostIncrementExpression 
+    PostDecrementExpression
+
+PostIncrementExpression:
+    PostfixExpression ++
+
+PostDecrementExpression:
+    PostfixExpression --
+
+UnaryExpression:
+    PreIncrementExpression 
+    PreDecrementExpression 
+    + UnaryExpression 
+    - UnaryExpression 
+    UnaryExpressionNotPlusMinus
+
+PreIncrementExpression:
+    ++ UnaryExpression
+
+PreDecrementExpression:
+    -- UnaryExpression
+
+UnaryExpressionNotPlusMinus:
+    PostfixExpression 
+    ~ UnaryExpression 
+    ! UnaryExpression 
+    CastExpression
+
+CastExpression:
+    ( PrimitiveType ) UnaryExpression 
+    ( ReferenceType {AdditionalBound} ) UnaryExpressionNotPlusMinus 
+    ( ReferenceType {AdditionalBound} ) LambdaExpression 
+
+AdditionalBound:
+    & InterfaceType
+
+MultiplicativeExpression:
+    UnaryExpression 
+    MultiplicativeExpression * UnaryExpression 
+    MultiplicativeExpression / UnaryExpression 
+    MultiplicativeExpression % UnaryExpression
+
+AdditiveExpression:
+    MultiplicativeExpression 
+    AdditiveExpression + MultiplicativeExpression 
+    AdditiveExpression - MultiplicativeExpression
+
+ShiftExpression:
+    AdditiveExpression 
+    ShiftExpression << AdditiveExpression 
+    ShiftExpression >> AdditiveExpression 
+    ShiftExpression >>> AdditiveExpression
+
+RelationalExpression:
+    ShiftExpression 
+    RelationalExpression < ShiftExpression 
+    RelationalExpression > ShiftExpression 
+    RelationalExpression <= ShiftExpression 
+    RelationalExpression >= ShiftExpression 
+    RelationalExpression instanceof ReferenceType
+
+EqualityExpression:
+    RelationalExpression 
+    EqualityExpression == RelationalExpression 
+    EqualityExpression != RelationalExpression
+
+AndExpression:
+    EqualityExpression 
+    AndExpression & EqualityExpression
+
+ExclusiveOrExpression:
+    AndExpression 
+    ExclusiveOrExpression ^ AndExpression
+
+InclusiveOrExpression:
+    ExclusiveOrExpression 
+    InclusiveOrExpression | ExclusiveOrExpression
+
+ConditionalAndExpression:
+    InclusiveOrExpression 
+    ConditionalAndExpression && InclusiveOrExpression
+
+ConditionalOrExpression:
+    ConditionalAndExpression 
+    ConditionalOrExpression || ConditionalAndExpression
+
+ConditionalExpression:
+    ConditionalOrExpression 
+    ConditionalOrExpression ? Expression : ConditionalExpression 
+    ConditionalOrExpression ? Expression : LambdaExpression 
+
+AssignmentExpression:
+    ConditionalExpression 
+    Assignment
+
+Assignment:
+    LeftHandSide AssignmentOperator Expression
+
+LeftHandSide:
+    ExpressionName 
+    FieldAccess 
+    ArrayAccess
+
+AssignmentOperator:
+    (one of) 
+    =  *=  /=  %=  +=  -=  <<=  >>=  >>>=  &=  ^=  |=
+
+LambdaExpression:
+    LambdaParameters -> LambdaBody
+
+LambdaParameters:
+    Identifier 
+    ( [FormalParameterList] ) 
+    ( InferredFormalParameterList )
+
+InferredFormalParameterList:
+    Identifier {, Identifier}
+
+FormalParameterList:
+    ReceiverParameter 
+    FormalParameters , LastFormalParameter 
+    LastFormalParameter
+
+FormalParameters:
+    FormalParameter {, FormalParameter} 
+    ReceiverParameter {, FormalParameter}
+
+FormalParameter:
+    {VariableModifier} UnannType VariableDeclaratorId
+
+LastFormalParameter:
+    {VariableModifier} UnannType {Annotation} ... VariableDeclaratorId 
+    FormalParameter
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+LambdaBody:
+    Expression 
+    Block
+
+ConstantExpression:
+    Expression
+
+
+
+
+
+
+
+
+
+
 
 文は Java における処理の最小単位です。主に C++ からアイデアを得ており、C、JavaScript、Python、Visual Basic 等でも採用されている構文が数多く存在します。
 
