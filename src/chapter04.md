@@ -1,4 +1,54 @@
-# 4. 式と文
+# 4. 文と式
+
+Java における処理の記述を文 (Statement) といいます。文の一覧を下表に示します。
+
+|文の分類|文|解説する章|
+|--------|--------|----|
+|単純な文|式文、空文|4 章|
+|分岐・繰り返し|if 文、if-else 文、while 文、do 文、switch 文|5 章|
+| |for 文|5 章、10 章|
+|ジャンプ|break 文、continue 文、return 文|5 章|
+|例外処理|throw 文|6 章|
+| |try 文|6 章、11 章|
+|同期化|synchronized 文|9 章|
+|文のグルーピング|ブロック|4 章|
+
+- if-else 文、while 文および for 文は、if 文との組み合わせで注意事項があります。詳細は 5 章にて取り上げます。
+- ラベル付き文、assert 文については用途が特殊なため割愛します (少なくとも筆者は使用した試しがありません)。
+
+この章では、式文、空文、ブロックの 3 種類と、式文のもとになる「式」について解説します。
+
+## 式文
+
+式文は、文字通り式を実行 (評価) する文です。Java では以下の式の末尾に `;` (セミコロン) を置いたものが式文となります。それぞれの式については後述しますが、ここでは (1) 式を実行する文を式文という、(2) 式文に使える式には一応制限が設けられている (どのような式でも式文にできるわけではない) ことを押さえておいてください。
+
+- 代入演算式
+- 前置インクリメント式
+- 前置デクリメント式
+- 後置インクリメント式
+- 後置デクリメント式
+- メソッド呼び出し式
+- インスタンス生成式
+
+>実際のプログラミングで多用することになる四則演算の式は、単独では式文にすることができません。四則演算の式は代入演算式やメソッド呼び出し式と組み合わせて使うことになります。
+
+## 空文
+
+空文 (EmptyStatement) は、何も処理をしない文です。`;` (セミコロン) だけで表します。
+
+EmptyStatement:
+    ;
+
+## ブロック
+
+文を `{ }` で囲んだものをブロック (Block) といいます。ブロックの中に記述できるものは、正確には次の 4 種類です。
+
+- ローカル変数宣言文
+- クラス定義
+- 文
+- ブロック
+
+ブロックは、メソッド本体の処理記述を行う際に使用します。また、後述の if 文、if-else 文、while 文、do 文、for 文の中で使用することもできます。
 
 Block:
     { [BlockStatements] }
@@ -16,47 +66,6 @@ LocalVariableDeclarationStatement:
 
 LocalVariableDeclaration:
     {VariableModifier} UnannType VariableDeclaratorList
-
-Statement:
-    StatementWithoutTrailingSubstatement 
-    LabeledStatement 
-    IfThenStatement 
-    IfThenElseStatement 
-    WhileStatement 
-    ForStatement
-
-StatementNoShortIf:
-    StatementWithoutTrailingSubstatement 
-    LabeledStatementNoShortIf 
-    IfThenElseStatementNoShortIf 
-    WhileStatementNoShortIf 
-    ForStatementNoShortIf
-
-StatementWithoutTrailingSubstatement:
-    Block 
-    EmptyStatement 
-    ExpressionStatement 
-    AssertStatement 
-    SwitchStatement 
-    DoStatement 
-    BreakStatement 
-    ContinueStatement 
-    ReturnStatement 
-    SynchronizedStatement 
-    ThrowStatement 
-    TryStatement
-
-IfThenStatement:
-    if ( Expression ) Statement
-
-IfThenElseStatement:
-    if ( Expression ) StatementNoShortIf else Statement
-
-IfThenElseStatementNoShortIf:
-    if ( Expression ) StatementNoShortIf else StatementNoShortIf
-
-EmptyStatement:
-    ;
 
 LabeledStatement:
     Identifier : Statement
@@ -76,152 +85,163 @@ StatementExpression:
     MethodInvocation 
     ClassInstanceCreationExpression
 
-IfThenStatement:
-    if ( Expression ) Statement
+## リテラル
 
-IfThenElseStatement:
-    if ( Expression ) StatementNoShortIf else Statement
+### 整数リテラル (IntegerLiteral)
 
-IfThenElseStatementNoShortIf:
-    if ( Expression ) StatementNoShortIf else StatementNoShortIf
+整数リテラルは 10 進数、16 進数、8 進数および 2 進数の各表記があります。
 
-AssertStatement:
-    assert Expression ; 
-    assert Expression : Expression ;
+#### 10 進数整数リテラル
 
-SwitchStatement:
-    switch ( Expression ) SwitchBlock
+- 使用できる数字は `0` `1` `2` `3` `4` `5` `6` `7` `8` `9` です。
+- `0`、または `1` `2` `3` `4` `5` `6` `7` `8` `9` から始まる 1 つ以上の数字で構成されます。
+- 原則として `int` 型の値となりますが、末尾に `l` または `L` を付加することで `long` 型の値となります。
+- 数字と数字の間に `_` (アンダースコア) を含めて、桁区切りとして用いることができます。
 
-SwitchBlock:
-    { {SwitchBlockStatementGroup} {SwitchLabel} }
+#### 16 進数整数リテラル
 
-SwitchBlockStatementGroup:
-    SwitchLabels BlockStatements
+- 使用できる数字は `0` `1` `2` `3` `4` `5` `6` `7` `8` `9` `a` `b` `c` `d` `e` `f` `A` `B` `C` `D` `E` `F` です。
+- 先頭 `0x` または `0X` で始まり、1 つ以上の数字で構成されます。
+- 原則として `int` 型の値となりますが、末尾に `l` または `L` を付加することで `long` 型の値となります。
+- 数字と数字の間に `_` (アンダースコア) を含めて、桁区切りとして用いることができます。
 
-SwitchLabels:
-    SwitchLabel {SwitchLabel}
+#### 8 進数整数リテラル
 
-SwitchLabel:
-    case ConstantExpression : 
-    case EnumConstantName : 
-    default :
+- 使用できる数字は `0` `1` `2` `3` `4` `5` `6` `7` です。
+- 先頭 `0` で始まり、1 つ以上の数字で構成されます。
+- 原則として `int` 型の値となりますが、末尾に `l` または `L` を付加することで `long` 型の値となります。
+- 数字と数字の間に `_` (アンダースコア) を含めて、桁区切りとして用いることができます。
 
-EnumConstantName:
-    Identifier
+#### 2 進数整数リテラル
 
-WhileStatement:
-    while ( Expression ) Statement
+- 使用できる数字は `0` `1` です。
+- 先頭 `0b` または `0B` で始まり、1 つ以上の数字で構成されます。
+- 原則として `int` 型の値となりますが、末尾に `l` または `L` を付加することで `long` 型の値となります。
+- 数字と数字の間に `_` (アンダースコア) を含めて、桁区切りとして用いることができます。
 
-WhileStatementNoShortIf:
-    while ( Expression ) StatementNoShortIf
+>【バージョン】 `_` (アンダースコア) を区切り文字として使用できる仕様、および 2 進数リテラルは Java SE 7 以降で導入されたものです。
 
-DoStatement:
-    do Statement while ( Expression ) ;
+|言語|10 進数|16 進数|8 進数|2 進数|桁区切り|サフィックス|
+|----|----|----|----|----|----|----|
+|Java|そのまま|先頭 `0x` `0X`|先頭 `0`|先頭 `0b` `0B`|`_` (アンダースコア)|`l` `L` で `long` 型|
+|C|そのまま|先頭 `0x` `0X`|先頭 `0`|N/A|N/A|`l` `L` で `long` 型|
+|Visual Basic|そのまま|先頭 `&h` `&H`|先頭 `&o` `&O`|N/A|N/A|`%` で `Integer` 型、`&` で `Long` 型|
+|Python|そのまま|先頭 `0x` `0X`|先頭 `0`|先頭 `0b` `0B`|N/A|`l` `L` で `long` 型|
+|JavaScript|そのまま|先頭 `0x` `0X`|N/A|N/A|N/A|N/A|
 
-ForStatement:
-    BasicForStatement 
-    EnhancedForStatement
+### 浮動小数点数リテラル (FloatingPointLiteral)
 
-ForStatementNoShortIf:
-    BasicForStatementNoShortIf 
-    EnhancedForStatementNoShortIf
+浮動小数点数リテラルは 10 進数および 16 進数の表記があります。
 
-BasicForStatement:
-    for ( [ForInit] ; [Expression] ; [ForUpdate] ) Statement
+#### 10 進数浮動小数点数リテラル
 
-BasicForStatementNoShortIf:
-    for ( [ForInit] ; [Expression] ; [ForUpdate] ) StatementNoShortIf
+10 進数整数リテラルと同じ数字を使用し、かつ以下のいずれかの条件を満たす場合に、10 進数浮動小数点リテラルとなります。
 
-ForInit:
-    StatementExpressionList 
+- `.` (小数点) が存在する
+- `e` `E` で始まる指数部を含む
 
-LocalVariableDeclaration
-    ForUpdate:
-    StatementExpressionList
+10 進数浮動小数点数リテラルの型は、末尾に `f` `F` が付加された場合は `float` 型、`d` `D` が付加された場合は `double` 型となります。省略時には `double` 型とみなされます。
 
-StatementExpressionList:
-    StatementExpression {, StatementExpression}
-
-EnhancedForStatement:
-    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) Statement
-
-EnhancedForStatementNoShortIf:
-    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) StatementNoShortIf
-
-VariableModifier:
+FloatingPointLiteral:
+    DecimalFloatingPointLiteral 
+    HexadecimalFloatingPointLiteral
+DecimalFloatingPointLiteral:
+    Digits . [Digits] [ExponentPart] [FloatTypeSuffix] 
+    . Digits [ExponentPart] [FloatTypeSuffix] 
+    Digits ExponentPart [FloatTypeSuffix] 
+    Digits [ExponentPart] FloatTypeSuffix
+ExponentPart:
+    ExponentIndicator SignedInteger
+ExponentIndicator:
     (one of) 
-    Annotation final
-
-VariableDeclaratorId:
-    Identifier [Dims]
-
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
-
-BreakStatement:
-    break [Identifier] ;
-
-ContinueStatement:
-    continue [Identifier] ;
-
-ReturnStatement:
-    return [Expression] ;
-
-ThrowStatement:
-    throw Expression ;
-
-SynchronizedStatement:
-    synchronized ( Expression ) Block
-
-TryStatement:
-    try Block Catches 
-    try Block [Catches] Finally 
-    TryWithResourcesStatement
-
-Catches:
-    CatchClause {CatchClause}
-
-CatchClause:
-    catch ( CatchFormalParameter ) Block
-
-CatchFormalParameter:
-    {VariableModifier} CatchType VariableDeclaratorId
-
-CatchType:
-    UnannClassType {| ClassType}
-
-Finally:
-    finally Block
-
-TryWithResourcesStatement:
-    try ResourceSpecification Block [Catches] [Finally]
-
-ResourceSpecification:
-    ( ResourceList [;] )
-
-ResourceList:
-    Resource {; Resource}
-
-Resource:
-    {VariableModifier} UnannType VariableDeclaratorId = Expression
-
-VariableModifier:
+    e E
+SignedInteger:
+    [Sign] Digits
+Sign:
     (one of) 
-    Annotation final
+    + -
+FloatTypeSuffix:
+    (one of) 
+    f F d D
 
-VariableDeclaratorId:
-    Identifier [Dims]
+#### 16 進数浮動小数点数リテラル
 
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
+16 進数整数リテラルと同じ数字とプリフィクス (`0x` `0X`) を使用し、かつ以下のいずれかの条件を満たす場合に、16 進数の浮動小数点リテラルとなります。
 
-A variable (in C, this would be called an lvalue)
-A value
-Nothing (the expression is said to be void)
+- `.` (小数点) が存在する
+- `p` `P` で始まる指数部を含む
 
-Expression:
-    LambdaExpression 
-    AssignmentExpression
+16 進数浮動小数点数リテラルの型は、末尾に `f` `F` が付加された場合は `float` 型、`d` `D` が付加された場合は `double` 型となります。省略時には `double` 型とみなされます。
+
+HexadecimalFloatingPointLiteral:
+    HexSignificand BinaryExponent [FloatTypeSuffix]
+HexSignificand:
+    HexNumeral [.] 
+    0 x [HexDigits] . HexDigits 
+    0 X [HexDigits] . HexDigits
+BinaryExponent:
+    BinaryExponentIndicator SignedInteger
+BinaryExponentIndicator:
+    (one of) 
+    p P
+
+### 文字リテラルと文字列リテラル
+
+#### 文字リテラル (CharacterLiteral)
+
+文字リテラルは 1 文字を表すリテラルで、文字、Unicode エスケープ (Unicode の 16 進数文字コード 4 桁 *xxxx* を \u*xxxx* 形式で表す記法) またはエスケープ・シーケンスを `' '` (シングルクォート) で囲んで表します。ただし、`'` (シングルクォート) および `\` (バックスラッシュ) は文字として表すことはできず、代わりにエスケープ・シーケンスを用います。文字リテラルは `char` 型の値となります。
+
+|Esc|意味|
+|:----:|--------|
+|`\b`|backspace BS, Unicode \u0008|
+|`\t`|horizontal tab HT, Unicode \u0009| 
+|`\n`|linefeed LF, Unicode \u000a|
+|`\f`|form feed FF, Unicode \u000c|
+|`\r`|carriage return CR, Unicode \u000d| 
+|`\"`|double quote ", Unicode \u0022| 
+|`\'`|single quote ', Unicode \u0027 
+|`\\`|backslash \, Unicode \u005c| 
+
+#### 文字列リテラル (StringLiteral)
+
+文字列リテラルは 0 文字以上の文字列を表すリテラルで、文字、Unicode エスケープまたはエスケープ・シーケンスの列を `" "` (ダブルクォート) で囲んで表します。ただし、`'` (ダブルクォート) および `\` (バックスラッシュ) は文字として表すことはできず、代わりにエスケープ・シーケンスを用います。文字列リテラルは `String` 型への参照となります。
+
+C には文字リテラルおよび文字列リテラルが存在します。表記は Java と同じですが文字列リテラルのデータ型は異なります (C の文字列リテラルは `const char *` など)。Python および JavaScript には文字列リテラルのみが存在し、囲み文字は `" "` (ダブルクォート) と `' '` (シングルクォート) のいずれも使用することができます。Visual Basic も文字列リテラルのみ存在しますが (囲み文字は Java 同様 `" "` (ダブルクォート) のみ)、エスケープ・シーケンスが使用できず代わりに `vbCrLf` などを使用する点が異なります。
+
+### その他のリテラル
+
+#### 論理リテラル (BooleanLiteral)
+
+論理リテラルは論理値を表すリテラルで、キーワード `true` `false` が値となります。また、`boolean` 型の値となります。
+
+>他の言語の論理型と異なり、Java の `boolean` 型は数値型との相互変換ができません。
+
+#### Null リテラル (NullLiteral)
+
+いずれのインスタンスも参照しないことを示すリテラルを Null リテラルといい、キーワード `null` で表します。
+
+## 式
+
+処理の基本単位を「式」といい、式を実行することを「評価する」といいます。式を評価した結果を「値」といい、値はプリミティブ型、何らかのクラス、または `void` (値を持たない) になります。
+
+値に名前を付けたものを「変数」と呼びます。
+
+### 一次式
+
+Java において最も単純な式を一次式 (Primary) と呼びます。一次式は他のすべての式に優先して評価されます。一次式には以下のものが挙げられます。
+
+- 配列生成式ではない一次式
+  - リテラル
+  - クラス・リテラル (7 章)
+  - `this` 参照
+  - TypeName . `this` 参照
+  - 括弧 ; `( 式 )`
+  - インスタンス生成式
+  - フィールド・アクセス式
+  - 配列アクセス式 (10 章)
+  - メソッド呼び出し式
+  - メソッド参照式 (12 章)
+- 配列生成式 (10 章)
 
 Primary:
     PrimaryNoNewArray 
@@ -290,187 +310,6 @@ WhiteSpace:
     the ASCII FF character, also known as "form feed" 
     LineTerminator
 
-リテラル
-
-整数リテラル
-
-整数リテラルは 10 進数、16 進数、8 進数および 2 進数の各表記があります。
-
-10 進数
-
-DecimalNumeral:
-    0 
-    NonZeroDigit [Digits] 
-    NonZeroDigit Underscores Digits
-NonZeroDigit:
-    (one of) 
-    1 2 3 4 5 6 7 8 9
-Digits:
-    Digit 
-    Digit [DigitsAndUnderscores] Digit
-Digit:
-    0 
-    NonZeroDigit
-DigitsAndUnderscores:
-    DigitOrUnderscore {DigitOrUnderscore}
-DigitOrUnderscore:
-    Digit 
-    _
-Underscores:
-    _ {_}
-
-16 進数
-
-HexNumeral:
-    0 x HexDigits 
-    0 X HexDigits
-HexDigits:
-    HexDigit 
-    HexDigit [HexDigitsAndUnderscores] HexDigit
-HexDigit:
-    (one of) 
-    0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F
-HexDigitsAndUnderscores:
-    HexDigitOrUnderscore {HexDigitOrUnderscore}
-HexDigitOrUnderscore:
-    HexDigit 
-    _
-
-8 進数
-
-OctalNumeral:
-    0 OctalDigits 
-    0 Underscores OctalDigits
-OctalDigits:
-    OctalDigit 
-    OctalDigit [OctalDigitsAndUnderscores] OctalDigit
-OctalDigit:
-    (one of) 
-    0 1 2 3 4 5 6 7
-OctalDigitsAndUnderscores:
-    OctalDigitOrUnderscore {OctalDigitOrUnderscore}
-OctalDigitOrUnderscore:
-    OctalDigit 
-    _
-
-2 進数
-
-BinaryNumeral:
-    0 b BinaryDigits 
-    0 B BinaryDigits
-BinaryDigits:
-    BinaryDigit 
-    BinaryDigit [BinaryDigitsAndUnderscores] BinaryDigit
-BinaryDigit:
-    (one of) 
-    0 1
-BinaryDigitsAndUnderscores:
-    BinaryDigitOrUnderscore {BinaryDigitOrUnderscore}
-BinaryDigitOrUnderscore:
-    BinaryDigit 
-    _
-
-浮動小数点数リテラル
-
-FloatingPointLiteral:
-    DecimalFloatingPointLiteral 
-    HexadecimalFloatingPointLiteral
-DecimalFloatingPointLiteral:
-    Digits . [Digits] [ExponentPart] [FloatTypeSuffix] 
-    . Digits [ExponentPart] [FloatTypeSuffix] 
-    Digits ExponentPart [FloatTypeSuffix] 
-    Digits [ExponentPart] FloatTypeSuffix
-ExponentPart:
-    ExponentIndicator SignedInteger
-ExponentIndicator:
-    (one of) 
-    e E
-SignedInteger:
-    [Sign] Digits
-Sign:
-    (one of) 
-    + -
-FloatTypeSuffix:
-    (one of) 
-    f F d D
-
-HexadecimalFloatingPointLiteral:
-    HexSignificand BinaryExponent [FloatTypeSuffix]
-HexSignificand:
-    HexNumeral [.] 
-    0 x [HexDigits] . HexDigits 
-    0 X [HexDigits] . HexDigits
-BinaryExponent:
-    BinaryExponentIndicator SignedInteger
-BinaryExponentIndicator:
-    (one of) 
-    p P
-
-論理リテラル
-
-BooleanLiteral:
-    (one of) 
-    true false
-
-文字リテラル
-
-CharacterLiteral:
-    ' SingleCharacter ' 
-    ' EscapeSequence '
-SingleCharacter:
-    InputCharacter but not ' or \
-
-文字列リテラル
-
-StringLiteral:
-    " {StringCharacter} "
-StringCharacter:
-    InputCharacter but not " or \ 
-    EscapeSequence
-
-EscapeSequence:
-    \ b (backspace BS, Unicode \u0008) 
-    \ t (horizontal tab HT, Unicode \u0009) 
-    \ n (linefeed LF, Unicode \u000a) 
-    \ f (form feed FF, Unicode \u000c) 
-    \ r (carriage return CR, Unicode \u000d) 
-    \ " (double quote ", Unicode \u0022) 
-    \ ' (single quote ', Unicode \u0027) 
-    \ \ (backslash \, Unicode \u005c) 
-    OctalEscape (octal value, Unicode \u0000 to \u00ff)
-OctalEscape:
-    \ OctalDigit 
-    \ OctalDigit OctalDigit 
-    \ ZeroToThree OctalDigit OctalDigit 
-OctalDigit:
-    (one of) 
-    0 1 2 3 4 5 6 7
-ZeroToThree:
-    (one of) 
-    0 1 2 3
-
-Null リテラル
-
-NullLiteral:
-    null
-
-ClassLiteral:
-    TypeName {[ ]} . class 
-    NumericType {[ ]} . class 
-    boolean {[ ]} . class 
-    void . class
-
-Separator:
-    (one of) 
-    (   )   {   }   [   ]   ;   ,   .   ...   @   ::
-
-Operator:
-    (one of)
-    =   >   <   !   ~   ?   :   ->
-    ==  >=  <=  !=  &&  ||  ++  --
-    +   -   *   /   &   |   ^   %   <<   >>   >>>
-    +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
-
 ClassInstanceCreationExpression:
     UnqualifiedClassInstanceCreationExpression 
     ExpressionName . UnqualifiedClassInstanceCreationExpression 
@@ -524,14 +363,13 @@ MethodInvocation:
 ArgumentList:
     Expression {, Expression}
 
-MethodReference:
-    ExpressionName :: [TypeArguments] Identifier 
-    ReferenceType :: [TypeArguments] Identifier 
-    Primary :: [TypeArguments] Identifier 
-    super :: [TypeArguments] Identifier 
-    TypeName . super :: [TypeArguments] Identifier 
-    ClassType :: [TypeArguments] new 
-    ArrayType :: new
+### 後置式
+
+後置式 (PostfixExpression) は一次式に次いで 2 番目に高い優先順位で評価される式です。
+
+- 変数名
+- 後置インクリメント式 (`++`)
+- 後置デクリメント式 (`--`)
 
 PostfixExpression:
     Primary 
@@ -544,6 +382,17 @@ PostIncrementExpression:
 
 PostDecrementExpression:
     PostfixExpression --
+
+### 単項式
+
+単項式 (UnaryExpression) は後置式に次いで 3 番目に高い優先順位で評価される式です。
+
+- 前置インクリメント式 (`++`)
+- 前置デクリメント式 (`++`)
+- 符号 (`+`/`-`)
+- ビット反転 (`~`)
+- 否定 (`!`)
+- キャスト (`(型)`) 
 
 UnaryExpression:
     PreIncrementExpression 
@@ -572,22 +421,38 @@ CastExpression:
 AdditionalBound:
     & InterfaceType
 
+### 乗算式と加算式 (四則演算)
+
+乗算式 (MultiplicativeExpression) は単項式に次いで 4 番目に高い優先順位で評価される式です。
+
 MultiplicativeExpression:
     UnaryExpression 
     MultiplicativeExpression * UnaryExpression 
     MultiplicativeExpression / UnaryExpression 
     MultiplicativeExpression % UnaryExpression
 
+加算式 (AdditiveExpression) は乗算式に次いで 5 番目に高い優先順位で評価される式です。
+
 AdditiveExpression:
     MultiplicativeExpression 
     AdditiveExpression + MultiplicativeExpression 
     AdditiveExpression - MultiplicativeExpression
+
+>括弧、符号、乗算式、加算式の優先順位は、括弧 (1 位) > 符号 (3 位) > 乗算式 (4 位) > 加算式 (5 位) となり、数式における優先順位と一致します。
+
+### シフト演算式
+
+シフト演算式 (ShiftExpression) は加算式に次いで 6 番目に高い優先順位で評価される式です。
 
 ShiftExpression:
     AdditiveExpression 
     ShiftExpression << AdditiveExpression 
     ShiftExpression >> AdditiveExpression 
     ShiftExpression >>> AdditiveExpression
+
+### 関係演算式 (大なり・小なり と等価演算式 (等号・不等号)
+
+関係演算式 (RelationalExpression) はシフト演算式に次いで 7 番目に高い優先順位で評価される式です。
 
 RelationalExpression:
     ShiftExpression 
@@ -597,35 +462,59 @@ RelationalExpression:
     RelationalExpression >= ShiftExpression 
     RelationalExpression instanceof ReferenceType
 
+等価演算式 (EqualityExpression) は関係演算式に次いで 8 番目に高い優先順位で評価される式です。
+
 EqualityExpression:
     RelationalExpression 
     EqualityExpression == RelationalExpression 
     EqualityExpression != RelationalExpression
 
+### ビット演算式 (AND 演算式・OR 演算式・XOR 演算式)
+
+AND 演算式 (AndExpression) は等価演算式に次いで 9 番目に高い優先順位で評価される式です。
+
 AndExpression:
     EqualityExpression 
     AndExpression & EqualityExpression
+
+XOR 演算式 (ExclusiveOrExpression) は AND 演算式に次いで 10 番目に高い優先順位で評価される式です。
 
 ExclusiveOrExpression:
     AndExpression 
     ExclusiveOrExpression ^ AndExpression
 
+OR 演算式 (InclusiveOrExpression) は XOR 演算式に次いで 11 番目に高い優先順位で評価される式です。
+
 InclusiveOrExpression:
     ExclusiveOrExpression 
     InclusiveOrExpression | ExclusiveOrExpression
+
+### 条件 AND/OR 演算式
+
+条件 AND 演算式 (ConditionalAndExpression) は OR 演算式に次いで 12 番目に高い優先順位で評価される式です。
 
 ConditionalAndExpression:
     InclusiveOrExpression 
     ConditionalAndExpression && InclusiveOrExpression
 
+条件 OR 演算式 (ConditionalOrExpression) は 条件 AND 演算式に次いで 13 番目に高い優先順位で評価される式です。
+
 ConditionalOrExpression:
     ConditionalAndExpression 
     ConditionalOrExpression || ConditionalAndExpression
+
+### 条件演算式 (三項演算子)
+
+条件演算式 (ConditionalExpression) は条件 OR 演算式に次いで 14 番目に高い優先順位で評価される式です。
 
 ConditionalExpression:
     ConditionalOrExpression 
     ConditionalOrExpression ? Expression : ConditionalExpression 
     ConditionalOrExpression ? Expression : LambdaExpression 
+
+### 代入演算式
+
+代入演算式 (AssignmentExpression) は最も低い優先順位で評価される式です。代入式には単純代入演算式と複合代入演算式があります。
 
 AssignmentExpression:
     ConditionalExpression 
@@ -643,135 +532,11 @@ AssignmentOperator:
     (one of) 
     =  *=  /=  %=  +=  -=  <<=  >>=  >>>=  &=  ^=  |=
 
-LambdaExpression:
-    LambdaParameters -> LambdaBody
-
-LambdaParameters:
-    Identifier 
-    ( [FormalParameterList] ) 
-    ( InferredFormalParameterList )
-
-InferredFormalParameterList:
-    Identifier {, Identifier}
-
-FormalParameterList:
-    ReceiverParameter 
-    FormalParameters , LastFormalParameter 
-    LastFormalParameter
-
-FormalParameters:
-    FormalParameter {, FormalParameter} 
-    ReceiverParameter {, FormalParameter}
-
-FormalParameter:
-    {VariableModifier} UnannType VariableDeclaratorId
-
-LastFormalParameter:
-    {VariableModifier} UnannType {Annotation} ... VariableDeclaratorId 
-    FormalParameter
-
-VariableModifier:
-    (one of) 
-    Annotation final
-
-VariableDeclaratorId:
-    Identifier [Dims]
-
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
-
-LambdaBody:
-    Expression 
-    Block
-
-ConstantExpression:
-    Expression
 
 
 
 
 
-
-
-
-
-
-
-文は Java における処理の最小単位です。主に C++ からアイデアを得ており、C、JavaScript、Python、Visual Basic 等でも採用されている構文が数多く存在します。
-
-## 4.1. 式文
-
-変数、リテラル（文字列・文字・整数・浮動小数点数・論理値）、算術式、論理式、代入式、その他の式、およびこれらの組み合わせのみで構成される文を式文と言います。式文は C と基本的に同一であり、末尾に `;` (セミコロン) を付加します。`;` (セミコロン) を式文の区切りとする JavaScript や、式文の終端記号を持たない Visual Basic とは異なりますので注意してください。
-
-### 4.1.1. 文字列リテラル
-
-前後をダブルクォート `" "` で囲んだ文字の列を文字列リテラル (定数) と呼びます。文字列リテラルは必ず `String` クラスのインスタンスになります。文字列リテラル内では " と \ を直接使用することはできず、それぞれ `\"` と `\\` に置き換えます。文字列リテラルには `\n` : 改行、`\t` : タブ などの制御文字を含めることもできます (制御文字は必ず `\` で始まります)。文字列リテラルの書式は C と同一であり、JavaScript や Visual Basic とは差異があります。
-
->JavaScript と Python では文字列リテラルを表すのにシングルクォート `' '` を用いることもできますが、Java では次節で取り上げる文字リテラルの構文となるため使用できません。また、Visual Basic では文字列リテラル内で `\` を使用可能だが制御文字が使用できない (`vbCrLf` 等を用いる)、" は `""` で表現するといった違いがあります。
-         
-文字列 (リテラルを含む) を `+` で繋ぐと、文字列を連結することができます。連結後の文字列は文字列リテラルとなり、`String` クラスのインスタンスとなります。
-
-(例) `"Good night, " + "everybody" + "!"` → `"Good night, everybody!"`
-
-### 4.1.2. 文字リテラル
-
-前後をシングルクォート `' '` で囲んだ文字を文字リテラルと呼びます。文字リテラルはプリミティブ型の `char` 型になります。文字リテラルは 1 文字 (Unicode) または制御文字のいずれかです (制御文字については前節を参照のこと)。文字リテラルの書式は C に類似します (C には ASCII 文字は `char` 型、 Unicode 文字は `wchar_t` 型という区別があります)。文字リテラルは JavaScript および Python には存在しませんが、Visual Basic には存在します。ただし Visual Basic の文字リテラルは文字列リテラル同様に前後をダブルクォート `" "` で囲みます。
-
-(例) `'A'`, `'漢'`, `'\n'`
-
-### 4.1.3. 整数リテラル
-
-整数リテラルは、10 進数、16 進数、8 進数、2 進数で以下のように表現します。2 進数を除き C、JavaScript および Python の整数リテラルと同一の書式です。Visual Basic では 16 進数の先頭に `&H`、8 進数の先頭に `&O` を付加するため、そこが相違点となります。
-
-* `0`, `10`, `16`  // 10 進数; 0-9、0 以外は 0 から始まらない
-* `0x0`, `0xa`, `0x10`  // 16 進数; 0-9,a-f(A-F)、先頭に 0x または 0X を付ける
-* `00`, `012`, `020`  // 8 進数; 0-8、先頭に 0 を付ける
-* `0b0`, `0b1010`, `0b10000`  // 2 進数; 0 or 1、先頭に 0b または 0B を付ける
-
-数値リテラルは通常プリミティブ型の `int` 型になります。`int` 型のサイズに収まらない数値リテラルは `long` 型にする必要があり、その場合にはリテラルの末尾に `L` を付けます (例: `0L`, `10L`, `16L`)。
-
->【バージョン】2 進数リテラルは Java SE 7 以降で使用することができます。
-
-#### 4.1.3.1. プリミティブ型
-
-Java にはクラス以外に値を保持するためのデータ型である「プリミティブ型」が備わっています。C の「基本データ型」から拝借した仕様で、単純なデータ処理の高速化を目的に当初から導入されています。また、プリミティブ型と対応し相互変換が可能な「ラッパークラス」が用意されています。
-
-|プリミティブ型|格納できるデータ型|初期値|対応するラッパークラス|
-|----|----|----|
-|`boolean`|論理型 (`true` or `false`)|`false`|`Boolean`|
-|`byte`|符号付き 8 ビット整数型|`(byte) 0`|`Byte`|
-|`char`|符号なし 16 ビット整数型 (Unicode)|`(char) 0`|`Character`|
-|`short`|符号付き 16 ビット整数型|`(short) 0`|`Short`|
-|`int`|32 ビット整数型|`0`|`Integer`|
-|`long`|64 ビット整数型|`0L`|`Long`|
-|`float`|単精度浮動小数点型|`0F`|`Float`|
-|`double`|倍精度浮動小数点型|`0D`|`Double`|
-
->【バージョン】Java SE 5.0 以降、プリミティブ型とラッパークラスは自動で相互変換が可能となり、変換メソッドを用いなくても算術演算や代入などに用いることができます。これを「オートボクシング機能」と言います (プリミティブ型からラッパークラスへの変換を「ボクシング」、その逆を「アンボクシング」と呼んでいます)。
-
->【バージョン】Java SE 8 ではラッパークラスに `static` メソッドが大幅に追加され、従来 `Math` クラスを利用していたプリミティブ型の比較・変換の一部を各ラッパークラスで行えるようになりました (後述の Stream API で使うことを想定しての機能追加です)。
-
-### 4.1.4. 浮動小数点数リテラル
-
-数値リテラルのうち小数点 `.` を含むものは浮動小数点リテラルと呼ばれます。小数点以下が 0 の場合でも `.0` を付加することで浮動小数点リテラルになります (例: `0`, `16` は整数リテラル、`0.0`, `16.0` は浮動小数点リテラル)。浮動小数点リテラルは C と同一の仕様であり、JavaScript、Python および Visual Basic も類似した書式となります。
-
-Java には 2 種類の浮動小数点型 `float` (単精度浮動小数点型) と `double` (倍精度浮動小数点型) が用意されており、それぞれ表記が決まっています。
-
-* 末尾に `F` (例: `0.0F`, `1.5F`) => `float` 型
-* 末尾に `D` (例: `0.0D`, `1.5D`) => `double` 型
-* 末尾なし (例: `0.0`, `1.5`) => `double` 型
-
-#### 4.1.4.1. float 型と double 型のどちらを選択すべきか？
-
-特別な理由がない限り `double` 型を選択してください。
-
-浮動小数点型が `float` 型と `double` 型に分かれているのは歴史的経緯によるものです。現在は `double` 型を用いるのが一般的です。
-
->1990 年代ごろまでの一般的なコンピュータは CPU に浮動小数点演算用のユニットが含まれていませんでした。そのため、多くの CPU は整数演算用ユニットを利用して浮動小数点演算を行っており、消費リソースは少ないが演算桁数も少ない `float` 型と、演算桁数は十分だが消費リソースも大きい `double` 型を使い分けていました。現在の CPU はすべて浮動小数点演算専用のユニットを内蔵しており、設計の簡略化のため `double` 型の演算のみサポートし、`float` 型の演算は CPU 内部で `double` 型に変換した上で実行しています。従って、データ型変換のロスを考慮すると始めからすべて `double` 型で演算をした方が効率がよいのです。
-
-### 4.1.5. 論理値リテラル
-
-`true` は「真」の論理値リテラル、`false` は「偽」の論理値リテラルで、ともに `boolean` 型となります。C (1999 年改定以降)、JavaScript、Python および Visual Basic にも (書式等が微妙に異なるものの) 論理値リテラルは存在します。
 
 ### 4.1.6. 算術式
 
@@ -869,22 +634,3 @@ String s = new String("Hello, world");
 // 0, 5 は subSequence() メソッドの「実引数」(→呼び出しにより仮引数に設定される)
 String prefix = s.subSequence(0, 5);
 ```
-
-### 4.1.10. Java の演算子の優先順位
-
-|順位|演算子|
-|----|----|
-|1|括弧 `( )`、new 演算子 (`new`)、メンバ演算子 (`.`)、配列演算子 (`[]`)|
-|2|単項演算子 (後置); インクリメント (後置)/デクリメント (後置)
-|3|単項演算子 (前置); インクリメント (前置)/デクリメント (前置)、ビット反転 (`~`)、NOT (`!`)、符号 (`+`、`-`)、キャスト (`( )`)|
-|4|乗除演算子; 乗算 (`*`)、除算 (`/`)、剰余 (`%`)
-|5|加減演算子; 加算 (`+`)、減算 (`-`)
-|6|シフト演算子; 左シフト (`<<`)、右シフト (`>>` `>>>`)
-|7|関係演算子; 未満 (`<`)、以下(`<=`)、以上 (`=>`)、より大きい (`>`)、クラス比較 (`instanceof`)
-|8|等価演算子; 等しい (`==`)、等しくない (`!=`)
-|9|論理演算子; AND (`&`)、OR (`|`)、XOR (`^`)
-|10|AND 演算子 (`&&`)
-|11|OR 演算子 (`||`)
-|12|条件演算子 (三項演算子); `? :`
-|13|代入演算子 (`=`)、複合代入演算子 (`*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `>>>=` `&=` `^=` `|=`)
-

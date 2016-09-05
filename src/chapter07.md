@@ -261,7 +261,7 @@ public class SomeClass extends Object {
 
 |メソッド名|スコープ|説明|
 |----|----|
-|`getClass`|`public`|クラス (継承している場合はサブクラス) を返す。オーバーライド不可。|
+|`getClass`|`public`|クラス (継承している場合はサブクラス) のクラス・リテラルを返す。オーバーライド不可。|
 |`hashCode`|`public`|インスタンスのハッシュ値を返す。`HashMap` 等で使用する場合にはオーバーライドすること。|
 |`equals`|`public`|インスタンスを比較する。インスタンスの比較を行う場合にはオーバーライドすること。|
 |`clone`|`protected`|インスタンスを複製する。制約が多いので現在ではほとんど使われない。|
@@ -272,6 +272,13 @@ public class SomeClass extends Object {
 |`finalize`|`protected`|インスタンスの終了処理を行う。オーバーライド時に良くない副作用が確認されているため現在ではほとんど使われない。|
 
 上記のうち実質的にオーバーライドの対象となるのは `hashCode`、`equals`、`toString` の 3 つです。データの格納を目的とするクラスでは、比較等の操作が必須となるため、`hashCode` と `equals` をセットでオーバーライドします。画面出力等も考慮するのであれば、`toString` をオーバーライドして人間が見てわかる形式の文字列表現を返すようにすると良いでしょう。逆にアルゴリズムの記述を目的とするクラスでは、これらのメソッドをオーバーライドする必要はないでしょう。なお、最近の統合開発環境には `hashCode`、`equals`、`toString` の自動生成機能が備わっているため活用してください。
+
+ClassLiteral:
+    TypeName {[ ]} . class 
+    NumericType {[ ]} . class 
+    boolean {[ ]} . class 
+    void . class
+
 
 ## 7.5. 抽象クラス経由のアクセス
 

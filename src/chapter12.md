@@ -161,6 +161,79 @@ list.sort((s1, s2) -> s1.length() - s2.length());
 - 外側の変数を参照することは可能ですが、変更することはできません。これは匿名クラスと同じ仕様です。Java SE 7 までは、匿名クラスが外側の変数を参照する場合、参照する変数に `final` を付加して読み取り専用であることを明示する必要がありました。Java SE 8 では `final` 自体は省略可能です (実質的 `final`) が、読み取り専用でなければならない点は変わりません。
 - ラムダ式の内部で変数を宣言することは可能ですが、外側の変数と同じ名前を使うことはできません。一方で、匿名クラスでは外側の変数と同じ名前を使うことができます。これは、ラムダ式はクラスではないためです。
 
+ラムダ式は代入演算式と並んで、最も低い優先順位で評価される式です。
+
+Expression:
+    LambdaExpression 
+    AssignmentExpression
+    
+AssignmentExpression:
+    ConditionalExpression 
+    Assignment
+
+Assignment:
+    LeftHandSide AssignmentOperator Expression
+
+LeftHandSide:
+    ExpressionName 
+    FieldAccess 
+    ArrayAccess
+
+AssignmentOperator:
+    (one of) 
+    =  *=  /=  %=  +=  -=  <<=  >>=  >>>=  &=  ^=  |=
+
+LambdaExpression:
+    LambdaParameters -> LambdaBody
+
+LambdaParameters:
+    Identifier 
+    ( [FormalParameterList] ) 
+    ( InferredFormalParameterList )
+
+InferredFormalParameterList:
+    Identifier {, Identifier}
+
+FormalParameterList:
+    ReceiverParameter 
+    FormalParameters , LastFormalParameter 
+    LastFormalParameter
+
+FormalParameters:
+    FormalParameter {, FormalParameter} 
+    ReceiverParameter {, FormalParameter}
+
+FormalParameter:
+    {VariableModifier} UnannType VariableDeclaratorId
+
+LastFormalParameter:
+    {VariableModifier} UnannType {Annotation} ... VariableDeclaratorId 
+    FormalParameter
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+LambdaBody:
+    Expression 
+    Block
+
+MethodReference:
+    ExpressionName :: [TypeArguments] Identifier 
+    ReferenceType :: [TypeArguments] Identifier 
+    Primary :: [TypeArguments] Identifier 
+    super :: [TypeArguments] Identifier 
+    TypeName . super :: [TypeArguments] Identifier 
+    ClassType :: [TypeArguments] new 
+    ArrayType :: new
+
+
 ### 12.2.4. メソッド参照
 
 ラムダ式には「メソッド参照」という略記が存在します。ラムダ式の引数をそのままメソッド、`static` メソッド、コンストラクタの引数として渡す場合には、下表に示すようにインスタンス名/クラス名とメソッド名 (コンストラクタの場合は `new`) を `::` でつなぎ、引数の記述を省略することができます。

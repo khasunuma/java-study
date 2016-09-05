@@ -1,5 +1,188 @@
 # 5. 制御文
 
+Statement:
+    StatementWithoutTrailingSubstatement 
+    LabeledStatement 
+    IfThenStatement 
+    IfThenElseStatement 
+    WhileStatement 
+    ForStatement
+
+StatementNoShortIf:
+    StatementWithoutTrailingSubstatement 
+    LabeledStatementNoShortIf 
+    IfThenElseStatementNoShortIf 
+    WhileStatementNoShortIf 
+    ForStatementNoShortIf
+
+StatementWithoutTrailingSubstatement:
+    Block 
+    EmptyStatement 
+    ExpressionStatement 
+    AssertStatement 
+    SwitchStatement 
+    DoStatement 
+    BreakStatement 
+    ContinueStatement 
+    ReturnStatement 
+    SynchronizedStatement 
+    ThrowStatement 
+    TryStatement
+
+IfThenStatement:
+    if ( Expression ) Statement
+
+IfThenElseStatement:
+    if ( Expression ) StatementNoShortIf else Statement
+
+IfThenElseStatementNoShortIf:
+    if ( Expression ) StatementNoShortIf else StatementNoShortIf
+
+IfThenStatement:
+    if ( Expression ) Statement
+
+IfThenElseStatement:
+    if ( Expression ) StatementNoShortIf else Statement
+
+IfThenElseStatementNoShortIf:
+    if ( Expression ) StatementNoShortIf else StatementNoShortIf
+
+AssertStatement:
+    assert Expression ; 
+    assert Expression : Expression ;
+
+SwitchStatement:
+    switch ( Expression ) SwitchBlock
+
+SwitchBlock:
+    { {SwitchBlockStatementGroup} {SwitchLabel} }
+
+SwitchBlockStatementGroup:
+    SwitchLabels BlockStatements
+
+SwitchLabels:
+    SwitchLabel {SwitchLabel}
+
+SwitchLabel:
+    case ConstantExpression : 
+    case EnumConstantName : 
+    default :
+
+EnumConstantName:
+    Identifier
+
+WhileStatement:
+    while ( Expression ) Statement
+
+WhileStatementNoShortIf:
+    while ( Expression ) StatementNoShortIf
+
+DoStatement:
+    do Statement while ( Expression ) ;
+
+ForStatement:
+    BasicForStatement 
+    EnhancedForStatement
+
+ForStatementNoShortIf:
+    BasicForStatementNoShortIf 
+    EnhancedForStatementNoShortIf
+
+BasicForStatement:
+    for ( [ForInit] ; [Expression] ; [ForUpdate] ) Statement
+
+BasicForStatementNoShortIf:
+    for ( [ForInit] ; [Expression] ; [ForUpdate] ) StatementNoShortIf
+
+ForInit:
+    StatementExpressionList 
+    LocalVariableDeclaration
+
+ForUpdate:
+    StatementExpressionList
+
+StatementExpressionList:
+    StatementExpression {, StatementExpression}
+
+EnhancedForStatement:
+    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) Statement
+
+EnhancedForStatementNoShortIf:
+    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) StatementNoShortIf
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+BreakStatement:
+    break [Identifier] ;
+
+ContinueStatement:
+    continue [Identifier] ;
+
+ReturnStatement:
+    return [Expression] ;
+
+ThrowStatement:
+    throw Expression ;
+
+SynchronizedStatement:
+    synchronized ( Expression ) Block
+
+TryStatement:
+    try Block Catches 
+    try Block [Catches] Finally 
+    TryWithResourcesStatement
+
+Catches:
+    CatchClause {CatchClause}
+
+CatchClause:
+    catch ( CatchFormalParameter ) Block
+
+CatchFormalParameter:
+    {VariableModifier} CatchType VariableDeclaratorId
+
+CatchType:
+    UnannClassType {| ClassType}
+
+Finally:
+    finally Block
+
+TryWithResourcesStatement:
+    try ResourceSpecification Block [Catches] [Finally]
+
+ResourceSpecification:
+    ( ResourceList [;] )
+
+ResourceList:
+    Resource {; Resource}
+
+Resource:
+    {VariableModifier} UnannType VariableDeclaratorId = Expression
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+A variable (in C, this would be called an lvalue)
+A value
+Nothing (the expression is said to be void)
+
+
+
 ## 5.2. if-else 文
 
 if-else 文は条件式により処理を分岐します。C、JavaScript の if-else 文と同等で、Python の if-elif-else 構文、Visual Basic の If-Then-Else 構文に相当します。if-else 文には以下の 2 つの書式があります。
