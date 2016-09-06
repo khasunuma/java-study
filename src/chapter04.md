@@ -14,7 +14,7 @@ Java における処理の記述を文 (Statement) といいます。文の一�
 |文のグルーピング|ブロック|4 章|
 
 - if-else 文、while 文および for 文は、if 文との組み合わせで注意事項があります。詳細は 5 章にて取り上げます。
-- ラベル付き文、assert 文については用途が特殊なため割愛します (少なくとも筆者は使用した試しがありません)。
+- 上記の他にラベル付き文、assert 文が用意されていますが、特殊な用途で使用頻度も高くないためここでは割愛します。
 
 この章では、式文、空文、ブロックの 3 種類と、式文のもとになる「式」について解説します。
 
@@ -30,60 +30,43 @@ Java における処理の記述を文 (Statement) といいます。文の一�
 - メソッド呼び出し式
 - インスタンス生成式
 
->実際のプログラミングで多用することになる四則演算の式は、単独では式文にすることができません。四則演算の式は代入演算式やメソッド呼び出し式と組み合わせて使うことになります。
+>実際のプログラミングで多用することになる四則演算の式は、単独では式文にすることができません。四則演算の式は代入演算式やメソッド呼び出し式と組み合わせて使うことになります。式文の制約はプログラミング言語によって異なりますが、C や JavaScript は制約が緩く、Python や Visual Basic は制約が厳しい傾向にあります。
 
 ## 空文
 
 空文 (EmptyStatement) は、何も処理をしない文です。`;` (セミコロン) だけで表します。
 
-EmptyStatement:
-    ;
+>空文は後述の while 文、do 文、for 文においてダミー処理が必要になった時に使用します。C や JavaScript には空文は存在しており記法・用途も Java と同様ですが、Python や Visual Basic には空文の概念がないため注意が必要です。
 
 ## ブロック
 
-文を `{ }` で囲んだものをブロック (Block) といいます。ブロックの中に記述できるものは、正確には次の 4 種類です。
+文を `{ }` で囲んだものをブロック (Block) といいます。ブロックの中には以下の 4 種類を記述することができます。
 
-- ローカル変数宣言文
+- ローカル変数宣言文 (下記参照)
 - クラス定義
 - 文
 - ブロック
 
-ブロックは、メソッド本体の処理記述を行う際に使用します。また、後述の if 文、if-else 文、while 文、do 文、for 文の中で使用することもできます。
+ローカル変数宣言文は、ブロック内でのみ有効 (ローカル) な変数 (式の値に名前を付けたもの) を宣言するための文で、以下の書式となります。
 
-Block:
-    { [BlockStatements] }
+```
+[final] データ型 (クラスまたはプリミティブ型) ローカル変数名 ;
+```
 
-BlockStatements:
-    BlockStatement {BlockStatement}
+(例) リテラルの解説とあわせて参照のこと
 
-BlockStatement:
-    LocalVariableDeclarationStatement 
-    ClassDeclaration 
-    Statement
+```java
+double doubleValue;  // データ型: double、ローカル変数名: doubleValue
+String str;  // データ型: String、ローカル変数名: str
+long longValue = 10L;  // データ型: long、ローカル変数名: intValue、初期値: 10
+final int round = 0;  // データ型: int、ローカル変数名: round、初期値: 0、変更不可
+```
 
-LocalVariableDeclarationStatement:
-    LocalVariableDeclaration ;
+>ローカル変数に対して、フィールドはインスタンスの範囲で有効な変数と言い換えることができます。
 
-LocalVariableDeclaration:
-    {VariableModifier} UnannType VariableDeclaratorList
+ブロックは、メソッド本体の処理記述そのものです。また、後述の if 文、if-else 文、while 文、do 文、for 文との組み合わせで多用されます。
 
-LabeledStatement:
-    Identifier : Statement
-
-LabeledStatementNoShortIf:
-    Identifier : StatementNoShortIf
-
-ExpressionStatement:
-    StatementExpression ;
-
-StatementExpression:
-    Assignment 
-    PreIncrementExpression 
-    PreDecrementExpression 
-    PostIncrementExpression 
-    PostDecrementExpression 
-    MethodInvocation 
-    ClassInstanceCreationExpression
+>ブロックは C や JavaScript に存在しており記法・用途も Java と同様です。Python はブロックの代わりにインデント (オフサイド・ルール) を用います。Visual Basic のブロックは各構文と一体化しており、Java のように単独で用いることはできません。
 
 ## リテラル
 
@@ -121,13 +104,14 @@ StatementExpression:
 
 >【バージョン】 `_` (アンダースコア) を区切り文字として使用できる仕様、および 2 進数リテラルは Java SE 7 以降で導入されたものです。
 
-|言語|10 進数|16 進数|8 進数|2 進数|桁区切り|サフィックス|
-|----|----|----|----|----|----|----|
-|Java|そのまま|先頭 `0x` `0X`|先頭 `0`|先頭 `0b` `0B`|`_` (アンダースコア)|`l` `L` で `long` 型|
-|C|そのまま|先頭 `0x` `0X`|先頭 `0`|N/A|N/A|`l` `L` で `long` 型|
-|Visual Basic|そのまま|先頭 `&h` `&H`|先頭 `&o` `&O`|N/A|N/A|`%` で `Integer` 型、`&` で `Long` 型|
-|Python|そのまま|先頭 `0x` `0X`|先頭 `0`|先頭 `0b` `0B`|N/A|`l` `L` で `long` 型|
-|JavaScript|そのまま|先頭 `0x` `0X`|N/A|N/A|N/A|N/A|
+>Java とその他の言語 (C、Python、JavaScript、Visual Basic) との整数リテラルの対照表を以下に示します。
+>|言語|10 進数|16 進数|8 進数|2 進数|桁区切り|サフィックス|
+>|----|----|----|----|----|----|----|
+>|Java|そのまま|先頭 `0x` `0X`|先頭 `0`|先頭 `0b` `0B`|`_` (アンダースコア)|`l` `L` で `long` 型|
+>|C|そのまま|先頭 `0x` `0X`|先頭 `0`|N/A|N/A|`l` `L` で `long` 型|
+>|Python|そのまま|先頭 `0x` `0X`|先頭 `0`|先頭 `0b` `0B`|N/A|`l` `L` で `long` 型|
+>|JavaScript|そのまま|先頭 `0x` `0X`|N/A|N/A|N/A|N/A|
+>|Visual Basic|そのまま|先頭 `&h` `&H`|先頭 `&o` `&O`|N/A|N/A|`%` で `Integer` 型、`&` で `Long` 型|
 
 ### 浮動小数点数リテラル (FloatingPointLiteral)
 
@@ -140,50 +124,32 @@ StatementExpression:
 - `.` (小数点) が存在する
 - `e` `E` で始まる指数部を含む
 
+10 進数浮動小数点数リテラルには「小数点表記」と「指数表記」の 2 種類が存在します。
+
+小数点表記は、例えば数式 0.015 のように小数点を含む形で表す記法です。小数点表記は事務処理計算で多用される記法です。
+
+指数表記は、例えば数式 1.5 × 10<sup>-2</sup> を 1.5e-2 とする記法で、この時の 1.5 を仮数部、e2 を指数部といいます。仮数部は整数リテラルまたは小数点表記の浮動小数点リテラルと同じ形式となります。指数部は先頭が `e` または `E` で始まり、それに指数 (正または負の整数、この例では指数は -2) が続きます。例えば 2e3、3.0e+2、0.5e-1 はいずれも指数表記となります (それぞれ 2 × 10<sup>3</sup>、3.0 × 10<sup>2</sup>、0.5 × 10<sup>-1</sup> を意味します)。指数表記は科学技術計算で多用される記法です。
+
 10 進数浮動小数点数リテラルの型は、末尾に `f` `F` が付加された場合は `float` 型、`d` `D` が付加された場合は `double` 型となります。省略時には `double` 型とみなされます。
 
-FloatingPointLiteral:
-    DecimalFloatingPointLiteral 
-    HexadecimalFloatingPointLiteral
-DecimalFloatingPointLiteral:
-    Digits . [Digits] [ExponentPart] [FloatTypeSuffix] 
-    . Digits [ExponentPart] [FloatTypeSuffix] 
-    Digits ExponentPart [FloatTypeSuffix] 
-    Digits [ExponentPart] FloatTypeSuffix
-ExponentPart:
-    ExponentIndicator SignedInteger
-ExponentIndicator:
-    (one of) 
-    e E
-SignedInteger:
-    [Sign] Digits
-Sign:
-    (one of) 
-    + -
-FloatTypeSuffix:
-    (one of) 
-    f F d D
+>C、Python、JavaScript および Visual Basic にも 10 進数浮動小数点数リテラルが存在しており、記法も Java と同じです。
 
 #### 16 進数浮動小数点数リテラル
 
-16 進数整数リテラルと同じ数字とプリフィクス (`0x` `0X`) を使用し、かつ以下のいずれかの条件を満たす場合に、16 進数の浮動小数点リテラルとなります。
+先頭 `0x` `0X` で始まり、かつ以下のいずれかの条件を満たす場合に、16 進数の浮動小数点リテラルとなります (数字として 16 進数整数リテラルと同じものを使用できるようになります)。
 
 - `.` (小数点) が存在する
 - `p` `P` で始まる指数部を含む
 
+16 進数浮動小数点数リテラルには「小数点表記」と「指数表記」の 2 種類が存在します。
+
+小数点表記は、例えば数式 0x1F.7FF のように小数点を含む形で表す記法です。これは 10 進数浮動小数点数リテラルを 16 進数に拡張したもので、先頭の `0x` `0X` で 10 進数浮動小数点数リテラルと区別されます。
+
+指数表記は、例えば数式 0x1.ff × 2<sup>-3</sup> を 0x1.ffp-3 とする記法で、この時の 1.ff を仮数部、p-3 を指数部といいます。こちらも 10 進数浮動小数点数リテラルを 16 進数に拡張したもので、先頭の `0x` `0X` および指数部の先頭 `p` `P` で　10 進数浮動小数点数リテラルと区別されます。
+
 16 進数浮動小数点数リテラルの型は、末尾に `f` `F` が付加された場合は `float` 型、`d` `D` が付加された場合は `double` 型となります。省略時には `double` 型とみなされます。
 
-HexadecimalFloatingPointLiteral:
-    HexSignificand BinaryExponent [FloatTypeSuffix]
-HexSignificand:
-    HexNumeral [.] 
-    0 x [HexDigits] . HexDigits 
-    0 X [HexDigits] . HexDigits
-BinaryExponent:
-    BinaryExponentIndicator SignedInteger
-BinaryExponentIndicator:
-    (one of) 
-    p P
+>C には Java と同じ記法の 16 進数浮動小数点数リテラルが存在します (C99 規格以降)。Python、JavaScript、Visual Basic には 16 進数浮動小数点数リテラルは存在しません。
 
 ### 文字リテラルと文字列リテラル
 
@@ -206,19 +172,21 @@ BinaryExponentIndicator:
 
 文字列リテラルは 0 文字以上の文字列を表すリテラルで、文字、Unicode エスケープまたはエスケープ・シーケンスの列を `" "` (ダブルクォート) で囲んで表します。ただし、`'` (ダブルクォート) および `\` (バックスラッシュ) は文字として表すことはできず、代わりにエスケープ・シーケンスを用います。文字列リテラルは `String` 型への参照となります。
 
-C には文字リテラルおよび文字列リテラルが存在します。表記は Java と同じですが文字列リテラルのデータ型は異なります (C の文字列リテラルは `const char *` など)。Python および JavaScript には文字列リテラルのみが存在し、囲み文字は `" "` (ダブルクォート) と `' '` (シングルクォート) のいずれも使用することができます。Visual Basic も文字列リテラルのみ存在しますが (囲み文字は Java 同様 `" "` (ダブルクォート) のみ)、エスケープ・シーケンスが使用できず代わりに `vbCrLf` などを使用する点が異なります。
+>C には Java と類似した記法の文字リテラルおよび文字列リテラルが存在します (Unicode エスケープが使用できるのは C99 規格以降)。Python および JavaScript には文字列リテラルのみが存在し、囲み文字は `" "` (ダブルクォート) と `' '` (シングルクォート) のいずれも使用することができます。Visual Basic も文字列リテラルのみ存在しますが (囲み文字は Java 同様 `" "` (ダブルクォート) のみ)、エスケープ・シーケンスが使用できず代わりに `vbCrLf` などを使用する点が異なります。
 
 ### その他のリテラル
 
 #### 論理リテラル (BooleanLiteral)
 
-論理リテラルは論理値を表すリテラルで、キーワード `true` `false` が値となります。また、`boolean` 型の値となります。
+論理リテラルは論理値を表すリテラルで、真 `true`、偽 `false` の 2 値となります。また、`boolean` 型の値となります。
 
->他の言語の論理型と異なり、Java の `boolean` 型は数値型との相互変換ができません。
+>論理リテラルは C (C99 規格以降)、Python、JavaScript、Visual Basic にも存在します。他の言語では論理型と整数型は変換可能ですが (多くは 真 = 1、偽 = 0 となりますが、Visual Basic だけは真 = -1、偽 = 0)、Java ではできないことに注意してください。
 
 #### Null リテラル (NullLiteral)
 
 いずれのインスタンスも参照しないことを示すリテラルを Null リテラルといい、キーワード `null` で表します。
+
+>C には言語レベルの Null はなく、マクロ定数 `NULL` が相当します (コンパイラ依存ですが `(void *) 0` で定義されることが多いです)。Python は `None`、JavaScript は `null`、Visual Basic は `Nothing` がそれぞれ相当します。
 
 ## 式
 
@@ -233,166 +201,45 @@ Java において最も単純な式を一次式 (Primary) と呼びます。一�
 - 配列生成式ではない一次式
   - リテラル
   - クラス・リテラル (7 章)
-  - `this` 参照
-  - TypeName . `this` 参照
-  - 括弧 ; `( 式 )`
-  - インスタンス生成式
-  - フィールド・アクセス式
+  - `this` 参照 (インスタンスにおいて自分自身の参照を表す)
+  - `(` *式* `)` (括弧)
+  - インスタンス生成式 (3 章)
+  - フィールド・アクセス式 (3 章)
   - 配列アクセス式 (10 章)
-  - メソッド呼び出し式
+  - メソッド呼び出し式 (3 章)
   - メソッド参照式 (12 章)
 - 配列生成式 (10 章)
 
-Primary:
-    PrimaryNoNewArray 
-    ArrayCreationExpression
-
-PrimaryNoNewArray:
-    Literal 
-    ClassLiteral 
-    this 
-    TypeName . this 
-    ( Expression ) 
-    ClassInstanceCreationExpression 
-    FieldAccess 
-    ArrayAccess 
-    MethodInvocation 
-    MethodReference
-
-Literal:
-    IntegerLiteral 
-    FloatingPointLiteral 
-    BooleanLiteral 
-    CharacterLiteral 
-    StringLiteral 
-    NullLiteral
-
-IntegerLiteral:
-    DecimalIntegerLiteral 
-    HexIntegerLiteral 
-    OctalIntegerLiteral 
-    BinaryIntegerLiteral
-DecimalIntegerLiteral:
-    DecimalNumeral [IntegerTypeSuffix]
-HexIntegerLiteral:
-    HexNumeral [IntegerTypeSuffix]
-OctalIntegerLiteral:
-    OctalNumeral [IntegerTypeSuffix]
-BinaryIntegerLiteral:
-    BinaryNumeral [IntegerTypeSuffix]
-IntegerTypeSuffix:
-    (one of) 
-    l L
-
-UnicodeInputCharacter:
-    UnicodeEscape 
-    RawInputCharacter
-UnicodeEscape:
-    \ UnicodeMarker HexDigit HexDigit HexDigit HexDigit
-UnicodeMarker:
-    u {u}
-HexDigit:
-    (one of) 
-    0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F
-RawInputCharacter:
-    any Unicode character
-
-LineTerminator:
-    the ASCII LF character, also known as "newline" 
-    the ASCII CR character, also known as "return" 
-    the ASCII CR character followed by the ASCII LF character
-InputCharacter:
-    UnicodeInputCharacter but not CR or LF
-
-WhiteSpace:
-    the ASCII SP character, also known as "space" 
-    the ASCII HT character, also known as "horizontal tab" 
-    the ASCII FF character, also known as "form feed" 
-    LineTerminator
-
-ClassInstanceCreationExpression:
-    UnqualifiedClassInstanceCreationExpression 
-    ExpressionName . UnqualifiedClassInstanceCreationExpression 
-    Primary . UnqualifiedClassInstanceCreationExpression
-
-UnqualifiedClassInstanceCreationExpression:
-    new [TypeArguments] ClassOrInterfaceTypeToInstantiate ( [ArgumentList] ) [ClassBody]
-
-ClassOrInterfaceTypeToInstantiate:
-    {Annotation} Identifier {. {Annotation} Identifier} [TypeArgumentsOrDiamond]
-
-TypeArgumentsOrDiamond:
-    TypeArguments 
-    <>
-
-ArgumentList:
-    Expression {, Expression}
-
-ArrayCreationExpression:
-    new PrimitiveType DimExprs [Dims] 
-    new ClassOrInterfaceType DimExprs [Dims] 
-    new PrimitiveType Dims ArrayInitializer 
-    new ClassOrInterfaceType Dims ArrayInitializer
-
-DimExprs:
-    DimExpr {DimExpr}
-
-DimExpr:
-    {Annotation} [ Expression ]
-
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
-
-ArrayAccess:
-    ExpressionName [ Expression ] 
-    PrimaryNoNewArray [ Expression ]
-
-FieldAccess:
-    Primary . Identifier 
-    super . Identifier 
-    TypeName . super . Identifier
-
-MethodInvocation:
-    MethodName ( [ArgumentList] ) 
-    TypeName . [TypeArguments] Identifier ( [ArgumentList] ) 
-    ExpressionName . [TypeArguments] Identifier ( [ArgumentList] ) 
-    Primary . [TypeArguments] Identifier ( [ArgumentList] ) 
-    super . [TypeArguments] Identifier ( [ArgumentList] ) 
-    TypeName . super . [TypeArguments] Identifier ( [ArgumentList] )
-
-ArgumentList:
-    Expression {, Expression}
+>括弧で囲まれた式は最優先で評価されます (括弧をネストさせることも可能です)。そのため、括弧は式の評価順位を制御するためのツールとして用いることができます。
 
 ### 後置式
 
 後置式 (PostfixExpression) は一次式に次いで 2 番目に高い優先順位で評価される式です。
 
-- 変数名
-- 後置インクリメント式 (`++`)
-- 後置デクリメント式 (`--`)
+- 変数
+- 後置インクリメント式 (`++`) ; (例) `index++`
+- 後置デクリメント式 (`--`) ; (例) `index--`
 
-PostfixExpression:
-    Primary 
-    ExpressionName 
-    PostIncrementExpression 
-    PostDecrementExpression
+変数は評価されると、それがプリミティブ型の場合はその値がそのまま式の値となり、クラスの場合はインスタンスが式の値となります。なお、クラスがいずれのインスタンスも参照していない場合は `null` (Null リテラル) が式の値となります。
 
-PostIncrementExpression:
-    PostfixExpression ++
+>`null` に対してさらに式の評価 (例: メソッド呼び出し式の実行) を行わないでください。`null` に対する式の評価が行われた場合は、Java VM が非チェック例外 `NullPointerException` をスローし処理が中断します。例外については 6 章を参照してください。
 
-PostDecrementExpression:
-    PostfixExpression --
+後置インクリメント式、後置デクリメント式は、それぞれ式を評価した後にその値を `+1` または `-1` します。例えば、`index` の値が `3` の場合に式 `index++` の値は `3` と評価され、その後 `index` の値が `4` となります。同様に `index` の値が `3` の場合に式 `index--` の値は `3` と評価され、その後 `index` の値が `2` となります。なお、`index++++` は `(index++)++`、`index----` は `(index--)--` として評価されます。
+
+>後置インクリメント式、後置デクリメント式は Python や Visual Basic にはありません。
 
 ### 単項式
 
 単項式 (UnaryExpression) は後置式に次いで 3 番目に高い優先順位で評価される式です。
 
-- 前置インクリメント式 (`++`)
-- 前置デクリメント式 (`++`)
-- 符号 (`+`/`-`)
-- ビット反転 (`~`)
-- 否定 (`!`)
-- キャスト (`(型)`) 
+- 前置インクリメント式 (`++`) ; (例) `++index`
+- 前置デクリメント式 (`++`) ; (例) `--index`
+- 符号 (`+`/`-`) ; (例) `+num`、`-num`
+- ビット反転 (`~`) ; (例) `~bitset`
+- 否定 (`!`) ; (例) `!cond`
+- キャスト (`(型)`)  ; (例) `(short) intValue`、`(byte) intValue`
+
+>前置インクリメント式、前置デクリメント式は Python や Visual Basic にはありません。Python ではビット反転は `~`、否定は `not` です。Visual Basic ではビット反転と否定はともに `Not` で、文脈により判断されます。C や JavaScript には上記すべての式が用意されています。
 
 UnaryExpression:
     PreIncrementExpression 
@@ -425,6 +272,12 @@ AdditionalBound:
 
 乗算式 (MultiplicativeExpression) は単項式に次いで 4 番目に高い優先順位で評価される式です。
 
+- 乗算式
+- 除算式
+- 剰余式
+
+>乗算式・除算式・剰余式は C、Python、JavaScript および Visual Basic でサポートされます。ただし、剰余式で浮動小数点数を使用できるのは Java と JavaScript だけです。また、剰余の記号は Visual Basic のみ `Mod` となります。
+
 MultiplicativeExpression:
     UnaryExpression 
     MultiplicativeExpression * UnaryExpression 
@@ -432,6 +285,11 @@ MultiplicativeExpression:
     MultiplicativeExpression % UnaryExpression
 
 加算式 (AdditiveExpression) は乗算式に次いで 5 番目に高い優先順位で評価される式です。
+
+- 加算式
+- 減算式
+
+>加算式・減算式は C、Python、JavaScript および Visual Basic でサポートされます。加算演算子 `+` は文字列結合にも使用しますが、C では文字列リテラル同士の結合にしか使用できない点、Visual Basic では `&` による文字列結合が推奨される点がそれぞれ異なります。
 
 AdditiveExpression:
     MultiplicativeExpression 
@@ -444,13 +302,15 @@ AdditiveExpression:
 
 シフト演算式 (ShiftExpression) は加算式に次いで 6 番目に高い優先順位で評価される式です。
 
+>シフト演算式は C、Python、JavaScript に存在し、Visual Basic には存在しません。JavaScript のシフト演算式は Java と同一です。Python は論理シフト `>>>` がなく、すべて算術シフトになります。C は `>>>` 演算子がない代わりに、データ型の符号の有無により算術シフトと論理シフトが切り替わります。
+
 ShiftExpression:
     AdditiveExpression 
     ShiftExpression << AdditiveExpression 
-    ShiftExpression >> AdditiveExpression 
-    ShiftExpression >>> AdditiveExpression
+    ShiftExpression >> AdditiveExpression  算術シフト
+    ShiftExpression >>> AdditiveExpression 論理シフト
 
-### 関係演算式 (大なり・小なり と等価演算式 (等号・不等号)
+### 関係演算式と等価演算式
 
 関係演算式 (RelationalExpression) はシフト演算式に次いで 7 番目に高い優先順位で評価される式です。
 
@@ -462,12 +322,16 @@ RelationalExpression:
     RelationalExpression >= ShiftExpression 
     RelationalExpression instanceof ReferenceType
 
+>関係演算式は C、Python、JavaScript、Visual Basic に存在し、記法・用法も同じです。
+
 等価演算式 (EqualityExpression) は関係演算式に次いで 8 番目に高い優先順位で評価される式です。
 
 EqualityExpression:
     RelationalExpression 
     EqualityExpression == RelationalExpression 
     EqualityExpression != RelationalExpression
+
+>等価演算式は C、Python、JavaScript、Visual Basic に存在しますが、Visual Basic のみ記法が異なり等号 `=`、不等号 `<>` となります。
 
 ### ビット演算式 (AND 演算式・OR 演算式・XOR 演算式)
 
@@ -489,6 +353,8 @@ InclusiveOrExpression:
     ExclusiveOrExpression 
     InclusiveOrExpression | ExclusiveOrExpression
 
+>ビット演算式は C、Python、JavaScript、Visual Basic に存在しますが、Visual Basic のみ記法が異なり `And`、`Or`、`Xor` となります。
+
 ### 条件 AND/OR 演算式
 
 条件 AND 演算式 (ConditionalAndExpression) は OR 演算式に次いで 12 番目に高い優先順位で評価される式です。
@@ -503,6 +369,8 @@ ConditionalOrExpression:
     ConditionalAndExpression 
     ConditionalOrExpression || ConditionalAndExpression
 
+>条件 AND/OR 演算式は C、Python、JavaScript、Visual Basic に存在しますが、Visual Basic のみ記法が異なり `And`、`Or` となります。
+
 ### 条件演算式 (三項演算子)
 
 条件演算式 (ConditionalExpression) は条件 OR 演算式に次いで 14 番目に高い優先順位で評価される式です。
@@ -511,6 +379,8 @@ ConditionalExpression:
     ConditionalOrExpression 
     ConditionalOrExpression ? Expression : ConditionalExpression 
     ConditionalOrExpression ? Expression : LambdaExpression 
+
+>条件演算子 (三項演算子) は C や JavaScript に同じ構文があります。Python は構文が異なり、Visual Basic は `IIf` 関数で代用します。
 
 ### 代入演算式
 
@@ -532,54 +402,14 @@ AssignmentOperator:
     (one of) 
     =  *=  /=  %=  +=  -=  <<=  >>=  >>>=  &=  ^=  |=
 
+複合代入演算子は C、Python、JavaScript に存在しますが、Python では文脈により異なる意味合いを持つ場合があります。Visual Basic には複合代入演算子は存在しません。
 
 
 
 
 
 
-### 4.1.6. 算術式
 
-数値同士について、算術演算 (四則演算) がサポートされています。異なる数値型同士の演算の場合、より大きいデータ型 (int < long < double) に合わせられます。文法は C と同一で、JavaScript、Python および Visual Basic とも多くが共通しています (Visual Basic では一部記法が異なります)。
-
-* (加算) x ＋ y :  `x + y`
-* (減算) x － y :  `x - y`
-* (乗算) x × y : `x * y`
-* (除算) x ÷ y : `x / y`
-* (剰余) x mod y : `x % y` (Visual Basic と異なり `MOD` ではない)
-
-また、インクリメント (+1)・デクリメント (-1) 演算が存在します。なお、インクリメント・デクリメント演算は Python と Visual Basic には存在しません。
-
-* インクリメント (前置) : `++x`
-* インクリメント (後置) : `x++`
-* デクリメント (前置) : `--x`
-* デクリメント (後置) : `x--`
-
-前置と後置では式の評価タイミングが異なり、前置は評価前に+1/-1演算が行われ、後置は評価後に+1/-1演算が行われます。
-
-(例) x = 3, y = 2 の時
-
-* `++x * y` の結果は、式の値 = 8、x = 4、y = 2 (計算前に+1)
-* `x++ * y` の結果は、式の値 = 6、x = 4、y = 2 (計算後に+1)
-
-### 4.1.7. 論理式
-
-数値同士について比較演算がサポートされています。演算結果は boolean 型になります。
-
-* (未満) x ＜ y : `x < y`
-* (以下) x ≦ y : `x <= y`
-* (等しい) x ＝ y : `x == y` (Pascal、Ada と異なり `:=` ではない)
-* (等しくない) x ≠ y : `x != y` (Pascal、Ada、Visual Basic と異なり `<>` ではない)
-* (以上) x ≧ y : `x >= y`
-* (より大きい) x ＞ y : `x > y`
-
-比較演算には `&&` (AND)、`||` (OR)、`!` (NOT) を使用することができ、基本的な等式・不等式を表現することができます (Visual Basic では記法が異なり、それぞれ `And`、`Or`、`Not` となります)。
-
-#### 4.1.7.1. 条件演算子 (三項演算子)
-
-`x ? y : z` で論理式 x が真のとき y、偽のとき z を値とする「条件演算子 (三項演算子)」が用意されています。ほとんどの場合 `if (x) y; else z;` と同じですが、式は置けるが文は置けない個所で条件分岐をしたい場合に用いられます。条件演算子 (三項演算子) は C および JavaScript と共通であり、Python にもそれに相当する構文があります。また、Visual Basic では `IIf` 関数が相当します。
-
-条件演算子は使い方次第でソースコードの可読性を向上させる場合も悪化させる場合もあるため、注意が必要です。
 
 ### 4.1.8. 変数と代入式
 
@@ -616,21 +446,3 @@ int intValue = (int) longValue;  // 型キャスト; (データ型) 変数/リ�
 
 `byte`、`char`、`short` などの整数型は、`int` 型よりも小さなサイズであるため、これらの型の変数に整数リテラルを代入する場合には必ず型キャストが発生します。その他、整数同士の除算を行い結果を浮動小数点数として取得したい (例: 3 / 2 の結果として 1.5 を得たい) 場合等に、演算に先立って数値を double 型にキャストします。
 
-### 4.1.9. その他の式
-
-new 演算子でクラスのインスタンスを生成した結果 (例: `new BigDecimal(150)`) や、メンバ演算子 `.` でクラスのフィールドやメソッドを参照した結果 (例: `s.toUpperCase()`) も、式として扱われます。
-
-(例) new 演算子によるインスタンスの生成式 (代入式との組み合わせ)
-```
-// インスタンス生成式: new String("Hello, world") → 結果を変数 s に代入
-// "Hello, world" は String クラスのコンストラクタの「実引数」(→呼び出しにより仮引数に設定される)
-String s = new String("Hello, world");
-```
-
-(例) `.` 演算子によるメソッド参照式 (代入式との組み合わせ)
-```
-// s は String クラスのインスタンスで 5 文字以上と仮定 (具体的には上記の例の結果)
-// メソッド参照式: s.subSequence(0, 5) → 結果を prefix に代入
-// 0, 5 は subSequence() メソッドの「実引数」(→呼び出しにより仮引数に設定される)
-String prefix = s.subSequence(0, 5);
-```

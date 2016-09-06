@@ -8,6 +8,25 @@
 2. `<データ型>[] <配列名> = {[初期値のリスト]};`
 3. `<データ型>[] <配列名> = new <データ型>[<要素数>];`
 
+ArrayCreationExpression:
+    new PrimitiveType DimExprs [Dims] 
+    new ClassOrInterfaceType DimExprs [Dims] 
+    new PrimitiveType Dims ArrayInitializer 
+    new ClassOrInterfaceType Dims ArrayInitializer
+
+DimExprs:
+    DimExpr {DimExpr}
+
+DimExpr:
+    {Annotation} [ Expression ]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+ArrayAccess:
+    ExpressionName [ Expression ] 
+    PrimaryNoNewArray [ Expression ]
+
 
 ## 10.2. コレクション
 
