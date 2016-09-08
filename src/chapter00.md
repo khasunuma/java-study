@@ -6,11 +6,13 @@
 
 ## 2. 対象とする読者
 
-このドキュメントは主に Java (Java SE 7 以前)、C、JavaScript、Python、Visual Basic (Visual Basic 6.0 以前または Visual Basic for Applications) の使用経験が多少なりともあるプログラマを対象としています。オブジェクト指向プログラミングに関する知識はなくても構いませんが、構造化プログラミングの概要を理解していると読み進めやすいと思われます。
+このドキュメントは主に Java (Java SE 7 以前)、C、Python、JavaScript または Visual Basic (Visual Basic 6.0 以前または Visual Basic for Applications) の使用経験が多少なりともあるプログラマを対象としています。オブジェクト指向プログラミングに関する知識はなくても構いませんが、構造化プログラミングの概要を理解していると読み進めやすいと思われます。
 
 ## 3. このドキュメントの構成
 
-第 4 章および第 5 章はプログラミング言語全般に共通する事柄でもあることから、C、JavaScript、Python、Visual Basic の対応する構文についても注記しています。
+第 4 章および第 5 章はプログラミング言語全般に共通する事柄でもあることから、C、Python、JavaScript、Python および Visual Basic の対応する構文についても注記しています。
+
+【対比】 で示した情報は、C、Python、JavaScript または Visual Basic の構文との対比に関する情報です。
 
 【バージョン】 で示した情報は、Java SE 7 以前の Java を経験しているプログラマ向けの情報です。
 
