@@ -5,11 +5,12 @@ Java における処理の記述を文 (Statement) といいます。文の一�
 |文の分類|文|解説する章|
 |--------|--------|----|
 |単純な文|式文、空文|4 章|
-|分岐・繰り返し|if 文、if-else 文、while 文、do 文、switch 文|5 章|
-| |for 文|5 章、10 章|
+|分岐・繰り返し|if 文、if-else 文、while 文、do 文、for 文、switch 文|5 章|
+| |拡張 for 文|5 章、10 章|
 |ジャンプ|break 文、continue 文、return 文|5 章|
 |例外処理|throw 文|6 章|
-| |try 文|6 章、11 章|
+| |try 文|6 章|
+| |try-with-resources 文|6 章、11 章|
 |同期化|synchronized 文|9 章|
 |文のグルーピング|ブロック|4 章|
 

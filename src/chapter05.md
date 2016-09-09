@@ -29,73 +29,48 @@ StatementWithoutTrailingSubstatement:
     ThrowStatement 
     TryStatement
 
-IfThenStatement:
-    if ( Expression ) Statement
-
-IfThenElseStatement:
-    if ( Expression ) StatementNoShortIf else Statement
-
-IfThenElseStatementNoShortIf:
-    if ( Expression ) StatementNoShortIf else StatementNoShortIf
+## if 文
 
 IfThenStatement:
     if ( Expression ) Statement
 
-IfThenElseStatement:
-    if ( Expression ) StatementNoShortIf else Statement
+- 書式: `if ( expr ) stmt` (`expr`: 論理型、`stmt`: 任意の文)
+- 条件式 `expr` の値が `true` のとき `stmt` を実行します。それ以外の場合は何も行いません。
+- `stmt` には任意の文を指定できます。
 
-IfThenElseStatementNoShortIf:
-    if ( Expression ) StatementNoShortIf else StatementNoShortIf
+## if-else 文
 
-WhileStatement:
-    while ( Expression ) Statement
+- 書式: `if ( expr ) stmt1 else stmt2` (`expr`: 論理型、`stmt1`: if 文を含まない文、`stmt2`: 任意の文)
+- 条件式 `expr` の値が `true` のとき `stmt1` を、`false` のとき `stmt2` を実行します。
+- `stmt1` は if 文であったり、while 文/for 文と if 文の組み合わせであってはいけません (if-else 文や、while 文/for 文と if-else 文の組み合わせは問題ありません)。
+- `stmt2` には任意の文を指定できます。
 
-WhileStatementNoShortIf:
-    while ( Expression ) StatementNoShortIf
+## while 文
 
-DoStatement:
-    do Statement while ( Expression ) ;
+- 書式: `while ( expr ) stmt` (`expr`: 論理型、`stmt`: 文)
+- 条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
+- `stmt` はその while 文が if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、if 文以外の文としなければなりません。それ以外の場合は任意の文を指定できます。
 
-ForStatement:
-    BasicForStatement 
-    EnhancedForStatement
+## do 文
 
-ForStatementNoShortIf:
-    BasicForStatementNoShortIf 
-    EnhancedForStatementNoShortIf
+- 書式: `do stmt while ( expr ) ;` (`expr`: 論理型、`stmt`: 文)
+- 最初に `stmt` を実行し、その後は条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
+- `stmt` には任意の文を指定できます (while 文と異なり条件はありません)。
 
-BasicForStatement:
-    for ( [ForInit] ; [Expression] ; [ForUpdate] ) Statement
+## for 文
 
-BasicForStatementNoShortIf:
-    for ( [ForInit] ; [Expression] ; [ForUpdate] ) StatementNoShortIf
+- 書式: `for ( [init] ; [expr] ; [update] ) stmt` (`init`: 式のリストまたはローカル変数定義式、`expr`: 論理型、`update`: 式のリスト、`stmt`: 文)
+- 最初に `init` を評価します。その後は条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。毎回の `stmt` 実行後に `update` を評価します。
+- `init` は式のリストまたはローカル変数宣言式を指定することができます。ローカル変数宣言式を指定した場合は、for 文内でのみ使用可能なローカル変数を宣言することができます。
+- for 文は指定回数繰り返しによく使用されます (`init` でループカウンタを宣言、`expr` でループカウンタの上限を指定、`update` でカウント処理を指定)。
+- `init`、`expr`、`update` はいずれも省略が可能で、すべて省略した場合には無限ループになります。
+- `stmt` はその for 文が if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、if 文以外の文としなければなりません。それ以外の場合は任意の文を指定できます。
 
-ForInit:
-    StatementExpressionList 
-    LocalVariableDeclaration
+## 拡張 for 文
 
-ForUpdate:
-    StatementExpressionList
-
-StatementExpressionList:
-    StatementExpression {, StatementExpression}
-
-EnhancedForStatement:
-    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) Statement
-
-EnhancedForStatementNoShortIf:
-    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) StatementNoShortIf
-
-VariableModifier:
-    (one of) 
-    Annotation final
-
-VariableDeclaratorId:
-    Identifier [Dims]
-
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
-
+- 書式: `for ( type var : expr ) stmt` (`type`: データ型、`var`: ローカル変数名、`expr`: `Iterable` 実装のインスタンスまたは配列)
+- `stmt` はその拡張 for 文が if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、if 文以外の文としなければなりません。それ以外の場合は任意の文を指定できます。
+- 詳細は 10 章で取り上げます。
 
 
 ## 5.2. if-else 文
@@ -150,12 +125,6 @@ if (条件式) {
 * ブロック内では、そのブロックの外側で既に宣言されている変数名と同じ変数名は使用できません。
 * ブロック内で宣言した変数は、宣言したブロック内でのみ有効です。言い換えると、異なるブロックであれば同じ変数名を使用することができます。
 
-## 5.4. while 文/do-while 文
-
-while 文/do-while 文は条件式により繰り返し処理を行います。C および JavaScript の while 文/do-while 文と同等で、Python の while 文、Visual Basic の Do-While-Loop 構文に相当します。書式は以下の通りです (if-else 文同様、ブロックを用いることもできます)。
-
-* `while (条件式) 文`
-* `do 文 while (条件式);`
 
 ## 5.5. for 文
 

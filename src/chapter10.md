@@ -170,6 +170,23 @@ for (String s : set) {
 }
 ```
 
+EnhancedForStatement:
+    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) Statement
+
+EnhancedForStatementNoShortIf:
+    for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) StatementNoShortIf
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+
 拡張 for 文は以下のような繰り返しを行います。
 
 1. コレクションからイテレータを用いて要素を取り出し、変数に代入する。
