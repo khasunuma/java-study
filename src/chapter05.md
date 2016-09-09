@@ -47,30 +47,6 @@ IfThenElseStatement:
 IfThenElseStatementNoShortIf:
     if ( Expression ) StatementNoShortIf else StatementNoShortIf
 
-AssertStatement:
-    assert Expression ; 
-    assert Expression : Expression ;
-
-SwitchStatement:
-    switch ( Expression ) SwitchBlock
-
-SwitchBlock:
-    { {SwitchBlockStatementGroup} {SwitchLabel} }
-
-SwitchBlockStatementGroup:
-    SwitchLabels BlockStatements
-
-SwitchLabels:
-    SwitchLabel {SwitchLabel}
-
-SwitchLabel:
-    case ConstantExpression : 
-    case EnumConstantName : 
-    default :
-
-EnumConstantName:
-    Identifier
-
 WhileStatement:
     while ( Expression ) Statement
 
@@ -119,67 +95,6 @@ VariableDeclaratorId:
 
 Dims:
     {Annotation} [ ] {{Annotation} [ ]}
-
-BreakStatement:
-    break [Identifier] ;
-
-ContinueStatement:
-    continue [Identifier] ;
-
-ReturnStatement:
-    return [Expression] ;
-
-ThrowStatement:
-    throw Expression ;
-
-SynchronizedStatement:
-    synchronized ( Expression ) Block
-
-TryStatement:
-    try Block Catches 
-    try Block [Catches] Finally 
-    TryWithResourcesStatement
-
-Catches:
-    CatchClause {CatchClause}
-
-CatchClause:
-    catch ( CatchFormalParameter ) Block
-
-CatchFormalParameter:
-    {VariableModifier} CatchType VariableDeclaratorId
-
-CatchType:
-    UnannClassType {| ClassType}
-
-Finally:
-    finally Block
-
-TryWithResourcesStatement:
-    try ResourceSpecification Block [Catches] [Finally]
-
-ResourceSpecification:
-    ( ResourceList [;] )
-
-ResourceList:
-    Resource {; Resource}
-
-Resource:
-    {VariableModifier} UnannType VariableDeclaratorId = Expression
-
-VariableModifier:
-    (one of) 
-    Annotation final
-
-VariableDeclaratorId:
-    Identifier [Dims]
-
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
-
-A variable (in C, this would be called an lvalue)
-A value
-Nothing (the expression is said to be void)
 
 
 
@@ -268,6 +183,15 @@ for 文に類似するものとして拡張 for 文 (Visual Basic の For Each-N
 
 ## 5.6. break/continue/return 文
 
+BreakStatement:
+    break [Identifier] ;
+
+ContinueStatement:
+    continue [Identifier] ;
+
+ReturnStatement:
+    return [Expression] ;
+
 break/continue/return 文は、処理の流れを強制的に変えるための文です。
 
 break 文は繰り返し (while 文/do-while 文、for 文) の中で使用し、繰り返しの中止に使用します。また continue 文は繰り返しの中で使用し、繰り返しを中断して次の繰り返しの実行を指示します。一般的な説明は以上ですが感覚的でないため疑似的なコードを用いて説明します。
@@ -310,6 +234,26 @@ return;  // 戻り値の型が void (強制的にメソッドを終了する場�
 break 文、continue 文、return 文は C から引き継いだ構文で、JavaScript および Python にも同等の構文があります。Visual Basic では、break 文に対応する Exit Do/Exit For 構文、return 文に対応する Exit Function/End Function は存在しますが、continue 文に対応する構文は存在しません。
 
 ## 5.7. switch 文
+
+SwitchStatement:
+    switch ( Expression ) SwitchBlock
+
+SwitchBlock:
+    { {SwitchBlockStatementGroup} {SwitchLabel} }
+
+SwitchBlockStatementGroup:
+    SwitchLabels BlockStatements
+
+SwitchLabels:
+    SwitchLabel {SwitchLabel}
+
+SwitchLabel:
+    case ConstantExpression : 
+    case EnumConstantName : 
+    default :
+
+EnumConstantName:
+    Identifier
 
 switch 文は、値に応じて処理を分岐させる場合に使用します。C および JavaScript の switch 文をベースとしており、Visual Basic の Select-Case 構文に相当します。Python には Java の switch 文に相当する構文はありません。
 

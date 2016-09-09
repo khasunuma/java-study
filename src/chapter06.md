@@ -1,5 +1,50 @@
 # 6. 例外処理
 
+ThrowStatement:
+    throw Expression ;
+
+TryStatement:
+    try Block Catches 
+    try Block [Catches] Finally 
+    TryWithResourcesStatement
+
+Catches:
+    CatchClause {CatchClause}
+
+CatchClause:
+    catch ( CatchFormalParameter ) Block
+
+CatchFormalParameter:
+    {VariableModifier} CatchType VariableDeclaratorId
+
+CatchType:
+    UnannClassType {| ClassType}
+
+Finally:
+    finally Block
+
+TryWithResourcesStatement:
+    try ResourceSpecification Block [Catches] [Finally]
+
+ResourceSpecification:
+    ( ResourceList [;] )
+
+ResourceList:
+    Resource {; Resource}
+
+Resource:
+    {VariableModifier} UnannType VariableDeclaratorId = Expression
+
+VariableModifier:
+    (one of) 
+    Annotation final
+
+VariableDeclaratorId:
+    Identifier [Dims]
+
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
 コンストラクタやメソッドの処理実行中に何らかの異常が発生した場合に、プログラムまたは Java VM が処理を中断して対策を講じる仕組みを「例外処理」と呼びます。例外処理では、異常が発生した箇所で「例外のスロー」という形でプログラムを一時中断します。中断したプログラムは「例外のキャッチ」によってリカバリ処理を行います。
 
 例外処理は Java をはじめとするオブジェクト指向言語で多く採用されている仕組みで、プログラムの正常系処理と異常系処理を明確に分離するのに役立ちます。例外処理をサポートしていないプログラミング言語では戻り値に特別な値を設定することで正常系処理と異常系処理を区別しています。
