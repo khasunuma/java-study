@@ -11,5 +11,4 @@
 - [8 章](docs/chapter08.md)
 - [9 章](docs/chapter09.md)
 - [11 章](docs/chapter11.md)
-- [12 章](docs/chapter12.md)
 - [13 章](docs/chapter13.md)
