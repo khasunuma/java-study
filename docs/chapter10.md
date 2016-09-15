@@ -31,7 +31,7 @@
 ArrayAccess:
     ExpressionName [ Expression ] 
     PrimaryNoNewArray [ Expression ]
-
+```
 
 ## 10.2. コレクション
 
@@ -179,7 +179,7 @@ for (String s : set) {
     ...
 }
 ```
-
+```
 EnhancedForStatement:
     for ( {VariableModifier} UnannType VariableDeclaratorId : Expression ) Statement
 
@@ -195,7 +195,7 @@ VariableDeclaratorId:
 
 Dims:
     {Annotation} [ ] {{Annotation} [ ]}
-
+```
 
 拡張 for 文は以下のような繰り返しを行います。
 

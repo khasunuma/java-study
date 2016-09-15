@@ -10,7 +10,5 @@
 - [7 章](docs/chapter07.md)
 - [8 章](docs/chapter08.md)
 - [9 章](docs/chapter09.md)
-- [10 章](docs/chapter10.md)
 - [11 章](docs/chapter11.md)
-- [12 章](docs/chapter12.md)
 - [13 章](docs/chapter13.md)
