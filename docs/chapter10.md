@@ -2,26 +2,31 @@
 
 ## 10.1. 配列
 
-配列は、同じデータ型の変数をメモリ上の連続した領域に確保したものです。配列は通常、1 つの変数に格納できないような大きなデータ (例: ファイル、ネットワークの送受信データ) を保持するために用います。配列を構成する一つひとつの変数を「要素」といい、それぞれの要素には先頭から「添字 (インデックス)」と呼ばれる連番が振られています。
+配列は、同じデータ型の変数をメモリ上の連続した領域に確保したものです。配列は通常、1 つの変数に格納できないような大きなデータ (例: ファイル、ネットワークの送受信データ) を保持するために用います。配列を構成する一つひとつの変数を「要素」といい、それぞれの要素には先頭から「添字 (インデックス)」と呼ばれる連番が振られています。配列の各要素に対して配列全体を「配列オブジェクト」と呼ぶこともあります。
 
-1. `<データ型>[] <配列名>;`
-2. `<データ型>[] <配列名> = {[初期値のリスト]};`
-3. `<データ型>[] <配列名> = new <データ型>[<要素数>];`
+### 10.1.1. 配列生成式
 
-ArrayCreationExpression:
-    new PrimitiveType DimExprs [Dims] 
-    new ClassOrInterfaceType DimExprs [Dims] 
-    new PrimitiveType Dims ArrayInitializer 
-    new ClassOrInterfaceType Dims ArrayInitializer
+配列を生成するための式を「配列生成式」といいます。配列生成式で用いる記号 `[ ]` を配列演算子と呼び、宣言するものが配列であることと、配列の要素数を表します。
 
-DimExprs:
-    DimExpr {DimExpr}
+- 書式 (1): `new type [ n ]` (`type`: プリミティブ型、`n`: 要素数)
+- 書式 (2): `new ClassName [ n ]` (`ClassName`: クラス、`n`: 要素数)
+- 書式 (3): `new type [] { [ value [, value ...] ] }` (`type`: プリミティブ型、`value`: 初期値)
+- 書式 (4): `new ClassName [] { [ value [, value ...] ] }` (`ClassName`: クラス、`value`: 初期値)
+- 書式 (1) (2) は、配列の要素数を指定して配列を生成する式です。要素数は `[ ]` 内に指定された値となり、各要素の初期状態は変数・フィールドの初期値と同じ扱いとなります。
+  - 配列をフィールドの初期値として生成した場合、各要素の初期値はフィールドと同じになります。
+  - 配列をメソッド内で生成した場合、各要素の初期値はローカル変数同様「不定」であるため、改めて値を代入する必要があります (配列アクセス式を用います)。
+- 書式 (3) (4) は、配列の初期値を指定して配列を生成する式です。`{ }` 内に初期値をカンマ区切りで列挙します (0 個も許されます)。配列の要素数は列挙した初期値の数となります。
+  - 配列演算子 `[ ]` の中には値を記述しません。
+  - 配列の各要素が初期化される点では確実ですが、初期値の指定に漏れがあると予期しない要素数の配列が生成されるため注意が必要です。
 
-DimExpr:
-    {Annotation} [ Expression ]
+### 10.1.2. 配列変数
 
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
+配列全体に対する参照を「配列変数」と呼びます。
+
+- 書式: `Type [ ] var [= array]
+
+### 10.1.3. 配列アクセス式
+
 
 ArrayAccess:
     ExpressionName [ Expression ] 
@@ -38,18 +43,18 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
 
 主なコレクション (インタフェース) を以下に示します。
 
-* `Collection` : コレクションのスーパーインタフェース。順序、要素の重複およびアクセス方法はサブインタフェースが決定する。
-  * `Set` : 集合。順序を持たず要素の重複も許さない。
-  * `List` : リスト。順序を持ち要素の重複も許す、配列同様に添字を用いて要素にアクセスする。
-  * `Queue` : キュー。順序を持ち要素の重複も許す、FIFO (先入れ先出し) で要素にアクセスする。
-  * `Deque` : 両端キュー。順序を持ち要素の重複も許す、FIFO (先入れ先出し) に加えて LIFO (後入れ先出し) で要素にアクセスする。
-* `Map` : テーブル、連装配列とも。キーと値のペアの集合。
+- `Collection` : コレクションのスーパーインタフェース。順序、要素の重複およびアクセス方法はサブインタフェースが決定する。
+  - `Set` : 集合。順序を持たず要素の重複も許さない。
+  - `List` : リスト。順序を持ち要素の重複も許す、配列同様に添字を用いて要素にアクセスする。
+  - `Queue` : キュー。順序を持ち要素の重複も許す、FIFO (先入れ先出し) で要素にアクセスする。
+  - `Deque` : 両端キュー。順序を持ち要素の重複も許す、FIFO (先入れ先出し) に加えて LIFO (後入れ先出し) で要素にアクセスする。
+- `Map` : テーブル、連装配列とも。キーと値のペアの集合。
 
 コレクションには、どのクラスの要素を設定するものかを示すための「型パラメータ」と呼ばれるものを持ちます。コレクションに限らず、型パラメータを持つクラスのことを「ジェネリクス (総称型)」と呼びます。以下に例を挙げます。
 
-* `List<String>` : `String` クラスの要素を格納する `List`
-* `Queue<Integer>` : `Integer` クラスの要素を格納する `Queue`
-* `Map<String, BigDecimal>` : `String` クラスのキーと `BigDecimal` クラスの値のペアからなる `Map`
+- `List<String>` : `String` クラスの要素を格納する `List`
+- `Queue<Integer>` : `Integer` クラスの要素を格納する `Queue`
+- `Map<String, BigDecimal>` : `String` クラスのキーと `BigDecimal` クラスの値のペアからなる `Map`
 
 型パラメータに指定できるのはクラスのみでプリミティブ型を指定できないため、コレクションの要素にはプリミティブ型を設定することはできません。対応するラッパークラスを型パラメータに指定して、プリミティブ型とラッパー型の相互変換を使用する必要があります。ただし、相互変換自体は自動で行われるため (オートボクシング機能)、通常はプリミティブ型のままでコレクションの操作を行って構いません。
 
@@ -89,8 +94,9 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
 3. 実装 = 要件なし → HashSet<String>
 
 (推奨される実装)
-* `Set<String> set = new HashSet<String>();`
-* `Set<String> set = new HashSet<>();`  // Java SE 7 以降の略記 (推奨)
+
+- `Set<String> set = new HashSet<String>();`
+- `Set<String> set = new HashSet<>();`  // Java SE 7 以降の略記 (推奨)
 
 #### 例2 : int型、順序あり、直接アクセスあり
 
@@ -99,8 +105,9 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
 3. 実装 = 要件なし → ArrayList<Integer>
 
 (推奨される実装)
-* `List<Integer> list = new ArrayList<Integer>();`
-* `List<Integer> list = new ArrayList<>();`  // Java SE 7 以降の略記 (推奨)
+
+- `List<Integer> list = new ArrayList<Integer>();`
+- `List<Integer> list = new ArrayList<>();`  // Java SE 7 以降の略記 (推奨)
 
 #### 例3 : Integerクラス、順序あり、直接アクセスあり、挿入・削除が多い
 
@@ -109,8 +116,9 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
 3. 実装 = 挿入・削除多い → LinkedList<Integer>
 
 (推奨される実装)
-* `List<Integer> list = new LinkedList<Integer>();`
-* `List<Integer> list = new LinkedList<>();`  // Java SE 7 以降の略記 (推奨)
+
+- `List<Integer> list = new LinkedList<Integer>();`
+- `List<Integer> list = new LinkedList<>();`  // Java SE 7 以降の略記 (推奨)
 
 ### 10.2.3. Collection の主なメソッド
 
@@ -149,7 +157,8 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
 4. `Iterator.remove()` メソッドはあまり使われない。イテレータの状態を常に意識する必要があり、処理が煩雑になりがち。
 
 (例) イテレータの使用例
-```
+
+```java
 Set<String> set = new HashSet<>();
 ...
 Iterator iter = set.iterator();
@@ -162,7 +171,8 @@ while (iter.hasNext()) {
 イテレータを利用した繰り返しを簡潔に表現するため、Java には拡張 for 文と呼ばれる特殊な繰り返しがあります。拡張 for 文は Visual Basic の For-Each-Next 構文、JavaScript の foreach 文に相当します。上記のイテレータの使用例を拡張 for 文で書き直したものを以下に示します。
 
 (例) 拡張 for 文の使用例
-```
+
+```java
 Set<String> set = new HashSet<>();
 ...
 for (String s : set) {
