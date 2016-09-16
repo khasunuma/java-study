@@ -10,9 +10,9 @@ Java における配列は、配列全体としてみた場合はクラスに準
 
 配列を生成するための式を「配列生成式」といいます。配列生成式で用いる記号 `[ ]` を配列演算子と呼び、宣言するものが配列であることと、配列の要素数を表します。
 
-- 書式 (1): `new Type [ n ]` (`Type`: 基本データ型、`n`: 要素数)
-- 書式 (2): `new Type [] { [ value [, value ...] ] }` (`Type`: 基本データ型、`value`: 初期値)
-- 基本データ型 `Type` は配列の各要素のデータ型を表し、具体的にはプリミティブ型またはクラスとなります。基本データ型と配列演算子 `[ ]` が組み合わさることで配列生成式として認識されます。
+- 書式 (1): `new Type [ n ]` (`Type`: 要素型、`n`: 要素数)
+- 書式 (2): `new Type [] { [ value [, value ...] ] }` (`Type`: 要素型、`value`: 初期値)
+- 要素型 `Type` は配列の各要素のデータ型を表し、具体的にはプリミティブ型またはクラスとなります。基本データ型と配列演算子 `[ ]` が組み合わさることで配列生成式として認識されます。
 - 書式 (1) は、配列の要素数を指定して配列を生成する式です。要素数は `[ ]` 内に指定された値となり、各要素の初期状態は変数・フィールドの初期値と同じ扱いとなります。
   - 配列をフィールドの初期値として生成した場合、各要素の初期値はフィールドと同じになります。
   - 配列をメソッド内で生成した場合、各要素の初期値はローカル変数同様「不定」であるため、改めて値を代入する必要があります (配列アクセス式を用います)。
@@ -24,7 +24,7 @@ Java における配列は、配列全体としてみた場合はクラスに準
 
 配列はそれ全体を変数として宣言することができます。
 
-- 書式: `Type [ ] array [= expr] ;` (`Type`: 基本データ型、`array`: 配列の変数名、`expr`: 初期値) 
+- 書式: `Type [ ] array [= expr] ;` (`Type`: 要素型、`array`: 配列の変数名、`expr`: 初期値) 
 - 基本データ型 `Type` は配列の各要素のデータ型を表し、具体的にはプリミティブ型またはクラスとなります。基本データ型と配列演算子 `[ ]` が組み合わさることで配列の変数宣言文として認識されます。
 - 初期値 `expr` は配列生成式または既存の配列となります。`expr` が表す配列の基本データ型は、配列の変数宣言文の基本データ型 `Type` と一致している必要があります。
 - 配列の変数宣言文は、ローカル変数宣言文としても、フィールド定義 (初期化を含む) としても使用することができます。
@@ -34,7 +34,7 @@ Java における配列は、配列全体としてみた場合はクラスに準
 配列アクセス式を使用すると、配列の各要素に対して読み取りまたは書き込みができるようになります。
 
 - 書式: `array [ index ]` (`array`: 配列の変数名、`index`: 添字)
-- 添字 `index` は `0` から始まり、要素数 - 1 までの間で指定します。添字が負数、または要素数 - 1 を超えた場合には Java VM が非チェック例外 `ArrayIndexOutOfBoundsException` をスローします。
+- 添字 `index` は `0` から始まり、要素数 - 1 までの間で指定します。添字が負数、または要素数 - 1 を超えた場合には Java VM が非チェック例外 `ArrayIndexOutOfBoundsException` をスローします。Visual Basic と Python では添字の範囲をある程度自由に設定できますが、Java では言語仕様で添字の開始は `0`、終了は 要素数 - 1 と決められています (C と JavaScript の配列の添字も、Java と同じ仕様です)。
 - 変数名と添字の組み合わせにより、基本データ型の変数として扱うことができるようになります。
 
 ### 10.1.4. 配列の length フィールド
@@ -79,7 +79,7 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
   - `Deque` : 両端キュー。順序を持ち要素の重複も許す、FIFO (先入れ先出し) に加えて LIFO (後入れ先出し) で要素にアクセスする。
 - `Map` : テーブル、連装配列とも。キーと値のペアの集合。
 
->【バージョン】 Java Collections Framework は J2SE 1.2 で追加されました。Java Collections Framework は Java のバージョンアップのたびに改訂されていますが (例えば、`Queue` は Java SE 5.0、`Deque` は Java SE 6 での改訂時に追加されたものです)、基本設計が優秀だったため J2SE 1.2 時代と大きく変わることなく現在に至っています。JDK 1.1 まではコレクションに相当するものとして、リストを表す `Vector` やテーブルを表す `Hashtable` などが存在していました。これらは現在コレクションとの互換性を持つように改修されていますが、古い API のためできるだけ使用しないことが推奨されています。
+>【バージョン】 Java Collections Framework は J2SE 1.2 で追加されました。Java Collections Framework は Java のバージョンアップのたびに改訂されていますが (例えば、`Queue` は Java SE 5.0、`Deque` は Java SE 6 での改訂時に追加されたものです)、基本設計が優秀だったため J2SE 1.2 時代から大きく変わることなく現在に至っています。JDK 1.1 まではコレクションに相当するものとして、リストを表す `Vector` やテーブルを表す `Hashtable` などが存在していました。これらは現在コレクションとの互換性を持つように改修されていますが、古い API のためできるだけ使用しないことが推奨されています。
 
 ### 10.2.2. コレクションとジェネリクス (総称型)
 
@@ -176,11 +176,12 @@ List<String> list2 = new ArrayList<>();
 
 ### 10.2.5. Collection の主なメソッド
 
-`Collection` インタフェースにはいくつものメソッドが定義されていますが、その中からよく使われるものを以下に示します。これらはコレクション (`Map` を除く) で共通して使用できるメソッドであるため、押さえておきましょう。
+`Collection` インタフェースにはいくつものメソッドが定義されていますが、その中からよく使われるものを以下に示します。これらはコレクション (`Map` を除く) で共通して使用できるメソッドであるため、押さえておきましょう。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html) を参照してください。
 
 |メソッド名|説明|
 |----------------|----------------|
 |`boolean add(E e)`|コレクションに要素を追加する|
+|`boolean addAll(Collection <? extends E> c)`|コレクションにすべての要素を追加する|
 |`void clear()`|コレクションの全要素を削除する|
 |`boolean contains(Object o)`|要素がコレクションに含まれている場合は `true`、そうでなければ `false` を返す|
 |`boolean isEmpty()`|コレクションの要素数が 0 の場合は `true`、そうでなければ `false` を返す|
@@ -222,7 +223,7 @@ Set<String> set = new HashSet<>();
 Iterator iter = set.iterator();
 while (iter.hasNext()) {
     String s = iterator.next();
-    ...
+    System.out.println(s);
 }
 ```
 
@@ -234,7 +235,7 @@ while (iter.hasNext()) {
 Set<String> set = new HashSet<>();
 ...
 for (String s : set) {
-    ...
+    System.out.println(s);
 }
 ```
 
@@ -283,6 +284,8 @@ for (int index = 0; index < expr.length; index++) {
 
 #### 10.2.7.1. リスト操作 (list のみ)
 
+`List` では、`Collection` の各メソッドに加え、以下のリスト操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/List.html) を参照してください。
+
 |メソッド名|説明|
 |----------------|----------------|
 |`boolean add(int index, E element)`|`index` 番目に要素を挿入する|
@@ -293,6 +296,8 @@ for (int index = 0; index < expr.length; index++) {
 |`E set(int index, E element)`|`index` 番目の要素を置き換える|
 
 #### 10.2.7.2. キュー操作 (Queue および Deque)
+
+`Queue` および `Deque` では、`Collection` の各メソッドに加え、以下のキュー操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント (Queue)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Queue.html) または [Java SE 標準 API のドキュメント (Deque)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
 
 |メソッド名|説明|
 |----------------|----------------|
@@ -305,6 +310,8 @@ for (int index = 0; index < expr.length; index++) {
 
 #### 10.2.7.3. スタック操作 (Deque のみ)
 
+`Deque` では、`Collection` の各メソッドに加え、以下のスタック操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
+
 |メソッド名|説明|
 |----------------|----------------|
 |`void push(E e)`|要素をスタックへ挿入する|
@@ -312,6 +319,8 @@ for (int index = 0; index < expr.length; index++) {
 |`E peek()`|要素を取得するがスタックには残す|
 
 ### 10.2.8. Map の主なメソッド
+
+`Map` では以下のスタック操作メソッドが用意されています。`Map` は `Collection` のサブインタフェースではないためメソッドに共通性がないことに注意してください。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Map.html) を参照してください。
 
 |メソッド名|説明|
 |----------------|----------------|
@@ -331,6 +340,8 @@ for (int index = 0; index < expr.length; index++) {
 ## 10.3. Arrays クラスと Collections クラス
 
 ### 10.3.1. Arrays クラス
+
+`Arrays` クラスは配列の操作に便利なユーティリティ・クラスです。配列の操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Arrays` クラスのメソッドを利用することを強く推奨します。`Arrays` クラスの詳細は [Java SE 標準 API ドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html) を参照してください。
 
 |メソッド名|説明|
 |--------|--------|
@@ -356,11 +367,13 @@ for (int index = 0; index < expr.length; index++) {
 
 `sort`、`setAll` は逐次処理で実行されますが、`parallelSort`、`parallelSetAll` は並列処理で実行されます。扱う要素数が多く CPU パワーにも余裕がある場合は並列処理を、扱う要素数が少ないか CPU パワーに余裕がない場合は逐次処理を選択するのが効率的です。通常使用する範囲では逐次処理で問題はありません。
 
->【バージョン】 Java SE 5.0: `deepEquals`、`deepHashCode`、`deepToString`、Java SE 6: `copyOf`、`copyOfRange`、Java SE 8: `setAll`、`parallelSetAll`、`parallelSort`
+>【バージョン】 `Arrays` クラスは Java のバージョンアップのたびに新しいメソッドが追加されています。例えば、Java SE 5.0 では `deepEquals`, `deepHashCode`,`deepToString`、Java SE 6では `copyOf`, `copyOfRange`、Java SE 8 では `setAll`,`parallelSetAll`, `parallelSort` がそれぞれ追加されています。
 
 ### 10.3.2. Collections クラス
 
-|メソッド名|クラス|説明|
+`Collections` クラスはコレクションの操作に便利なユーティリティ・クラスです。コレクションをデータ構造とするならば、`Collecions` クラスは汎用的なアルゴリズムに相当するものです。コレクションの操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Collections` クラスのメソッドを利用することを強く推奨します。`Collections` クラスの詳細は [Java SE 標準 API ドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html) を参照してください。
+
+|メソッド名|対象|説明|
 |--------|--------|--------|
 |`addAll`|`Collection`|指定されたすべての要素を `Collection` に追加する (高速)|
 |`binarySearch`|`List`|リストからインスタンスを検索する (二分探索)|
@@ -395,10 +408,11 @@ for (int index = 0; index < expr.length; index++) {
 |`unmodifiableMap`|`Map`|不変な `Map` を返す|
 |`unmodifiableSet`|`Set`|不変な `Set` を返す|
 
-
->【バージョン】 J2SE 1.3: `singletonList`、`singletonMap`、J2SE 1.4: `indexOfSubList`、`lastIndexOfSubList`、`rotate`、Java SE 5.0: `addAll`、`disjoint`、`emptyList`、`emptyMap`、`emptySet`、`frequency`、Java SE 7: `emptyIterator`
+>【バージョン】 `Collections` クラスは Java のバージョンアップのたびに新しいメソッドが追加されています。例えば、J2SE 1.3 では `singletonList`, `singletonMap`、J2SE 1.4では `indexOfSubList`, `lastIndexOfSubList`, `rotate`、Java SE 5.0 では `addAll`, `disjoint`, `emptyList`, `emptyMap`, `emptySet`, `frequency`、Java SE 7 では `emptyIterator` がそれぞれ追加されています。
 
 ### 10.4. 配列とコレクションの相互変換
+
+この節では、実際のアプリケーションで多用するであろう、配列とコレクションの相互変換について取り上げます。Java はデータ型の判断に厳しい言語であるため少し冗長な記述となりますが、実際には定型処理となるため一度やり方を覚えてしまえば後々まで活用することができます。
 
 ### 10.4.1. 配列からコレクションへの変換
 
@@ -425,23 +439,32 @@ Deque<String> stringDeque = new ArrayDeque<>(Arrays.asList(strings));
 List<String> stringList = Arrays.asList("Able", "Baker", "Charlie");
 ```
 
-# 7.4.2. コレクションから配列への変換
+余談ですが、現在開発中の Java SE 9 では、`List`、`Map`、`Set` の各クラスから直接コレクションを生成できるようになる見込みです (この機能については Java SE 7 の規格制定段階から議論がなされてきました)。生成されたコレクションは読み取り専用となりますが、コレクションの生成が格段に容易になる点で大きな進歩と言えるでしょう。
+
+```java
+// Java SE 9 以降で使用可能な略記
+// List.of メソッドだけで List を作成可能 (Set や Map も概ね同じ)
+List<String> stringList = List.of("Able", "Baker", "Charlie");
+```
+
+### 10.4.2. コレクションから配列への変換
 
 `Collection` インタフェースに `toArray` メソッドが用意されています。
 
-- `Object[] toArray()`
-- `T[] toArray(T[] array)`
+1. `Object[] toArray()`
+2. `T[] toArray(T[] array)`
 
 最初の書式は引数なしで呼び出せますが、変換後の配列は `Object` クラスの配列になります。`Object` クラスの配列を元のクラスの配列にキャストするのは非常に手間がかかります。
 
 2 番目の書式は引数に出力先の配列を指定して、その配列に要素を格納するものです。引数の配列の要素数は、コレクションの要素数と一致していなくても構いません。引数の配列とコレクションの要素数が一致している場合は、引数の配列に要素が設定されてそのまま戻り値となります。引数の配列の要素数が不足する場合には、`toArray` メソッドが新しい配列を作成して要素を設定し戻り値とします。
 
-コレクション側は、格納している要素のクラスの情報から配列を組み立てることができません。詳細は割愛しますが、Java では基本型と配列では別のデータ型という扱いになるため、`toArray` メソッドは基本型となるクラスの情報だけから配列を生成することができないのです。そのために最初の書式では `Object` クラスの配列を返さざるを得なくなっています。`Object` 型の配列にはどのようなクラスのインスタンスでも格納できるため、配列全体をダウンキャストできるとはかぎりません (条件が揃っていればキャスト可能ですが、それを担保する情報はどこにもありません)。
+コレクション側は、格納している要素の要素型 (プリミティブ型またはクラス) の情報から出力先の配列を完全な形で組み立てることができません。これは、Java の言語仕様が後方互換性を堅持していることになるもので、特に要素型がプリミティブ型の場合はその情報から配列を生成することはできません。そこで、変換後の配列を `Object` クラスまたはその配列として出力せざるを得ない状況にあります。
 
-そこで 2 番目の書式でははじめから配列を渡すことで、配列の生成に必要な情報を `toArray` メソッドに伝えているわけです。
+- 参考: [Javaの理論と実践: Generics、了解！](http://www.ibm.com/developerworks/jp/java/library/j-jtp01255/#2.3)
 
+以上のことから、`toArray` メソッドは要素型となるクラスの情報だけから配列を生成することができず、最初の書式では `Object` クラスの配列を返さざるを得なくなっています。`Object` 型の配列にはどのようなクラスのインスタンスでも格納できる利点はありますが、配列全体をダウンキャストできるとはかぎりません (条件が揃っていればキャスト可能ですが、それを担保する情報はどこにもありません)。そのため、各要素をスキャンして個別にダウンキャストを行う必要が出てきます。
 
-なお、`Map` を配列に直接変換する方法は用意されていません。キーと値の割り当て方に合わせて独自に実装する必要があります。
+そこで 2 番目の書式でははじめから配列を渡すことで、配列の生成に必要な情報を `toArray` メソッドに伝えるようにしています。配列が保持するデータ型情報を用いることで、同じ要素型で要素数が異なる配列を生成することが可能になるためです。`toArray` メソッドは、引数の配列から戻り値に必要な要素数を持つ配列を生成して設定しますが、配列の要素数とコレクションの要素数が一致している場合には引数の配列に直接要素を設定して、そのまま戻り値に設定する動作を行います (配列の再生星を行わない分だけ高速になります)。
 
 ```java
 List<String> list = new ArrayList<>();
@@ -456,3 +479,13 @@ String[] array1 = list.toArray(new String[list.size()]);
 // 引数の配列は要素数が少なくても (空の配列であっても) OK
 String[] array2 = list.toArray(new String[0]);
 ```
+
+### 10.4.3. Map から配列への変換
+
+`Map` を配列に直接変換する方法は用意されていません。`Map` がキーと値のペアによる 2 次元のデータ型であるのに対して、配列は連続する要素型で構成される 1 次元のデータ型であるためです。例えば、配列の要素型にキーと値のペアを格納するクラスを指定し、`Map` の要素をそれに割り当てていくようなアプローチを採る必要が出てきます。
+
+## 10.5. 配列・コレクションと Stream API の関係
+
+配列・コレクションと 12 章で取り上げる Stream API は相互変換が可能です。典型的な使い方としては、まずに処理するデータを配列またはコレクションで用意し、Stream API に変換した後にデータの加工を行い、結果を配列またはコレクションに戻す方法が挙げられます。Stream API でデータを処理するのは、Stream API 自体が強力なデータ処理機能を有しており (Java SE 8 で導入されたため当然と言えます)、`Arrays` や `Collections` を駆使するよりも容易にデータの加工が可能となるためです。また、Stream API は並列処理に対応しているため、要素数が多い場合には Stream API に変換して並列処理を行った方がパフォーマンス上有利である点も上げられます。
+
+配列・コレクションと Stream API の相互変換については、12 章にて取り上げます。

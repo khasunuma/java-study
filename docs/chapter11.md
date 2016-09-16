@@ -29,13 +29,13 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 |1 バイトの読み取り/書き込み|`read()`|`write(int b)`|
 |配列の要素数だけ読み取り/書き込み|`read(byte[] b, int off, int len)`|`write(byte[] b, int off, int len)`|
 |指定した長さだけ読み取り/書き込み|`read(byte[] b, int off, int len)`|`write(byte[] b, int off, int len)`|
-|ファイルのフラッシュ| - |`flush()`|
+|ファイルのフラッシュ| N/A |`flush()`|
 |ファイルのクローズ|`close()`|`close()`|
 
 バイト・ストリームを使用する際には、以下の点に注意してください。
 
-* コンストラクタおよびメソッドは `IOException` (またはそのサブクラス) をスローする可能性があります。したがって、例外処理が必須となります。
-* 処理の最後に必ずファイルのクローズが必要です。原則として try-catch 文の finally 句でクローズします。
+- コンストラクタおよびメソッドは `IOException` (またはそのサブクラス) をスローする可能性があります。したがって、例外処理が必須となります。
+- 処理の最後に必ずファイルのクローズが必要です。原則として try-catch 文の finally 句でクローズします。
 
 ### 11.1.2. 文字ストリーム
 
@@ -55,8 +55,8 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 
 文字ストリームを使用する際には、以下の点に注意してください。
 
-* コンストラクタおよびメソッドは `IOException` (またはそのサブクラス) をスローする可能性があります。したがって、例外処理が必須となります。
-* 処理の最後に必ずファイルのクローズが必要です。原則として try-catch 文の finally 句でクローズします。
+- コンストラクタおよびメソッドは `IOException` (またはそのサブクラス) をスローする可能性があります。したがって、例外処理が必須となります。
+- 処理の最後に必ずファイルのクローズが必要です。原則として try-catch 文の finally 句でクローズします。
 
 ### 11.1.3. 入出力ストリームの変換 (参考)
 
@@ -84,10 +84,10 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 |1 文字の読み取り/書き込み|`read()`|`write(int c)`|
 |配列の要素数だけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
 |指定した長さだけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
-|1 行読み取り (*)|`readLine()`| - |
-|改行の書き込み (*)| - |`newLine()`|
-|文字列の書き込み (*)| - |`write(String str)`|
-|バッファのフラッシュ| - |`flush()`|
+|1 行読み取り (*)|`readLine()`| N/A |
+|改行の書き込み (*)| N/A |`newLine()`|
+|文字列の書き込み (*)| N/A |`write(String str)`|
+|バッファのフラッシュ| N/A |`flush()`|
 |バッファのクローズ|`close()`|`close()`|
 (*) 行単位での入出力を行うためのメソッド。改行コードは OS によって異なるため、その差違を吸収するようなメソッドが用意されている。
 
@@ -111,36 +111,36 @@ Java は最初のバージョンから入出力ストリームをはじめとす
 
 `Files` クラスが提供するメソッドのうちファイル・システム操作に関するものには、以下のようなものが用意されています。具体的なメソッド名については API ドキュメントを参照してください。
 
-* ファイルのコピー (※NIO.2 以前、実はファイルのコピー機能も提供されていなかった)
-* ファイルの移動 (リネーム)
-* ディレクトリの作成
-* 空ファイルの作成
-* ハードリンク/シンボリックリンクの作成
-* 一時ディレクトリの作成
-* 空の一時ファイルの作成
-* ファイル (ディレクトリ) の削除
-* ファイル (ディレクトリ) の存在チェック
-* ファイル (ディレクトリ) のサイズ・属性・更新日時・所有者等の取得
-* ディレクトリ・ツリーのスキャン
+- ファイルのコピー (※NIO.2 以前、実はファイルのコピー機能も提供されていなかった)
+- ファイルの移動 (リネーム)
+- ディレクトリの作成
+- 空ファイルの作成
+- ハードリンク/シンボリックリンクの作成
+- 一時ディレクトリの作成
+- 空の一時ファイルの作成
+- ファイル (ディレクトリ) の削除
+- ファイル (ディレクトリ) の存在チェック
+- ファイル (ディレクトリ) のサイズ・属性・更新日時・所有者等の取得
+- ディレクトリ・ツリーのスキャン
 
 `Files` クラスが提供するメソッドのうち、ファイル操作に関するものには、以下のようなものが用意されています (チャネルが関連するもの等は省略します)。参考までに、具体的なメソッド名を [ ] 内に示します。詳細については API ドキュメントを参照してください。
 
-* ファイルを読み取り用に開き BufferedReader を返す [`newBufferedReader()`]
-* ファイルを書き込み用に開き BufferedWriter を返す [`newBufferedWriter()`]
-* ファイルを読み取り用に開き InputStream を返す [`newInputStream()`]
-* ファイルを書き込み用に開き OutputStream を返す [`newOutputStream()`]
-* ファイルからすべてのバイトを読み取り byte[] で返す [`readAllBytes()`]
-* ファイルからすべての行を読み取り List<String> で返す [`readAllLines()`]
-* ファイルからすべての行を読み取り Stream<String> で返す [`lines()`]  (Java SE 8 以降)
-* すべてのバイトまたは行をファイルに書き込む [`write()`]  (一部の書式は Java SE 8 以降)
+- ファイルを読み取り用に開き BufferedReader を返す [`newBufferedReader()`]
+- ファイルを書き込み用に開き BufferedWriter を返す [`newBufferedWriter()`]
+- ファイルを読み取り用に開き InputStream を返す [`newInputStream()`]
+- ファイルを書き込み用に開き OutputStream を返す [`newOutputStream()`]
+- ファイルからすべてのバイトを読み取り byte[] で返す [`readAllBytes()`]
+- ファイルからすべての行を読み取り List<String> で返す [`readAllLines()`]
+- ファイルからすべての行を読み取り Stream<String> で返す [`lines()`]  (Java SE 8 以降)
+- すべてのバイトまたは行をファイルに書き込む [`write()`]  (一部の書式は Java SE 8 以降)
 
 ※`readAllBytes()`、`readAllLines()`、`lines()` および `write()` は、完了後にファイルがクローズされる。
 
 ## 11.3. ファイル操作の実際
 
-### 11.3.1. try-with-resources 文
+### 11.3.1. try-catch 文を用いたファイルの読み込み
 
-```
+```java
 public void readFile(Path path) throws IOException {
     BufferedReader reader = Files.newBufferedReader(path);
     try {
@@ -151,7 +151,7 @@ public void readFile(Path path) throws IOException {
         }
     } catch (IOException e) {
         ...
-        // IOException の再スロー、場合によっては catch 節ごと省略可能
+        // IOException の再スロー、その他の処理がなければ catch 節ごと省略可能
         throw e;
     } finally {
         reader.close();
@@ -159,7 +159,9 @@ public void readFile(Path path) throws IOException {
 }
 ```
 
-```
+### 11.3.2. try-with-resources 文を用いたファイルの読み込み
+
+```java
 public void readFile(Path path) throws IOException {
     try (BufferedReader reader = Files.newBufferdReader(path)) {
         String line = reader.readLine();
@@ -169,7 +171,7 @@ public void readFile(Path path) throws IOException {
         }
     } catch (IOException e) {
         ...
-        // IOException の再スロー、場合によっては catch 節ごと省略可能
+        // IOException の再スロー、その他の処理がなければ catch 節ごと省略可能
         throw e;
     } // close() が不要となるので、finally 節も省略できる
 }
