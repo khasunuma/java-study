@@ -1,4 +1,4 @@
-# 14. Java SE 標準 API を活用しよう
+# 14. 標準 API を活用しよう
 
 ## 14.1. Properties
 

@@ -14,4 +14,4 @@
 - [11. ファイル操作の基本](docs/chapter11.md)
 - [12. ラムダ式と Stream API](docs/chapter12.md)
 - [13. Date and Time API](docs/chapter13.md)
-- [14. Java SE 標準 API を活用しよう](docs/chapter14.md)
+- [14. 標準 API を活用しよう](docs/chapter14.md)
