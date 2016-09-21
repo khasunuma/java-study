@@ -12,7 +12,7 @@
 
 Java では `Iterable` インタフェースに外部イテレータを返す `iterator()` メソッドと内部イテレータを提供する `forEach()` メソッドが定義されています。`Iterable` インタフェースの定義を以下に示します。
 
-```
+```java
 public interface Iterable<T> {
     Iterator<T> iterator();  // 外部イテレータ
     default void forEach(Consumer<? super T> action);  // 内部イテレータ
@@ -22,7 +22,7 @@ public interface Iterable<T> {
 
 まず、外部イテレータによる繰り返し処理を記述してみましょう (`List` が `Collection`、そして `Iterable` のサブインタフェースであることを思い出してください)。ここではわかりやすさのために拡張 for 文を使用しますが、while 文でも記述できます。
 
-```
+```java
 List<String> list = new CopyOnWriteArrayList<>();
 ...
 for (String s : list) {
@@ -32,7 +32,7 @@ for (String s : list) {
 
 次に、上記と同じ処理を内部イテレータで置き換えてみます。まず、内部イテレータの引数のクラスである `Consumer` について見てみましょう。
 
-```
+```java
 @FunctionalInterface
 public interface Consumer<T> {
     void accept(T t);  // 処理を記述する
@@ -42,7 +42,7 @@ public interface Consumer<T> {
 
 `Consumer` はインタフェースで、引数を受け取り処理を行う (そして戻り値を返さない) メソッド `accept()` を持ちます。そして、`Consumer` インタフェースを `Iterable.forEach()` メソッドで使用するには、以下のように匿名クラスを使用します。
 
-```
+```java
 List<String> list = new CopyOnWriteArrayList<>();
 ...
 list.forEach(new Consumer<>() {
@@ -63,7 +63,7 @@ list.forEach(new Consumer<>() {
 
 実際のところ、匿名クラスのインスタンス生成とメソッド実行には相応のコストがかかるため、折角の処理高速化をそれで相殺されては困ります。また、匿名クラスは単純な処理を記述するのにも冗長な書き方をしなければなりません。そこで、匿名クラスよりも軽量で、かつ、同様の処理を簡潔に書けるような文法が追加されました。それが「ラムダ式」です。上記の内部イテレータの使用例をラムダ式で書き換えると以下のようになります。
 
-```
+```java
 List<String> list = new CopyOnWriteArrayList<>();
 ...
 list.forEach(t -> System.out.println(t));
@@ -93,7 +93,7 @@ list.forEach(t -> System.out.println(t));
 
 `List.sort()` メソッドに渡す `Comparator` の匿名クラスを例に、匿名クラスからラムダ式への書き換えについて説明します。まず、匿名クラスによる記述を以下に示します。
 
-```
+```java
 List<String> list = ...;
 list.sort(new Comparator<String>() {
     @Override
@@ -105,7 +105,7 @@ list.sort(new Comparator<String>() {
 
 `Comparator` インタフェースを用いることは `List.sort()` メソッドの宣言から自明なので、外側の匿名クラス定義部分を削除します。
 
-```
+```java
 List<String> list = ...;
 list.sort(
     public int compare(String s1, String s2) {
@@ -116,7 +116,7 @@ list.sort(
 
 次に、関数インタフェースの匿名クラスには `public` のメソッドが 1 つだけ存在することが明らかであるため、メソッド名とスコープを削除します。さらに戻り値の型も `return` 文から `int` 型であると類推できるため不要となります。そして、ラムダ式であることを示すために引数リストと処理のブロックを `->` で繋ぎます。
 
-```
+```java
 List<String> list = ...;
 list.sort(
     (String s1, String s2) -> {
@@ -127,7 +127,7 @@ list.sort(
 
 以上でラムダ式として成立しますが、まだ冗長さが残ります。引数の型は `Comparator` インタフェースの定義から明らかなので省略が可能です。
 
-```
+```java
 List<String> list = ...;
 list.sort(
     (s1, s2) -> {
@@ -138,7 +138,7 @@ list.sort(
 
 さらに、処理を１行で記述できる場合には、`return` 文と文末のセミコロン、そして `{ }` を省略可能です。
 
-```
+```java
 List<String> list = ...;
 list.sort(
     (s1, s2) -> s1.length() - s2.length()
@@ -147,7 +147,7 @@ list.sort(
 
 整形すると以下の通りになります。
 
-```
+```java
 List<String> list = ...;
 list.sort((s1, s2) -> s1.length() - s2.length());
 ```
@@ -162,77 +162,6 @@ list.sort((s1, s2) -> s1.length() - s2.length());
 - ラムダ式の内部で変数を宣言することは可能ですが、外側の変数と同じ名前を使うことはできません。一方で、匿名クラスでは外側の変数と同じ名前を使うことができます。これは、ラムダ式はクラスではないためです。
 
 ラムダ式は代入演算式と並んで、最も低い優先順位で評価される式です。
-
-Expression:
-    LambdaExpression 
-    AssignmentExpression
-    
-AssignmentExpression:
-    ConditionalExpression 
-    Assignment
-
-Assignment:
-    LeftHandSide AssignmentOperator Expression
-
-LeftHandSide:
-    ExpressionName 
-    FieldAccess 
-    ArrayAccess
-
-AssignmentOperator:
-    (one of) 
-    =  *=  /=  %=  +=  -=  <<=  >>=  >>>=  &=  ^=  |=
-
-LambdaExpression:
-    LambdaParameters -> LambdaBody
-
-LambdaParameters:
-    Identifier 
-    ( [FormalParameterList] ) 
-    ( InferredFormalParameterList )
-
-InferredFormalParameterList:
-    Identifier {, Identifier}
-
-FormalParameterList:
-    ReceiverParameter 
-    FormalParameters , LastFormalParameter 
-    LastFormalParameter
-
-FormalParameters:
-    FormalParameter {, FormalParameter} 
-    ReceiverParameter {, FormalParameter}
-
-FormalParameter:
-    {VariableModifier} UnannType VariableDeclaratorId
-
-LastFormalParameter:
-    {VariableModifier} UnannType {Annotation} ... VariableDeclaratorId 
-    FormalParameter
-
-VariableModifier:
-    (one of) 
-    Annotation final
-
-VariableDeclaratorId:
-    Identifier [Dims]
-
-Dims:
-    {Annotation} [ ] {{Annotation} [ ]}
-
-LambdaBody:
-    Expression 
-    Block
-
-MethodReference:
-    ExpressionName :: [TypeArguments] Identifier 
-    ReferenceType :: [TypeArguments] Identifier 
-    Primary :: [TypeArguments] Identifier 
-    super :: [TypeArguments] Identifier 
-    TypeName . super :: [TypeArguments] Identifier 
-    ClassType :: [TypeArguments] new 
-    ArrayType :: new
-
 
 ### 12.2.4. メソッド参照
 
@@ -252,6 +181,8 @@ MethodReference:
 
 ### 12.3.2. Stream の生成
 
+`Stream` は様々なデータから生成することができます。主な生成メソッドを下表に示します。
+
 |ソース|クラス|生成するメソッド|生成されるストリーム|
 |----|----|----|----|
 |配列|`Arrays`|`<T>stream(T[])`|`Stream<T>`|
@@ -267,6 +198,22 @@ MethodReference:
 | |Files|lines(Path)|Stream<String>|
 |ディレクトリ内の要素|Files|list(Path)|Stream<Path>|
 | |Files|walk(Path, TODO)|Stream<Path>|
+
+`Stream` 生成の中で最も使用頻度が高いと思われるのは、`Collection.stream()` メソッドを用いたコレクションからの生成と、`Arrays.stream()` メソッドを用いた配列からの生成でしょう。これらはコレクション・配列から `Stream` への変換操作と捉えることもできます。
+
+```java
+// コレクション (List) から Stream への変換
+List<String> list = new ArrayList<>();
+...
+Stream<String> stream1 = list.stream();
+
+// 配列から Stream への変換
+String[] array = new String[] { ... };
+...
+Stream<String> stream2 = Arrays.stream(array);
+```
+
+コレクション・配列以外からの生成方法としては、`Stream.of()` メソッドで直接 `Stream` を生成する方法、`IntStream.range()` メソッドまたは `IntStream.rangeClosed()` メソッドで指定範囲の `IntStream` を生成する方法が良く使用されます。これらより使用頻度は下がりますが、`Random.ints()` メソッドでランダムな `IntStream` を生成する、`Files.lines()` メソッドでファイルの各行から `Stream` を生成する、といった方法も比較的よく用いられる `Stream` の生成方法です。 
 
 ### 12.3.3. 中間操作
 
@@ -284,6 +231,8 @@ MethodReference:
 
 ### 12.3.4. 終端操作
 
+Stream は一連の操作を終えたのちにクローズする必要があります。単純に `Stream.close()` メソッドでクローズすることもできますが、ほとんどの場合は操作した結果を残す形でクローズします。これらをまとめて終端操作と呼びます。主な終端操作を以下に示します。
+
 |メソッド名|引数|戻り値|概要|プリミティブ|
 |----|----|----|----|----|
 |forEach()|T -> void|void|要素ごとに何らかの処理を行う|○|
@@ -296,6 +245,21 @@ MethodReference:
 |collect()|Collector<? super T, A, R>|R|各要素から 1 つのオブジェクトに集計する|○|
 |toArray()|int -> A[]|A[]|すべての要素を含む配列を生成する|○|
 |count()|なし|int|要素数を取得する|○|
+
+コレクション・配列から Stream を生成する場合が多いのと同様に、Stream による操作結果をコレクション・配列の形で残す場合が多いです。これらは Stream からコレクション・配列への変換操作と捉えることもできます。
+
+```java
+Stream<String> stream = ...
+
+// コレクション (List) への変換
+List<String> list = stream.collect(Collectors.toList());
+
+// 配列への変換
+// String[]::new は i -> new String[i] と同じ
+String[] array = stream.toArray(String[]::new);
+```
+
+その他の終端操作も、`forEach()`、`count()`、`findFirst` をはじめ比較的よく使います。唯一、`reduce()` だけはあまり使いませんが、`reduce()` は他のすべての終端操作と同じ効果を得られる、非常に柔軟な終端操作になっています。
 
 ## 12.4. Optional
 
