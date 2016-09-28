@@ -34,7 +34,7 @@ Java における配列は、配列全体としてみた場合はクラスに準
 配列アクセス式を使用すると、配列の各要素に対して読み取りまたは書き込みができるようになります。
 
 - 書式: `array [ index ]` (`array`: 配列の変数名、`index`: 添字)
-- 添字 `index` は `0` から始まり、要素数 - 1 までの間で指定します。添字が負数、または要素数 - 1 を超えた場合には Java VM が非チェック例外 `ArrayIndexOutOfBoundsException` をスローします。Visual Basic と Python では添字の範囲をある程度自由に設定できますが、Java では言語仕様で添字の開始は `0`、終了は 要素数 - 1 と決められています (C と JavaScript の配列の添字も、Java と同じ仕様です)。
+- 添字 `index` は `0` から始まり、要素数 - 1 までの間で指定します。添字が負数、または要素数 - 1 を超えた場合には Java VM が非チェック例外 `ArrayIndexOutOfBoundsException` をスローします。Visual Basic と Python では添字の範囲を自由に設定できますが、Java では言語仕様で添字の開始は `0`、終了は 要素数 - 1 と決められています (C と JavaScript の配列の添字も、Java と同じ仕様です)。
 - 変数名と添字の組み合わせにより、基本データ型の変数として扱うことができるようになります。
 
 ### 10.1.4. 配列の length フィールド
@@ -79,7 +79,7 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
   - `Deque` : 両端キュー。順序を持ち要素の重複も許す、FIFO (先入れ先出し) に加えて LIFO (後入れ先出し) で要素にアクセスする。
 - `Map` : テーブル、連装配列とも。キーと値のペアの集合。
 
->【バージョン】 Java Collections Framework は J2SE 1.2 で追加されました。Java Collections Framework は Java のバージョンアップのたびに改訂されていますが (例えば、`Queue` は Java SE 5.0、`Deque` は Java SE 6 での改訂時に追加されたものです)、基本設計が優秀だったため J2SE 1.2 時代から大きく変わることなく現在に至っています。JDK 1.1 まではコレクションに相当するものとして、リストを表す `Vector` やテーブルを表す `Hashtable` などが存在していました。これらは現在コレクションとの互換性を持つように改修されていますが、古い API のためできるだけ使用しないことが推奨されています。
+>【バージョン】 JDK 1.1 まではコレクションがなく、それに代わるものとして相当するものとして、リストを表す `Vector` やテーブルを表す `Hashtable` などが存在していました。これらは現在コレクションとの互換性を持つように改修されていますが、古い API であるためできるだけ使用しないことを推奨します。
 
 ### 10.2.2. コレクションとジェネリクス (総称型)
 
@@ -90,8 +90,6 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
 - `Map<String, BigDecimal>` : `String` クラスのキーと `BigDecimal` クラスの値のペアからなる `Map`
 
 型パラメータに指定できるのはクラスのみであるため、コレクションの要素にはプリミティブ型を設定することはできません。そこで、プリミティブ型に対応するラッパークラスを型パラメータに指定した上で (例: `int` 型の `List` の場合は `List<Integer>`)、プリミティブ型とラッパー型の相互変換を行うことになります。ただし、相互変換自体は自動で行われるため (オートボクシング機能)、通常はプリミティブ型のままでコレクションの操作を行って構いません。
-
->【バージョン】 ジェネリクス (総称型) が導入されたのは Java SE 5.0 以降で、それ以前の古い Java には型パラメータはなく、コレクションの要素は `Object` クラスで固定されていました。古い Java ではコレクションの要素から値を取り出す時にキャストが必須であり、一方でコレクションの要素にはどのようなインスタンスでも設定できてしまうことから (`Object` はすべてのクラスのスーパークラスであるため)、エラー (`ClassCastException`) が多発する原因でした。その反省から、現在の Java ではジェネリクス (総称型) が導入され、指定したクラス以外の要素は設定できないようになっています。
 
 ### 10.2.3. コレクションのインスタンス生成式と変数宣言文
 
@@ -121,7 +119,7 @@ List<String> list1 = new ArrayList<String>();
 List<String> list2 = new ArrayList<>();
 ```
 
-【バージョン】 ダイヤモンド演算子は Java SE 7 で導入された記法です。Java はダイヤモンド演算子から適切な型パラメータを導くために型推論という仕組みを用いていますが、Java SE 7 の型推論は限定的であり、ダイヤモンド演算子を使用できない場面が多くありました。Java SE 8 では 12 章で取り上げるラムダ式を導入するために型推論の全面的見直しが図られた結果、インスタンス生成式が使用できるほとんどの場所でダイヤモンド演算子が適用できるよう改善されています。
+【バージョン】 ダイヤモンド演算子は Java SE 7 で導入された記法です。Java はダイヤモンド演算子から適切な型パラメータを導くために型推論という仕組みを用いていますが、Java SE 7 の型推論は限定的であり、そのためダイヤモンド演算子を使用できない場面が多くありました。Java SE 8 では [12 章](chapter12.md)で取り上げるラムダ式を導入する際に型推論の全面的な見直しが行われた結果、インスタンス生成式が使用できるほとんどの場所でダイヤモンド演算子が適用できるよう改善されています。
 
 ### 10.2.4. コレクションの実装と選び方
 
@@ -147,8 +145,6 @@ List<String> list2 = new ArrayList<>();
 1. 基本となるデータ型を決める: `String`, `Integer`, `BigDecimal`, etc.
 2. データ構造を決める: `Set<E>`, `List<E>`, `Deque<E>`, `Map<K, V>`, etc.
 3. データ構造の実装を決める
-
->【バージョン】 `LinkedHashSet`、`LinkedHashMap` は J2SE 1.4 で、`ArrayDeque` は Java SE 6 でそれぞれ追加されたものです。
 
 #### 10.2.4.1. Stringクラス、順不同、重複なし
 
@@ -197,8 +193,6 @@ List<String> list2 = new ArrayList<>();
 コレクションのうち使用頻度の高い `List` では、後述のように配列同様に添字を用いてすべての要素にアクセスできるため、イテレータの必要性は感じられないかもしれません。しかし、他のコレクションである `Set` や `Deque` では添字を用いることができません。そのため、コレクションの種類によらず使用可能なイテレータが必要になってきます。
 
 イテレータを持つクラスは、`Iterable` インタフェースを実装する必要があります。`Collection` インタフェースは `Iterable` インタフェースのサブインタフェースであるため、`Collection` から派生したコレクションはすべてイテレータをもっています。
-
->【バージョン】 `Iterable` インタフェースは後述の拡張 for 文を導入するために Java SE 5.0 で追加されたものです。
 
 イテレータは `Iterator` クラスのインスタンスであり、中心となるメソッドは以下の 3 種類です。
 
@@ -284,11 +278,7 @@ for (int index = 0; index < expr.length; index++) {
 
 #### 10.2.7.1. リスト操作 (list のみ)
 
-<<<<<<< HEAD
-http://docs.oracle.com/javase/jp/8/docs/api/java/util/List.html
-=======
 `List` では、`Collection` の各メソッドに加え、以下のリスト操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/List.html) を参照してください。
->>>>>>> branch 'master' of https://github.com/khasunuma/java-study.git
 
 |メソッド名|説明|
 |----------------|----------------|
@@ -301,11 +291,7 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/List.html
 
 #### 10.2.7.2. キュー操作 (Queue および Deque)
 
-<<<<<<< HEAD
-http://docs.oracle.com/javase/jp/8/docs/api/java/util/Queue.html
-=======
 `Queue` および `Deque` では、`Collection` の各メソッドに加え、以下のキュー操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント (Queue)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Queue.html) または [Java SE 標準 API のドキュメント (Deque)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
->>>>>>> branch 'master' of https://github.com/khasunuma/java-study.git
 
 |メソッド名|説明|
 |----------------|----------------|
@@ -318,11 +304,7 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/Queue.html
 
 #### 10.2.7.3. スタック操作 (Deque のみ)
 
-<<<<<<< HEAD
-http://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html
-=======
 `Deque` では、`Collection` の各メソッドに加え、以下のスタック操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
->>>>>>> branch 'master' of https://github.com/khasunuma/java-study.git
 
 |メソッド名|説明|
 |----------------|----------------|
@@ -332,11 +314,7 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html
 
 ### 10.2.8. Map の主なメソッド
 
-<<<<<<< HEAD
-http://docs.oracle.com/javase/jp/8/docs/api/java/util/Map.html
-=======
 `Map` では以下のスタック操作メソッドが用意されています。`Map` は `Collection` のサブインタフェースではないためメソッドに共通性がないことに注意してください。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Map.html) を参照してください。
->>>>>>> branch 'master' of https://github.com/khasunuma/java-study.git
 
 |メソッド名|説明|
 |----------------|----------------|
@@ -385,11 +363,9 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html
 
 `sort`、`setAll` は逐次処理で実行されますが、`parallelSort`、`parallelSetAll` は並列処理で実行されます。扱う要素数が多く CPU パワーにも余裕がある場合は並列処理を、扱う要素数が少ないか CPU パワーに余裕がない場合は逐次処理を選択するのが効率的です。通常使用する範囲では逐次処理で問題はありません。
 
->【バージョン】 `Arrays` クラスは Java のバージョンアップのたびに新しいメソッドが追加されています。例えば、Java SE 5.0 では `deepEquals`, `deepHashCode`,`deepToString`、Java SE 6では `copyOf`, `copyOfRange`、Java SE 8 では `setAll`,`parallelSetAll`, `parallelSort` がそれぞれ追加されています。
+>【バージョン】 `setAll`,`parallelSetAll`, `parallelSort` は Java SE 8 で追加されたメソッドで、[12 章](chapter12.md)で取り上げるラムダ式を活用しています。
 
 ### 10.3.2. Collections クラス
-
-http://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html
 
 `Collections` クラスはコレクションの操作に便利なユーティリティ・クラスです。コレクションをデータ構造とするならば、`Collecions` クラスは汎用的なアルゴリズムに相当するものです。コレクションの操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Collections` クラスのメソッドを利用することを強く推奨します。`Collections` クラスの詳細は [Java SE 標準 API ドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html) を参照してください。
 
@@ -428,7 +404,7 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html
 |`unmodifiableMap`|`Map`|不変な `Map` を返す|
 |`unmodifiableSet`|`Set`|不変な `Set` を返す|
 
->【バージョン】 `Collections` クラスは Java のバージョンアップのたびに新しいメソッドが追加されています。例えば、J2SE 1.3 では `singletonList`, `singletonMap`、J2SE 1.4では `indexOfSubList`, `lastIndexOfSubList`, `rotate`、Java SE 5.0 では `addAll`, `disjoint`, `emptyList`, `emptyMap`, `emptySet`, `frequency`、Java SE 7 では `emptyIterator` がそれぞれ追加されています。
+>【バージョン】 `emptyIterator` は Java SE 7 で追加されたメソッドです。また、補助的な役割のため上表からは割愛しましたが、Java SE 8 で追加されたメソッドがいくつか存在しています。
 
 ### 10.4. 配列とコレクションの相互変換
 
@@ -491,6 +467,4 @@ String[] array2 = list.toArray(new String[list.size()]);
 
 ## 10.5. 配列・コレクションと Stream API の変換について
 
-配列・コレクションと 12 章で取り上げる Stream API は相互変換が可能です。典型的な使い方としては、まずに処理するデータを配列またはコレクションで用意し、Stream API に変換した後にデータの加工を行い、結果を配列またはコレクションに戻す方法が挙げられます。Stream API でデータを処理するのは、Stream API 自体が強力なデータ処理機能を有しており (Java SE 8 で導入されたため当然と言えます)、`Arrays` や `Collections` を駆使するよりも容易にデータの加工が可能となるためです。また、Stream API は並列処理に対応しているため、要素数が多い場合には Stream API に変換して並列処理を行った方がパフォーマンス上有利である点も上げられます。
-
-配列・コレクションと Stream API の相互変換については、12 章にて取り上げます。
+配列・コレクションと [12 章](chapter12.md)で取り上げる Stream API も相互変換が可能です。典型的な使い方としては、まずに処理するデータを配列またはコレクションで用意し、Stream API に変換した後にデータの加工を行い、結果を配列またはコレクションに戻す方法が挙げられます。Stream API でデータを処理するのは、Stream API 自体が強力なデータ処理機能を有しており (Java SE 8 で導入されたため当然と言えます)、`Arrays` や `Collections` を駆使するよりも容易にデータの加工が可能となるためです。また、Stream API は並列処理に対応しているため、要素数が多い場合には Stream API に変換して並列処理を行った方がパフォーマンス上有利である点も上げられます。

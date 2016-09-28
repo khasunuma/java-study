@@ -16,7 +16,7 @@ Oracle JRE/JDK と IBM Java はプロプライエタリ・ライセンスでの�
 
 >GPLv2 には再配布時に改変した箇所を含むすべてのソースコードを GPLv2 で公開しなければならないという条件があります (ソースコードの添付が望ましいが、別途ダウンロードやソースコードのありかを示すだけでも良いとされます)。「クラスパス例外付き」とは、JRE/JDK 上で動作するアプリケーションについては GPLv2 の条件は適用されない (ソースコードの公開は不要でライセンスも GPLv2 にする必要がない) ことを意味します。
 
-以下、Oracle JRE/JDK を例にとり、それらに含まれる主なツールについて紹介します。他ベンダーの JDK ではツールの構成に一部相違があり得ます。
+以下、Oracle JRE/JDK を例にとり、それらに含まれる主なツールについて紹介します。他ベンダーの JDK ではツールの構成に一部相違があります。
 
 ### 2.1.1. JRE (Java Runtime Environment)
 
@@ -32,7 +32,7 @@ JDK は Java アプリケーションの開発に必要なツールキットで�
 
 - [`javac`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javac.html) : Java クラスとインタフェースの定義を読み取り、それらをバイト・コードとクラス・ファイルにコンパイルします。いわゆる「Java コンパイラ」です。言うまでもなく JDK の中核をなすツールです。
 - [`javadoc`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javadoc.html) : Javaソース・ファイルから、API ドキュメントの HTML ページを生成します。Java のソースコードにはドキュメンテーション・コメント (Javadoc コメント) と呼ばれる特殊なコメントを記述することが可能で、それをもとに API ドキュメントを生成するのが `javadoc` ツールです。Maven などのビルドツールや統合開発環境は `javadoc` ツールを自動で実行する機能を持っています。
-- [`native2ascii`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/native2ascii.html) : サポートされている任意の文字エンコーディングの文字を含むファイルを、ASCII または Unicode (あるいはその両方) のエスケープ文字を含むファイルに変換すること、またはその逆を行うことで、ローカライズ可能なアプリケーションを作成します。`native2ascii` ツールはアプリケーションの設定などを記述する「プロパティファイル」で日本語などを使用するために用意されていますが、現在の統合開発環境で同等の処理を肩代わりできること、さらにはプロパティファイルの UTF-8 エンコーディング対応により `native2ascii` ツールを介することなく直接日本語などを記述できるようになってきていることから、あまり使いどころはないかもしれません。
+- [`native2ascii`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/native2ascii.html) : サポートされている任意の文字エンコーディングの文字を含むファイルを、ASCII または Unicode (あるいはその両方) のエスケープ文字を含むファイルに変換すること、またはその逆を行うことで、ローカライズ可能なアプリケーションを作成します。`native2ascii` ツールはアプリケーションの設定などを記述する「プロパティファイル」で日本語などを使用するために用意されていますが、統合開発環境で同等の処理を肩代わりできること、さらにはプロパティファイルの UTF-8 エンコーディング対応により `native2ascii` ツールを介することなく直接日本語などを記述できるようになってきていることから、あまり使いどころはないかもしれません。
 - [`jar`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jar.html) : Java Archive (JAR) ファイルを操作します。コンパイル後に生成されたクラスファイルなどをメタ情報とともに ZIP アーカイブにする (またはその逆) ために使用します。直接使用する機会はあまりありませんが、Maven などのビルドツールや統合開発環境からは頻繁に `jar` ツールを起動するため、使用頻度自体は高いツールです。
 - [`javapackager`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javapackager.html) : Java アプリケーションのパッケージ化と署名に関連するタスクを実行します。Windows、Mac または Linux の実行可能パッケージ (Windows の場合は .exe) を生成し、インストーラまで作成してくれる優れものです。パッケージには JRE (の内部実装) が含まれるため、別途 JRE/JDK を用意する必要がなくなるメリットもあります。JavaFX で開発した GUI アプリケーションを配布する際によく使われます。
 - [`jcmd`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jcmd.html) : 実行中の Java VM に診断コマンド要求を送信します。実行中の Java VM の一覧表示、Java VM の状態や各種診断情報、Java Flight Recorder による Java VM の状態監視などを行います。JDK には古くから様々な監視・診断ツールが含まれていましたが、`jcmd` ツールはそれらを統合したような位置づけです。Java Flight Recorder は Oracle の有償サポート契約の下で使用可能となり、管理ツールである Java Mission Control と連携して動作します。
@@ -307,7 +307,7 @@ java -jar hello.jar
 |`maven.compiler.source`|`javac` の `-source` オプションに渡す値、デフォルトは `1.5` (この例では `1.8`)|
 |`maven.compiler.target`|`javac` の `-target` オプションに渡す値、デフォルトは `1.5` (この例では `1.8`)|
 
-`properties` 要素は本来任意の項目ですが、Maven のデフォルトが実態とかけ離れているため (`javac` の `-source`/`-target` オプションに非推奨の値 `1.5` を渡す、など)、ここで設定した 3 種類については常に設定する前提の方が良いでしょう。
+`properties` 要素は本来任意の項目ですが、Maven のデフォルトが実態とかけ離れているため (`javac` の `-source`/`-target` オプションに非推奨の値 `1.5` を渡す、など)、ここで設定した 3 種類については常に設定する方が良いでしょう。
 
 `pom.xml` 作成後のディレクトリ・ツリーは以下の通りとなります。
 
@@ -536,5 +536,5 @@ java -jar hello-1.0-SNAPSHOT.jar
 現在主に利用されている Java の統合開発環境には、Eclipse、NetBeans、IntelliJ IDEA があります。
 
 - [Eclipse](http://www.eclipse.org/) は IBM 製の統合開発環境をオープンソース化したものです。モジュール化が徹底されており、ほとんどの機能がプラグインとして実現されているのが大きな特徴です。現在では開発対象ごとに公式プラグインを整理した形で配布が行われています。GUI の一部にプラットフォーム・ネイティブのコードを含み、登場当初は他の Pure Java の統合開発環境と比較して非常に軽快な動作でも注目を浴びました (現在は Java 自体の高速化によりそのメリットはなくなっていると言われます)。
-- [NetBeans](https://ja.netbeans.org/) は現在 Oracle から配布されているオープンソースの統合開発環境で、実質的に Java のオフィシャルな統合開発環境として認知されています。Pure Java のツールで、操作性に癖もなく、プラットフォームを問わず多くのユーザーに利用されています。標準で日本語化されているのも大きな特徴です。Oracle SQL Developer の最新版は NetBeans がベースとなっています。
+- [NetBeans](https://ja.netbeans.org/) は現在 Oracle から配布されている (今後は Apache Foundation に移管される予定) オープンソースの統合開発環境で、実質的に Java のオフィシャルな統合開発環境として認知されています。Pure Java のツールで、操作性に癖もなく、プラットフォームを問わず多くのユーザーに利用されています。標準で日本語化されているのも大きな特徴です。Oracle SQL Developer の最新版は NetBeans がベースとなっています。
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/) は JetBrains が販売している統合開発環境です。機能限定版はオープンソース化されています。先進的で多機能な統合開発環境であり、大規模アプリケーションのビルドも問題なくこなすヘビーデューティーなツールでもあります。一癖あると言われる操作性も使い込むほど手に馴染み、有償でありながら多くのユーザーが Eclipse から移行しているようです。Android Studio はこの IntelliJ IDEA がベースとなっています。
