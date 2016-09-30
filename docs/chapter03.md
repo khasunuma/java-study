@@ -197,7 +197,7 @@ instance.fieldValue = "Hello";
 
 ```java
 // methodName : メソッド名、argument : 仮引数、ReturnType : 戻り値の型
-[ public | protected | private ] [static] [final] ReturnType methodName ( [ argument [, argument ... ] ) {
+[ public | protected | private ] [static] [final] ReturnType methodName ( [ argument [, argument ... ] ] ) {
     // メソッドの処理記述
 }
 ```

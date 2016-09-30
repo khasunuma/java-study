@@ -4,15 +4,15 @@ Java における処理の記述を文 (Statement) といいます。文の一�
 
 |文の分類|文|解説する章|
 |--------|--------|----|
-|単純な文|式文、空文|4 章|
-|分岐・繰り返し|if 文、if-else 文、while 文、do-while 文、for 文、switch 文|5 章|
-| |拡張 for 文|5 章、10 章|
-|ジャンプ|break 文、continue 文、return 文|5 章|
-|例外処理|throw 文|6 章|
-| |try 文|6 章|
-| |try-with-resources 文|6 章、11 章|
-|同期化|synchronized 文|9 章|
-|文のグルーピング|ブロック|4 章|
+|単純な文|式文、空文|[4 章](chapter04.md)|
+|分岐・繰り返し|if 文、if-else 文、while 文、do-while 文、for 文、switch 文|[5 章](chapter05.md)|
+| |拡張 for 文|[5 章](chapter05.md)、[10 章](chapter10.md)|
+|ジャンプ|break 文、continue 文、return 文|[5 章](chapter05.md)|
+|例外処理|throw 文|[6 章](chapter06.md)|
+| |try 文|[6 章](chapter06.md)|
+| |try-with-resources 文|[6 章](chapter06.md)、[11 章](chapter11.md)|
+|同期化|synchronized 文|[9 章](chapter09.md)|
+|文のグルーピング|ブロック|[4 章](chapter04.md)|
 
 - if-else 文、while 文および for 文は、if 文との組み合わせで注意事項があります。詳細は 5 章にて取り上げます。
 - 上記の他にラベル付き文、assert 文が用意されていますが、特殊な用途で使用頻度も高くないためここでは割愛します。

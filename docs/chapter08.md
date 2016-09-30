@@ -14,11 +14,25 @@ public interface Runnable {
 
 一般には、インタフェースは以下のように定義されます。
 
-```
-[public] interface <インタフェース名> [extends <スーパーインタフェース名>] {
-    [static フィールド (必要なだけ・必要な場所で)]
-    [static メソッド (必要なだけ・必要な場所で)]
-    [抽象メソッド (必要なだけ・必要な場所で)]
+```java
+package package_name ;
+
+[ import package_name . { ClassName | * } ; [ import ... ; ] ... ]
+
+// InterfaceName : インタフェース名
+[ public ] interface InterfaceName {
+
+    // static フィールド定義
+    [ static_field [ static_field ... ] ]
+
+    // static メソッド定義
+    [ static_method [ static_method ... ] ]
+
+    // メソッドのデフォルト実装
+    [ default_method [ default_method ... ] ]
+
+    // 抽象メソッド定義
+    [ abstract_method [ abstract_method ... ] ]
 }
 ```
 
@@ -43,8 +57,9 @@ public interface Runnable {
 
 インタフェースは、クラスで「実装」することにより初めて利用することができます。以下にインタフェースを実装するクラスの一般的な書式を示します。インタフェースを実装するクラスは同時にクラスの継承を行っても良く、また抽象クラスとして定義することも可能です。なお、抽象クラスとして定義した場合は、具象クラスであるサブクラスでインスタンスを生成する必要があります。
 
-```
-[public] [abstract|final] class <クラス名> [extends <スーパークラス名>] implements <インタフェース名> {
+```java
+// ClassName : クラス名、SuperclassName : スーパークラス名、InterfaceName : インタフェース名
+[ public ] [ abstract | final ] class ClassName [ extends SuperclassName ] implements InterfaceName {
     ...
 }
 ```
@@ -82,7 +97,7 @@ public interface Serializable {
 
 `Serializable` インタフェースのように、中身を持たず目印として使用されるインタフェースを「マーカー・インタフェース」と呼びます。最近の Java ではマーカー・インタフェースの代わりにアノテーションを使用する傾向にあります。
 
-インタフェースは Java でポリモーフィズムを実現するための重要な機能であると同時に、後述のラムダ式とも密接な関連があるため、ぜひ使い方を身に着けてください。
+インタフェースは Java でポリモーフィズムを実現するための重要な機能であると同時に、後述のラムダ式とも密接な関連があるため、必ず使い方を覚えてください。
 
 ## 8.3. インタフェースと匿名クラス
 
@@ -119,9 +134,11 @@ public void runAfter() {
 
 一般に、匿名クラスは以下の書式で使用します。
 
-```
-[<インタフェース名> <変数名> = ]new <インタフェース名>() {
-    [メソッド (すべての抽象メソッドを実装する)]
+```java
+// InterfaceName : インタフェース名、var : 変数名
+[ InterfaceName var = ] new InterfaceName () {
+    // メソッド定義 (すべての抽象メソッドを実装すること)
+    [ method [ method ... ] ]
 }
 ```
 
@@ -141,8 +158,9 @@ Java のメソッドでは引数にデータ (変数・フィールドの値) �
 
 インタフェースのメソッドのデフォルト実装は、一般的に以下の書式となります。
 
-```
-default <戻り値の型> <メソッド名>([仮引数リスト]) {
+```java
+// methodName : メソッド名、argument : 仮引数、ReturnType : 戻り値の型
+default ReturnType methodName ( [ argument [, argument ... ] ] ) {
     ...
 }
 ```
@@ -152,3 +170,5 @@ default <戻り値の型> <メソッド名>([仮引数リスト]) {
 デフォルト実装はクラスでいつでもオーバーライド可能で、オーバーライドした後は必ずクラスで定義したメソッドが呼び出されます。デフォルト実装をオーバーライドすると通常のメソッドになり、フィールドへのアクセスもできるようになります。
 
 ただし、同時に実装するインタフェースでメソッドのデフォルト実装が重複している場合には、デフォルト実装を呼び出すことができません。そのような場合にはクラスで必ずオーバーライドする必要があります (デフォルト実装が重複していても、オーバーライドした後は必ずクラスで定義したメソッドが呼び出されます)。
+
+>インタフェースのデフォルト実装は当初 Java API の互換性維持のために導入されたものですが、Java SE 8 の開発中に API 仕様がブラッシュアップされるにつれて、単なる互換性維持に留まらない、広い範囲で使用されるようになりました。ある程度は意識しておいた方が良いでしょう。
