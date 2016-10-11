@@ -59,7 +59,7 @@ Java の正規表現実装です。正規表現そのものを表す `Pattern` �
 
 ## 14.5. Logger
 
-Java の標準 API にはログ出力 API が含まれています。Java の黎明期にはログ出力ライブラリとして "Apache Log4J" が普及しており、現在でも標準ではないが高機能な "Logback" や "JBoss LogManager" などが指示されています。Java 標準のログ出力 API (パッケージ名から `java.util.logging` やその略称の "JUL" でも呼ばれます) は "Logback" や "JBoss LogManager" に比べると機能は限定されますが、必要最低限の機能は有しており、何より標準で使用できるというメリットがあります。
+Java の標準 API にはログ出力 API が含まれています。Java の黎明期にはログ出力ライブラリとして "Apache Log4J" が普及しており、現在でも標準ではないが高機能な "Logback" や "JBoss LogManager" などが支持されています。Java 標準のログ出力 API (パッケージ名から `java.util.logging` やその略称の "JUL" でも呼ばれます) は "Logback" や "JBoss LogManager" に比べると機能は限定されますが、必要最低限の機能は有しており、標準で使用できるというメリットがあります。
 
 ### 14.5.1. Logger の基礎知識
 
