@@ -68,7 +68,7 @@ else
 - `expr1` が `false` の場合:
   - 何もしない
 
-なぜこのような解釈の相違が発生するのかというと、「`else` は最も近い `if` と結びつく」という Java の構文解釈があるためです。同様の問題は C と JavaScript にも存在しており、Python ではこの曖昧さを回避する目的も合わせてインデント (オフサイド・ルール) によるブロックを採用しています (なお、Visual Basic は Pascal 由来の Begin-End ブロック構文を採用しているため、このような問題は起こりません)。
+なぜこのような解釈の相違が発生するのかというと、「`else` は最も近い `if` と結びつく」という Java の構文解釈があるためです。同様の問題は C、C++ および JavaScript にも存在しており、Python ではこの曖昧さを回避する目的も合わせてインデント (オフサイド・ルール) によるブロックを採用しています (なお、Visual Basic は Pascal 由来の Begin-End ブロック構文を採用しているため、このような問題は起こりません)。
 
 上記のコードを意図した通りに動作させるには、以下のようにブロックを使用します。
 
@@ -106,7 +106,7 @@ else
 - 条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
 - while 文が、if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、`stmt` には if 文以外を指定します。そうでない場合は任意の文を指定できます。
 
->while 文は、C および JavaScript の while 文と同じで、Python の while 文、Visual Basic の Do While ... Loop 構文 (または While ... Wend 構文) に相当します。
+>while 文は、C、C++ および JavaScript の while 文と同じで、Python の while 文、Visual Basic の Do While ... Loop 構文 (または While ... Wend 構文) に相当します。
 
 ## 5.4. do-while 文
 
@@ -114,7 +114,7 @@ else
 - 最初に `stmt` を実行し、その後は条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
 - `stmt` には任意の文を指定できます。
 
->do-while 文は、C および JavaScript の do-while 文と同じで、Visual Basic の Do ... While Loop 構文に相当します。Python には相当する構文がありません。
+>do-while 文は、C、C++ および JavaScript の do-while 文と同じで、Visual Basic の Do ... While Loop 構文に相当します。Python には相当する構文がありません。
 
 ## 5.5. for 文
 
@@ -135,7 +135,7 @@ while ( expr ) {
 }
 ```
 
->for 文は、C および JavaScript の for 文と同じです。Visual Basic の For ... Next 構文に相当しますが、Visual Basic のそれが純粋な指定回数繰り返しであるのに対して、Java は制約が緩い (3 式の選び方で繰り返しをどのようにも制御できる) ことに注意してください。Python の for 文は次節の拡張 for 文に相当するもので、Java の for 文とは異なります。
+>for 文は、C、C++ および JavaScript の for 文と同じです。Visual Basic の For ... Next 構文に相当しますが、Visual Basic のそれが純粋な指定回数繰り返しであるのに対して、Java は制約が緩い (3 式の選び方で繰り返しをどのようにも制御できる) ことに注意してください。Python の for 文は次節の拡張 for 文に相当するもので、Java の for 文とは異なります。
 
 ## 5.6. 拡張 for 文
 
@@ -145,7 +145,7 @@ while ( expr ) {
 - 拡張 for 文が、if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、`stmt` には if 文以外を指定します。そうでない場合は任意の文を指定できます。
 - 拡張 for 文の詳細は [10 章](chapter10.md)で取り上げます。
 
->拡張 for 文は、JavaScript の foreach 文、Python の for 文、Visual Basic の For Each ... Next 構文に相当します。C には拡張 for 文に相当するものはありません。
+>拡張 for 文は、JavaScript の foreach 文、Python の for 文、Visual Basic の For Each ... Next 構文に相当します。C には拡張 for 文に相当するものはありません。C++ は言語仕様には含まれていませんが、標準ライブラリに Java の拡張 for 文に相当する機能が用意されています。
 
 ## 5.7. break 文と continue 文
 
@@ -181,7 +181,7 @@ break 文と continue 文は通常、繰り返しの中で if/if-else 文との�
 
 break 文、continue 文とも、実行後に繰り返しの最後までジャンプする点では同じです。 異なるのはその後の流れで、break 文はそのまま繰り返しを終了してしまいますが、continue 文は繰り返しを終了しません。したがって、continue 文では次の繰り返しに移り、さらに for 文においては <増分> の式が実行されることになります。
 
->break 文および continue 文は C から引き継いだ構文で、JavaScript および Python にも同等の構文があります。Visual Basic では、break 文に対応する Exit Do/Exit For 構文は存在しますが、continue 文に対応する構文は存在しません。
+>break 文および continue 文は C および C++ から引き継いだ構文で、JavaScript および Python にも同等の構文があります。Visual Basic では、break 文に対応する Exit Do/Exit For 構文は存在しますが、continue 文に対応する構文は存在しません。
 
 ## 5.8. return 文
 
@@ -195,7 +195,7 @@ return <戻り値>;
 return;
 ```
 
->return 文は C から引き継いだ構文で、JavaScript および Python にも同等の構文があります。Visual Basic には相当する構文として、Exit Function/End Function/Exit Sub/End Sub の各構文が存在します。
+>return 文は C および C++ から引き継いだ構文で、JavaScript および Python にも同等の構文があります。Visual Basic には相当する構文として、Exit Function/End Function/Exit Sub/End Sub の各構文が存在します。
 
 ## 5.9. switch 文
 
@@ -210,6 +210,8 @@ default: stmt stmt ...
 ```
 
 `switch` に続く `( )` に判定条件 `expr` を指定します。値には整数、列挙型、文字列が使用できます。switch 文のブロック `{ }` 内にはラベル (`case label_expr` または `default`) と文 (`stmt`) を必要なだけ置くことができます。
+
+>switch 文の判定条件の値として文字列が使用できるのは Java SE 7 以降となります。Java SE 6 では整数型または列挙型のみが許可されます。
 
 switch 文はまず判定条件を評価し、式の値に対応するラベル (`case label_expr`) にジャンプしてそこから処理を実行します。いずれの `case` にも一致しなかった場合には `default` にジャンプして処理を実行します。
 
@@ -231,6 +233,5 @@ default:
 }
 ```
 
->【対比】 switch 文 は C および JavaScript の switch 文と酷似しています (分岐処理後に break 文または return 文で抜ける必要がある仕様まで同じです)。また、Visual Basic の Select-Case 構文に相当しますが、Visual Basic の場合は分岐処理後に処理を抜ける仕様となっています。Python には Java の switch 文に相当する構文はなく、if-else 文による多肢分岐にて対応することになります。
+>switch 文 は C、C++ および JavaScript の switch 文とよく似ています (分岐処理後に break 文または return 文で抜ける必要がある仕様まで同じです)。また、Visual Basic の Select-Case 構文に相当しますが、Visual Basic の場合は分岐処理後に処理を抜ける仕様となっています。Python には Java の switch 文に相当する構文はなく、if-else 文による多肢分岐にて対応することになります。
 
->【バージョン】 switch 文の判定条件の値として文字列が使用できるのは Java SE 7 以降となります。Java SE 6 では整数型または列挙型のみが許可されます。
