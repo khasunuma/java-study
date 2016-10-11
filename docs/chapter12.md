@@ -181,6 +181,13 @@ list.sort((s1, s2) -> s1.length() - s2.length());
 
 ### 12.3.1. Stream API の概要
 
+Stream API は、`Stream` と呼ばれるデータの集合に対して、内部イテレータを用いて様々な操作を行うための API です。Stream API は Java に対して関数型プログラミング言語の機能を取り込むためのものです。Stream API には以下のような特徴があります。
+
+- 配列、コレクション、乱数、ファイルなど様々なデータから `Stream` を生成することができる。
+- `Stream` 単位でフィルタリング、変換、重複排除、ソート、検索などを連続して実行することができる。
+- `Stream` の各要素について並列で各種操作を行うことができる。
+- `Stream` を配列やコレクションに変換したり、SQL のような集合演算で集計したりすることができる。
+
 ### 12.3.2. Stream の生成
 
 `Stream` は様々なデータから生成することができます。主な生成メソッドを下表に示します。
@@ -199,7 +206,7 @@ list.sort((s1, s2) -> s1.length() - s2.length());
 |ファイルの各行|`BufferedReader`|`lines()`|`Stream<String>`|
 | |`Files`|`lines(Path)`|`Stream<String>`|
 |ディレクトリ内の要素|`Files`|`list(Path)`|`Stream<Path>`|
-| |`Files`|`walk(Path, TODO)`|`Stream<Path>`|
+| |`Files`|`walk(Path, int, FileVisitOption...)`|`Stream<Path>`|
 
 `Stream` 生成の中で最も使用頻度が高いと思われるのは、`Collection.stream()` メソッドを用いたコレクションからの生成と、`Arrays.stream()` メソッドを用いた配列からの生成でしょう。これらはコレクション・配列から `Stream` への変換操作と捉えることもできます。
 
@@ -219,6 +226,8 @@ Stream<String> stream2 = Arrays.stream(array);
 
 ### 12.3.3. 中間操作
 
+生成した `Stream` に対しては様々な操作を行うことができます。これらを中間操作と呼びます。中間操作の結果は `Stream` となるため、複数の操作を連続して行うことが可能です。主な中間操作を以下に示します。
+
 |メソッド名|引数|概要|
 |----|----|----|
 |`filter()`|`T -> boolean`|フィルタリングする|
@@ -231,15 +240,27 @@ Stream<String> stream2 = Arrays.stream(array);
 |`limit()`|`long`|引数の件数に要素数を制限する|
 |`skip()`|`long`|引数の件数文を読み飛ばす|
 
-### 12.3.4. 終端操作
+特に使用頻度の高いものは if 文に相当する `filter` とメソッド呼び出しに相当する `map` です。`distinct` や `sorted` は SQL の `DISTINCT` や `ORDER BY` に相当する操作です。あまり直感的でないのは `flatMap` ですが、これはネストした `Stream` をシンプルな `Stream` に変換する場合などに用います。
+
+### 12.3.4. 直列処理と並列処理
+
+`Stream` は、要素を先頭から順に処理する直列処理と、要素を同時に処理する並列処理の双方をサポートします。また、両者を混在させることもできます。`Stream` の以降の処理を直列処理する場合は `sequential()` メソッドを、並列処理にする場合は `parallel()` メソッドをそれぞれ呼び出し、直列処理と並列処理の変換を行います。初期状態の `Stream` は直列処理となります。
+
+>Stream API の並列処理には Fork/Join Framework という粒度の小さいマルチスレッドの仕組みが用いられます。これはいわゆる「分割統治法」に特化した仕組みです。Fork/Join Framework は Stream API を実装するために開発されたものですが、Stream API よりも一足早く Java SE 7 から搭載されています (正確にはラムダ式と Stream API のリリースが Java SE 8 まで延期されたことによります)。
+
+非常に多くのデータを多数の CPU コアを持つコンピュータで処理する場合は並列処理にすると処理の高速化を図ることができる場合があります。一方でデータがそれほど多くない場合やコンピュータの CPU コア数がそれほど多くない場合には並列処理の効果を得にくいとされています。実際のところ、この判断を机上で行うのは極めて困難とされています。直列処理と並列処理のどちらを選択すべきかは、同じ操作を直列処理と並列処理でそれぞれ計測して、その結果を持って判断するのが妥当でしょう。
+
+`Stream` が何らかの順序をもっている場合、並列処理を行うと順序が失われてしまいます (適切な設定をすることで順序を維持できる場合もあります)。その点も注意が必要です。
+
+### 12.3.5. 終端操作
 
 `Stream` は一連の操作を終えたのちにクローズする必要があります。単純に `Stream.close()` メソッドでクローズすることもできますが、ほとんどの場合は操作した結果を残す形でクローズします。これらをまとめて終端操作と呼びます。主な終端操作を以下に示します。
 
 |メソッド名|引数|戻り値|概要|
 |----|----|----|----|
 |`forEach()`|`T -> void`|`void`|要素ごとに何らかの処理を行う|
-|`findAny()`|なし|`T`|任意の要素を 1 つだけ取得する|
-|`findFirst()`|なし|`T`|最初の要素を取得する|
+|`findAny()`|なし|`Optional<T>`|任意の要素を 1 つだけ取得する|
+|`findFirst()`|なし|`Optional<T>`|最初の要素を取得する|
 |`anyMatch()`|`T -> boolean`|`boolean`|いずれかの要素が条件に沿うか|
 |`allMatch()`|`T -> boolean`|`boolean`|すべての要素が条件に沿うか|
 |`noneMatch()`|`T -> boolean`|`boolean`|すべての要素が条件に沿わないか|
@@ -248,10 +269,12 @@ Stream<String> stream2 = Arrays.stream(array);
 |`toArray()`|`int -> A[]`|`A[]`|すべての要素を含む配列を生成する|
 |`count()`|なし|`int`|要素数を取得する|
 
+`findFirst` および `findAny` は該当する要素が見つからない場合があるため、戻り値が `Optional` になります。`Optional` については後ほど取り上げます。また、`reduce` は汎用の終端操作であり、他では実現できない特殊な操作を実装する際に使用します。
+ 
 コレクション・配列から `Stream` を生成する場合が多いのと同様に、`Stream` による操作結果をコレクション・配列の形で残す場合が多いです。これらは `Stream` からコレクション・配列への変換操作と捉えることもできます。
 
 ```java
-Stream<String> stream = ...
+Stream<String> stream = ... ;
 
 // コレクション (List) への変換
 List<String> list = stream.collect(Collectors.toList());
@@ -261,7 +284,70 @@ List<String> list = stream.collect(Collectors.toList());
 String[] array = stream.toArray(String[]::new);
 ```
 
-その他の終端操作も、`forEach()`、`count()`、`findFirst` をはじめ比較的よく使います。唯一、`reduce()` だけはあまり使いませんが、`reduce()` は他のすべての終端操作と同じ効果を得られる、非常に柔軟な終端操作になっています。
+なお、`Collectors` クラスには `List` への変換の他に `Set` や `Map` への変換、文字列結合、最大・最小・平均の算出、グルーピングなど様々な変換や集合演算を行うメソッドが用意されています。SQL に匹敵する豊富な集合演算を Java の強力な型チェックの下で行うことが可能です。
 
 ## 12.4. Optional
 
+`Optional` は何らかの値を保持できるクラスです (必ずしも保持しなくてよい)。このクラスにはいくつかのメソッドが定義されており、それらを用いて値の `null` チェックやそれに関連する操作を行うことができます。
+
+### 12.4.1. Optional の生成
+
+`Optional` のインスタンスは、`of`、`ofNullable`、`empty` のいずれかのメソッドで生成することができます。
+
+|メソッド名|引数|説明|
+|--------|----|----------------|
+|`of`|`T`|値をラップして `Optional` のインスタンスを生成する。値が `null` の場合は `NullPointerException` をスローする。|
+|`ofNullable`|`T`|値をラップして `Optional` のインスタンスを生成する。値が `null` の場合は保持しない。|
+|`empty`|なし|値を保持しない `Optional` のインスタンスを生成する。`Optional.ofNullable(null)` と同じ。|
+
+### 12.4.2. Optional が保持する値の取得
+
+`Optional` が保持する値を取得するには、4 種類のメソッドのいずれかを使用します。`get` は単純に値を取得しようとするメソッドで、それ以外は値を取得できない (値を保持していない) 場合に何らかの代替手段を提供するメソッドです。
+
+|メソッド名|引数|説明|
+|--------|--------|----------------|
+|`get`|なし|値を取得する。値を保持しない場合は `NoSuchElementException` をスローする。|
+|`orElse`|`T`|値を取得する。値を保持しない場合は引数の値を返す。|
+|`orElseGet`|`Supplier<? extends T>`|値を取得する。値を保持しない場合は引数 (ラムダ式) で生成される値を返す。|
+|`orElseThrow`|`Supplier<? extends Throwable>`|値を取得する。値を保持しない場合は引数 (ラムダ式) で生成される例外をスローする。|
+
+以下に例を示します。
+
+```java
+// 値 (null の可能性がある)
+String original = ... ;
+
+// original をラップして Optional のインスタンスを生成する → value
+Optional<String> value = Optional.ofNullable(original);
+
+// get : 
+// 値を保持する場合は値を s1 に代入し、保持しない場合は NoSuchElementException をスローする
+String s1 = value.get();
+
+// orElse : 
+// 値を保持する場合は値を s2 に代入し、保持しない場合は引数の値を s2 に代入する
+String s2 = value.orElse("default value");
+
+// orElseGet : 
+// 値を保持する場合は値に s3 を代入し、保持しない場合は引数 (ラムダ式) で生成される値を s3 に代入する
+String s3 = value.orElseGet(() -> "default value");
+
+// orElseThrow : 
+// 値を保持する場合は値を s4 に代入し、保持しない場合は引数 (ラムダ式) で生成される例外をスローする
+String s4 = value.orElseThrow(() -> new IllegalArgumentException());
+```
+
+### 12.4.3. Optional の状態判定
+
+`Optional` が値を保持しているかどうかを判定するメソッドとして `isPresent` と `ifPresent` が用意されています。
+
+|メソッド名|引数|戻り値|説明|
+|--------|----|--------|--------|
+|isPresent|なし|`boolean`|値を保持する場合は `true`、そうでない場合は `false` を返す|
+|ifPresent|Consumer<? super T>|`void`|値を保持する場合は引数 (ラムダ式) を実行し、そうでない場合は何もしない|
+
+### 12.4.4. Optinal と Stream API
+
+`Optional` では Stream API の中間操作の一部をサポートします。サポートする中間操作は `filter`、`map` および `flatMap` です。
+
+`Optional` は要素数が 1 または 0 の `Stream` のように扱われ、値を取得する操作を行うことなく Stream API によるデータ操作に使用することができます。

@@ -170,7 +170,7 @@ try-catch 文はリソースのオープンとクローズを伴って使用さ�
   - 自動クローズ処理に対応していないリソースは try 節に記述できないため、try-catch 文と同様に finally 節でクローズすることになります。
 - catch 節と finally 節はともに省略可能です。try-catch 文と異なり両方を同時に省略することもできます (リソースのオープンと自動クローズのみに使用する場合)。
 
-try-with-resources 文は 11 章で具体例を示します。
+try-with-resources 文は [11 章](chapter11.md)で具体例を示します。
 
 ## 6.6. throws 句
 

@@ -101,9 +101,44 @@ Java は最初のバージョンから入出力ストリームをはじめとす
 
 >【バージョン】NIO と NIO.2 は大規模な API 刷新プロジェクトであり、すべてを同時リリースすることができませんでした。そこでまず `InputStream`/`OutputStream` の高速化 (チャネルの導入) を中心とした NIO を J2SE 1.4 でリリースし、その後ファイル操作の簡略化を中心とした NIO.2 を Java SE 7 でリリースする形を採りました。
 
-### 11.2.2. Path インタフェース
+### 11.2.2. FileSystem クラスと Path インタフェース
 
-`Path` インタフェースはファイルのパスを表します。
+NIO.2 によるファイル操作は、操作対象を示すための `FileSystem` クラスと `Path` インタフェース、実際の操作を提供するユーティリティである `Files` クラスが中心となります。ここでは `FileSystem` クラスと `Path` インタフェースについて取り上げます。
+
+`FileSystem` クラスはファイルシステムそのものを表します。既定のファイルシステムは Java VM が動作する OS のファイルシステムですが、NIO.2 ではそれ以外のファイルシステムもサポートできるように設計されています。例えば、Java SE 7 (またはそれ以降) では試験的にですが ZIP アーカイブをファイルシステムとして扱うことができます。
+
+`FileSystem` のインスタンスは `FileSystems` クラスから取得することができます。`FileSystems` クラスでは様々なファイルシステム (先に挙げた ZIP アーカイブを含む) に対応した `FileSystem` のインスタンスを取得できますが、既定のファイルシステムに対応した `FileSystem` のインスタンスを取得するには `FileSystems.getDefault()` メソッドを用います。
+
+`Path` インタフェースはファイルのパスを表します。既定のファイルシステムでは、OS 上のファイルやディレクトリなどを表します。`Path` のインスタンスは `FileSystem.getPath()` メソッドで取得できます。`getPath` メソッドの引数にはファイルまたはディレクトリのパスを指定します。
+
+```java
+FileSystem fileSystem = FileSystems.getDefault();
+
+// デリミタを含む fileSystem.getPath("C:\\eclipse\\eclipse.ini") でも OK
+Path path = fileSystem.getPath("C", "eclipse", "eclipse.ini");
+```
+
+>`FileSystem` クラスには `close()` メソッドが存在しており、**既定ではない**ファイルシステムを操作する場合には必ずクローズしなければなりません。ただし、既定のファイルシステムではクローズの必要がなく、`close()` メソッドを呼び出しても `UnsupportedOperationException` 例外がスローされてしまいます。
+
+なお、上記の操作は `Paths` クラスを用いて以下のように書き換えることができます。`Paths` クラスを用いた方が簡潔に記述できるため、通常はこちらの方法を用います。
+
+```java
+// デリミタを含む Paths.get("C:\\eclipse\\eclipse.ini") でも OK
+Path path = Paths.get("C", "eclipse", "eclipse.ini");
+```
+
+`Path` のインスタンスで表されるファイルまたはディレクトリのパスは、`FileSystem.getPath()` や `Paths.get()` メソッドの引数に相対パスを指定すると相対パスになります。相対パスで表される `Path` を絶対パスに変換する場合には `Path.toAbsolutePath()` メソッドを使用します。
+
+その他、`Path` インタフェースにはパス操作を行うためのメソッドが用意されています。主なものを以下に示します。
+
+|メソッド名|説明|
+|----------------|--------------------------------|
+|`getFileName`|ファイルまたはディレクトリ名そのもの (ディレクトリ構造を含まない) を取得する|
+|`getParent`|親ディレクトリのパスを取得する (親を持たない場合は `null`)|
+|`resolve`|指定されたパスをこのパスに対して解決する (例: パスの子要素を取得する)|
+|`resolveSibling`|指定されたパスをこのパスの親パスに対して解決する (例: ファイル名を変更する)|
+|`toAbsolutePath`|絶対パスを取得する|
+|`toString`|文字列表現を取得する (書式は OS に依存する)|
 
 ### 11.2.3. Files クラス
 
@@ -125,14 +160,16 @@ Java は最初のバージョンから入出力ストリームをはじめとす
 
 `Files` クラスが提供するメソッドのうち、ファイル操作に関するものには、以下のようなものが用意されています (チャネルが関連するもの等は省略します)。参考までに、具体的なメソッド名を [ ] 内に示します。詳細については API ドキュメントを参照してください。
 
-- ファイルを読み取り用に開き BufferedReader を返す [`newBufferedReader()`]
-- ファイルを書き込み用に開き BufferedWriter を返す [`newBufferedWriter()`]
-- ファイルを読み取り用に開き InputStream を返す [`newInputStream()`]
-- ファイルを書き込み用に開き OutputStream を返す [`newOutputStream()`]
-- ファイルからすべてのバイトを読み取り byte[] で返す [`readAllBytes()`]
-- ファイルからすべての行を読み取り List<String> で返す [`readAllLines()`]
-- ファイルからすべての行を読み取り Stream<String> で返す [`lines()`]  (Java SE 8 以降)
-- すべてのバイトまたは行をファイルに書き込む [`write()`]  (一部の書式は Java SE 8 以降)
+|メソッド名|説明|
+|----------------|----------------|
+|`newBufferedReader`|ファイルを読み取り用に開き BufferedReader を返す|
+|`newBufferedWriter`|ファイルを書き込み用に開き BufferedWriter を返す|
+|`newInputStream`|ファイルを読み取り用に開き InputStream を返す|
+|`newOutputStream`|ファイルを書き込み用に開き OutputStream を返す|
+|`readAllBytes`|ファイルからすべてのバイトを読み取り byte[] で返す|
+|`readAllLines`|ファイルからすべての行を読み取り List<String> で返す|
+|`lines`|ファイルからすべての行を読み取り Stream<String> で返す (Java SE 8 以降)|
+|`write`|すべてのバイトまたは行をファイルに書き込む (一部の書式は Java SE 8 以降)|
 
 ※`readAllBytes()`、`readAllLines()`、`lines()` および `write()` は、完了後にファイルがクローズされる。
 
@@ -140,12 +177,15 @@ Java は最初のバージョンから入出力ストリームをはじめとす
 
 ### 11.3.1. try-catch 文を用いたファイルの読み込み
 
+テキストファイルを 1 行単位で読み込み、何らかの処理を行うメソッドの例を以下に示します。これが Java におけるファイル読み込みの基本形となりますが、現在では次節に示すように try-with-resources 文を使用したほうがよいでしょう。
+
 ```java
 public void readFile(Path path) throws IOException {
-    BufferedReader reader = Files.newBufferedReader(path);
+    BufferedReader reader = Files.newBufferedReader(path, Charset.forName("UTF-8"));
     try {
         String line = reader.readLine();
         while (line != null) {
+            // ここで何か処理を行う
             ...
             line = reader.readLine();
         }
@@ -161,11 +201,16 @@ public void readFile(Path path) throws IOException {
 
 ### 11.3.2. try-with-resources 文を用いたファイルの読み込み
 
+前節のサンプルを try-with-resources 文を用いて書き換えたものを以下に示します。ファイルのオープン・クローズに関わる記述がシンプルになっていることに注目してください。
+
 ```java
 public void readFile(Path path) throws IOException {
-    try (BufferedReader reader = Files.newBufferdReader(path)) {
+    // リソース BufferedReader reader = Files.newBufferedReader(path) をオープンする
+    // ここでオープンしたリソースは try-catch を抜ける際に自動的にクローズされる 
+    try (BufferedReader reader = Files.newBufferdReader(path, Charset.forName("UTF-8"))) {
         String line = reader.readLine();
         while (line != null) {
+            // ここで何か処理を行う
             ...
             line = reader.readLine();
         }
@@ -177,16 +222,38 @@ public void readFile(Path path) throws IOException {
 }
 ```
 
-```
-try (リソースの宣言) {
-    ...
-} catch (例外) {
-    ...
-} finally {
-    // close() は不要
-    ...
+### 11.3.2. Files クラスの readAllLines メソッドと write メソッドの利用
+
+`Files` クラスにはファイルのすべての行/バイトを読み取る `readAllLines`/`readAllBytes` メソッドと、すべての行/バイトをファイルに書き込む `write` メソッドが用意されています。単純にファイルの全内容を読み書きするのであれば、この方法が最も簡潔な表現となります。
+
+```java
+public void readFile(Path path) throws IOException {
+    try {
+        for (String line : Files.readAllLines(path, Charset.forName("UTF-8"))) {
+            // ここで何か処理を行う
+            ...
+        }
+    } catch (IOException e) {
+        ...
+        // IOException の再スロー、その他の処理がなければ catch 節ごと省略可能
+        throw e;
+    }
 }
 ```
 
-### 11.3.2. Files クラスの readAllLines メソッドと write メソッドの利用
+```java
+public void writeFile(Path path, List<String> lines) throws IOException {
+    try {
+        Files.write(path, lines, Charset.forName("UTF-8"));
+    } catch (IOException e) {
+        ...
+        // IOException の再スロー、その他の処理がなければ catch 節ごと省略可能
+        throw e;
+    }
+}
+```
+
+`readAllLines`/`readAllBytes` および `write` メソッドは大きなファイルの読み書きを想定したものではありませんが、`List` または `byte` 配列を用いて一括でファイルの読み書きができるため、小さなファイルを数多く処理しなければならない場合に威力を発揮します。
+
+>【バージョン】 `Files` クラスのメソッドを用いてファイルの読み書きを行う際には `Charset` で文字エンコードをするようになっています。Windows 環境では Shift_JIS (Microsoft CP 932) : `Charset.forName("Windows-31J")` または UTF-8 : `Charset.forName("UTF-8")` を指定することが多いでしょう。文字エンコードの指定は Java SE 7 では必須ですが、Java SE 8 では省略可能です (省略時は UTF-8 とみなされます)。
 
