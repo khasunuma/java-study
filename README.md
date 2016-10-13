@@ -6,7 +6,7 @@ Java の入門あるいは再入門テキストは世の中に多数で回って
 
 全くのプログラミング初心者に対する説明を行う余裕がないため、対象とする読者には構造化プログラミングに関する基本的な知識を前提としました。C/C++、JavaScript、Python、Visual Basic などの経験が多少なりともあれば読み進めることはできるでしょう。また、研修で Java を習ったけれどもよく分からなかったという読者にとっても、復習教材として活用できるのではないかと思います。
 
-**2016 年 10 月 13 日現在、このテキストは執筆途中です。あらかじめご了承ください。**
+**2016 年 10 月 14 日現在、このテキストは執筆途中です。あらかじめご了承ください。**
 
 ## 2. 参考文献
 
@@ -18,3 +18,8 @@ Java の入門あるいは再入門テキストは世の中に多数で回って
 - 蓮沼賢志：「[JSR 310 "Date and Time API" への招待 III](http://www.slideshare.net/khasunuma/jsr310-3-61112729)」、関西 Java エンジニアの会「Java 8 徹底再入門」発表資料 、2015 年 7 月
 - 吉田真也：「きつねさんと学ぶ Lambda 式 & Stream API ハンズオン」、関西 Java エンジニアの会「Java 8 徹底再入門」ハンズオン資料、2015 年 7 月
 - 蓮沼賢志：「[Collections Framework Beginners Guide](http://www.slideshare.net/khasunuma/collections-framework-61112720)」、社内勉強会資料
+
+### 3. 著作権表記
+
+&copy; 2016 HASUNUMA Kenji (Studio Coppermine)
+

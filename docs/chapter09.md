@@ -58,7 +58,7 @@ for (int index = 0; index < array.length; index++) {
 
 ### 9.1.5. 多次元配列
 
-Java には Visual Basic のような多次元配列をサポートしません。代わりに配列の要素を配列として宣言することで多次元配列のように用いることができます。
+Java には C、C++ や Visual Basic のような多次元配列を実質的にサポートしません。代わりに配列の要素を配列として宣言することで多次元配列のように用いることができます。
 
 多次元配列は数値演算で使用することはありますが、元々使い勝手が悪く、使用頻度も低いためここでは割愛します (実際に多次元配列が必要な局面では、多次元配列の機能を持つクラスを定義して用いることが多いようです)。
 
@@ -146,7 +146,7 @@ List<String> list2 = new ArrayList<>();
 2. データ構造を決める: `Set<E>`, `List<E>`, `Deque<E>`, `Map<K, V>`, etc.
 3. データ構造の実装を決める
 
-#### 9.2.4.1. Stringクラス、順不同、重複なし
+#### 9.2.4.1. String クラス、順不同、重複なし
 
 1. 基本データ型 → String
 2. データ構造 = 順不同、重複なし → Set<String>
@@ -154,7 +154,7 @@ List<String> list2 = new ArrayList<>();
 
 (推奨される実装) `Set<String> set = new HashSet<>();`
 
-#### 9.2.4.2. int型、順序あり、直接アクセスあり
+#### 9.2.4.2. int 型、順序あり、直接アクセスあり
 
 1. 基本データ型 → Integer (ラッパー)
 2. データ構造 = 順序あり、直接アクセスあり → List<Integer>
@@ -162,7 +162,7 @@ List<String> list2 = new ArrayList<>();
 
 (推奨される実装) `List<Integer> list = new ArrayList<>();`
 
-#### 9.2.4.3. Integerクラス、順序あり、直接アクセスあり、挿入・削除が多い
+#### 9.2.4.3. Integer クラス、順序あり、直接アクセスあり、挿入・削除が多い
 
 1. 基本データ型 → Integer
 2. データ構造 = 順序あり、直接アクセスあり → List<Integer>
@@ -174,17 +174,17 @@ List<String> list2 = new ArrayList<>();
 
 `Collection` インタフェースにはいくつものメソッドが定義されていますが、その中からよく使われるものを以下に示します。これらはコレクション (`Map` を除く) で共通して使用できるメソッドであるため、押さえておきましょう。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html) を参照してください。
 
-|メソッド名|説明|
-|----------------|----------------|
-|`boolean add(E e)`|コレクションに要素を追加する|
+|メソッド名                   |説明|
+|----------------------------|----------------|
+|`boolean add(E e)`          |コレクションに要素を追加する|
 |`boolean addAll(Collection <? extends E> c)`|コレクションにすべての要素を追加する|
-|`void clear()`|コレクションの全要素を削除する|
+|`void clear()`              |コレクションの全要素を削除する|
 |`boolean contains(Object o)`|要素がコレクションに含まれている場合は `true`、そうでなければ `false` を返す|
-|`boolean isEmpty()`|コレクションの要素数が 0 の場合は `true`、そうでなければ `false` を返す|
-|`Iterator<E> iterator()`|イテレータを返す (後述)|
-|`boolean remove(Object o)`|コレクションの要素を削除する|
-|`int size()`|コレクションの要素数を返す|
-|`<T> T[] toArray(T[] a)`|コレクションを T 型/クラスの配列に変換する (後述)|
+|`boolean isEmpty()`         |コレクションの要素数が 0 の場合は `true`、そうでなければ `false` を返す|
+|`Iterator<E> iterator()`    |イテレータを返す (後述)|
+|`boolean remove(Object o)`  |コレクションの要素を削除する|
+|`int size()`                |コレクションの要素数を返す|
+|`<T> T[] toArray(T[] a)`    |コレクションを T 型/クラスの配列に変換する (後述)|
 
 ### 9.2.6. イテレータと拡張 for 文
 
@@ -196,18 +196,18 @@ List<String> list2 = new ArrayList<>();
 
 イテレータは `Iterator` クラスのインスタンスであり、中心となるメソッドは以下の 3 種類です。
 
-|メソッド|説明|
-|--------|------------|
+|メソッド    |説明|
+|-----------|------------|
 |`hasNext()`|次の要素がある場合は `true`、そうでなければ `false` (要素数が 0 の場合は常に `false`)|
-|`next()`|次の要素を取得する|
-|`remove()`|現在の要素 (= 前回 `next()` で取得した要素) を削除する|
+|`next()`   |次の要素を取得する|
+|`remove()` |現在の要素 (= 前回 `next()` で取得した要素) を削除する|
 
 以下にイテレータの使用例を示します。イテレータの使用時には、以下の点に注意してください。
 
-1. イテレータ取得時 (`Collection . iterator()` 呼び出し直後) はどの要素も指し示していない。
-2. 最初の要素を指し示すには `Iterator . next()` メソッドを呼び出す。
-3. コレクションに要素がない場合は `Iterator . next()` メソッドの呼び出しが失敗するため、事前に `Iterator . hasNext()` メソッドでチェックする。
-4. `Iterator . remove()` メソッドはあまり使われない。イテレータの状態を常に意識する必要があり、処理が煩雑になりがち。
+1. イテレータ取得時 (`Collection.iterator()` 呼び出し直後) はどの要素も指し示していない。
+2. 最初の要素を指し示すには `Iterator.next()` メソッドを呼び出す。
+3. コレクションに要素がない場合は `Iterator.next()` メソッドの呼び出しが失敗するため、事前に `Iterator.hasNext()` メソッドでチェックする。
+4. `Iterator.remove()` メソッドはあまり使われない。イテレータの状態を常に意識する必要があり、処理が煩雑になりがち。
 
 `Set` におけるイテレータの使用例を以下に示します。
 
@@ -280,56 +280,56 @@ for (int index = 0; index < expr.length; index++) {
 
 `List` では、`Collection` の各メソッドに加え、以下のリスト操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/List.html) を参照してください。
 
-|メソッド名|説明|
-|----------------|----------------|
+|メソッド名                    |説明|
+|-----------------------------|----------------|
 |`boolean add(int index, E element)`|`index` 番目に要素を挿入する|
-|`E get(int index)`|`index` 番目の要素を取得する|
-|`int indexOf(Object o)`|要素が最初に見つかった `index` を返す|
-|`int lastIndexOf(Object o)`|要素が最後に見つかった `index` を返す|
-|`int remove(int index)`|`index` 番目の要素を削除する|
+|`E get(int index)`           |`index` 番目の要素を取得する|
+|`int indexOf(Object o)`      |要素が最初に見つかった `index` を返す|
+|`int lastIndexOf(Object o)`  |要素が最後に見つかった `index` を返す|
+|`int remove(int index)`      |`index` 番目の要素を削除する|
 |`E set(int index, E element)`|`index` 番目の要素を置き換える|
 
 #### 9.2.7.2. キュー操作 (Queue および Deque)
 
 `Queue` および `Deque` では、`Collection` の各メソッドに加え、以下のキュー操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント (Queue)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Queue.html) または [Java SE 標準 API のドキュメント (Deque)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
 
-|メソッド名|説明|
-|----------------|----------------|
-|`boolean add(E e)`|要素をキューへ挿入する|
+|メソッド名           |説明|
+|--------------------|----------------|
+|`boolean add(E e)`  |要素をキューへ挿入する|
 |`boolean offer(E e)`|要素をキューへ挿入する (失敗した場合は非チェック例外 `NoSuchElementException` をスロー)|
-|`E poll()`|要素を取得してキューから取り除く (要素がなければ `null` を返す)|
-|`E element()`|要素を取得してキューから取り除く (要素がなければ非チェック例外 `NoSuchElementException` をスロー)|
-|`E peek()`|要素を取得するがキューには残す (要素がなければ `null` を返す)|
-|`E remove()`|要素を取得するがキューには残す (要素がなければ非チェック例外 `NoSuchElementException` をスロー)|
+|`E poll()`          |要素を取得してキューから取り除く (要素がなければ `null` を返す)|
+|`E element()`       |要素を取得してキューから取り除く (要素がなければ非チェック例外 `NoSuchElementException` をスロー)|
+|`E peek()`          |要素を取得するがキューには残す (要素がなければ `null` を返す)|
+|`E remove()`        |要素を取得するがキューには残す (要素がなければ非チェック例外 `NoSuchElementException` をスロー)|
 
 #### 9.2.7.3. スタック操作 (Deque のみ)
 
 `Deque` では、`Collection` の各メソッドに加え、以下のスタック操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
 
-|メソッド名|説明|
+|メソッド名       |説明|
 |----------------|----------------|
 |`void push(E e)`|要素をスタックへ挿入する|
-|`E pop()`|要素を取得してスタックから取り除く|
-|`E peek()`|要素を取得するがスタックには残す|
+|`E pop()`       |要素を取得してスタックから取り除く|
+|`E peek()`      |要素を取得するがスタックには残す|
 
 ### 9.2.8. Map の主なメソッド
 
 `Map` では以下のスタック操作メソッドが用意されています。`Map` は `Collection` のサブインタフェースではないためメソッドに共通性がないことに注意してください。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Map.html) を参照してください。
 
-|メソッド名|説明|
-|----------------|----------------|
-|`void clear()`|すべてのエントリ (キーと値のペア) を削除する|
+|メソッド名               |説明|
+|------------------------|----------------|
+|`void clear()`          |すべてのエントリ (キーと値のペア) を削除する|
 |`boolean containsKey(Object key)`|キーが含まれている場合は `true`、そうでない場合は `false` を返す|
-|`Set<K> keySet()`|すべてのキーを返す (`Set` インタフェース)|
-|`V get(Object key)`|キーに対応する値を取得する (存在しない場合は `null` を返す)|
+|`Set<K> keySet()`       |すべてのキーを返す (`Set` インタフェース)|
+|`V get(Object key)`     |キーに対応する値を取得する (存在しない場合は `null` を返す)|
 |`V getOrDefault(Object key, V defaultValue)`|キーに対応する値を取得する (存在しない場合は `defaultValue` を返す)|
-|`V put(K key, V value)`|キーに対応する値を設定する (既に存在する場合は置き換える)|
+|`V put(K key, V value)` |キーに対応する値を設定する (既に存在する場合は置き換える)|
 |`V putIfAbsent(K key, V value)`|キーに対応する値を設定する (既に存在する場合は置き換えない)|
-|`V remove(Object key)`|キーと対応する値を削除する (存在しない場合は何もしない)|
-|`int size()`|エントリ (キーと値のペア) の数を返す|
+|`V remove(Object key)`  |キーと対応する値を削除する (存在しない場合は何もしない)|
+|`int size()`            |エントリ (キーと値のペア) の数を返す|
 |`Collection<V> values()`|すべての値を返す (`Collection` インタフェース)|
 
->【バージョン】`getOrDefault()` および `putIfAbsent()` メソッドは Java SE 8 で追加されたものです。`get()` および `put()` メソッドと比較して、不要な `null` チェックを回避できる (すなわち `NullPointerException` がスローされにくい) 点で優れています。この他にも `Map` には Java SE 8 で追加されたメソッドが多数あります。
+`getOrDefault()` および `putIfAbsent()` メソッドは Java SE 8 で追加されたものです。`get()` および `put()` メソッドと比較して、不要な `null` チェックを回避できる (すなわち `NullPointerException` がスローされにくい) 点で優れています。この他にも `Map` には Java SE 8 で追加されたメソッドが多数あります。
 
 ## 9.3. Arrays クラスと Collections クラス
 
@@ -339,21 +339,21 @@ for (int index = 0; index < expr.length; index++) {
 
 http://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html
 
-|メソッド名|説明|
-|--------|--------|
-|`asList`|指定された配列に連動する固定サイズのリストを返す|
+|メソッド名     |説明|
+|--------------|--------|
+|`asList`      |指定された配列に連動する固定サイズのリストを返す|
 |`binarySearch`|配列から指定された値を検索する (二分検索)|
-|`copyOf`|指定された配列をコピーする (長さは必要に応じて切り詰めるかパディング)|
-|`copyOfRange`|指定された配列の指定された範囲を新しい配列にコピーする|
-|`equals`|2 つの配列が互いに同等である場合に `true` を返す|
-|`hashCode`|指定された配列の内容に基づくハッシュ・コードを返す|
-|`toString`|指定された配列の文字列表現を返す|
-|`deepEquals`|2つの配列が互いに等価な場合に `true` を返す (深層内容)|
+|`copyOf`      |指定された配列をコピーする (長さは必要に応じて切り詰めるかパディング)|
+|`copyOfRange` |指定された配列の指定された範囲を新しい配列にコピーする|
+|`equals`      |2 つの配列が互いに同等である場合に `true` を返す|
+|`hashCode`    |指定された配列の内容に基づくハッシュ・コードを返す|
+|`toString`    |指定された配列の文字列表現を返す|
+|`deepEquals`  |2つの配列が互いに等価な場合に `true` を返す (深層内容)|
 |`deepHashCode`|指定された配列のハッシュ・コードを返す (深層内容)|
 |`deepToString`|指定された配列の文字列表現を返す (深層内容)|
-|`fill`|配列の各要素を設定する (同一の値を使用する)|
-|`sort`|指定された配列をソートする|
-|`setAll`|配列のすべての要素を設定する (異なる値も設定可)|
+|`fill`        |配列の各要素を設定する (同一の値を使用する)|
+|`sort`        |指定された配列をソートする|
+|`setAll`      |配列のすべての要素を設定する (異なる値も設定可)|
 |`parallelSort`|指定された配列をソートする (マージソード・並列処理)|
 |`parallelSetAll`|配列のすべての要素を設定する (異なる値も設定可・並列処理)|
 
@@ -369,42 +369,42 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html
 
 `Collections` クラスはコレクションの操作に便利なユーティリティ・クラスです。コレクションをデータ構造とするならば、`Collecions` クラスは汎用的なアルゴリズムに相当するものです。コレクションの操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Collections` クラスのメソッドを利用することを強く推奨します。`Collections` クラスの詳細は [Java SE 標準 API ドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html) を参照してください。
 
-|メソッド名|対象|説明|
-|--------|--------|--------|
-|`addAll`|`Collection`|指定されたすべての要素を `Collection` に追加する (高速)|
-|`binarySearch`|`List`|リストからインスタンスを検索する (二分探索)|
-|`copy`|`List`|あるリストから別のリストにすべての要素をコピーする|
-|`disjoint`|`Collection`|2 つの `Collection` に共通の要素がない場合に `true` を返す|
-|`emptyIterator`|N/A|空のイテレータを返す|
-|`emptyList`|N/A|空の `List` を返す|
-|`emptyMap`|N/A|空の `Map` を返す|
-|`emptySet`|N/A|空の `Set` を返す|
-|`fill`|`List`|すべての要素を指定した要素で置き換える|
-|`frequency`|`Collection`|指定されたオブジェクトと等価な要素の数を返す|
-|`indexOfSubList`|`List`|サブ・リストが最初に出現した位置の開始位置を返す|
-|`lastIndexOfSubList`|`List`|サブ・リストが最後に出現した位置の開始位置を返す|
-|`max`|`Collection`|最大の要素を返す|
-|`min`|`Collection`|最小の要素を返す|
-|`nCopies`|N/A|指定されたインスタンスの n 個のコピーで構成される不変の `List` を返す|
-|`replaceAll`|`List`|指定された値をすべて置き換える|
-|`reverse`|`List`|リストの要素の順序を逆にする|
-|`rotate`|`List`|リストの要素を指定された距離により回転する|
-|`shuffle`|`List`|リストの順序をシャッフルする|
-|`singleton`|N/A|指定されたインスタンスだけを格納する不変の `Set` を返す|
-|`singletonList`|N/A|指定されたインスタンスだけを格納する不変の `List` を返す|
-|`singletonMap`|N/A|指定されたインスタンスだけを格納する不変の `Map` を返す|
-|`sort`|N/A|リストを昇順ソートする|
-|`swap`|`List`|リストの指定された位置にある要素を入れ替える|
+|メソッド名         |対象        |説明|
+|------------------|------------|----------------------------------------------------|
+|`addAll`          |`Collection`|指定されたすべての要素を `Collection` に追加する (高速)|
+|`binarySearch`    |`List`      |リストからインスタンスを検索する (二分探索)|
+|`copy`            |`List`      |あるリストから別のリストにすべての要素をコピーする|
+|`disjoint`        |`Collection`|2 つの `Collection` に共通の要素がない場合に `true` を返す|
+|`emptyIterator`   |N/A         |空のイテレータを返す|
+|`emptyList`       |N/A         |空の `List` を返す|
+|`emptyMap`        |N/A         |空の `Map` を返す|
+|`emptySet`        |N/A         |空の `Set` を返す|
+|`fill`            |`List`      |すべての要素を指定した要素で置き換える|
+|`frequency`       |`Collection`|指定されたオブジェクトと等価な要素の数を返す|
+|`indexOfSubList`  |`List`      |サブ・リストが最初に出現した位置の開始位置を返す|
+|`lastIndexOfSubList`|`List`    |サブ・リストが最後に出現した位置の開始位置を返す|
+|`max`             |`Collection`|最大の要素を返す|
+|`min`             |`Collection`|最小の要素を返す|
+|`nCopies`         |N/A         |指定されたインスタンスの n 個のコピーで構成される不変の `List` を返す|
+|`replaceAll`      |`List`      |指定された値をすべて置き換える|
+|`reverse`         |`List`      |リストの要素の順序を逆にする|
+|`rotate`          |`List`      |リストの要素を指定された距離により回転する|
+|`shuffle`         |`List`      |リストの順序をシャッフルする|
+|`singleton`       |N/A         |指定されたインスタンスだけを格納する不変の `Set` を返す|
+|`singletonList`   |N/A         |指定されたインスタンスだけを格納する不変の `List` を返す|
+|`singletonMap`    |N/A         |指定されたインスタンスだけを格納する不変の `Map` を返す|
+|`sort`            |N/A         |リストを昇順ソートする|
+|`swap`            |`List`      |リストの指定された位置にある要素を入れ替える|
 |`synchronizedCollection`|`Collection`|スレッドセーフな `Collection` を返す|
-|`synchronizedList`|`List`|スレッドセーフな `List` を返す|
-|`synchronizedMap`|`Map`|スレッドセーフな `Map` を返す|
-|`synchronizedSet`|`Set`|スレッドセーフな `Set` を返す|
+|`synchronizedList`|`List`      |スレッドセーフな `List` を返す|
+|`synchronizedMap` |`Map`       |スレッドセーフな `Map` を返す|
+|`synchronizedSet` |`Set`       |スレッドセーフな `Set` を返す|
 |`unmodifiableCollection`|`Collection`|不変な `Collection` を返す|
-|`unmodifiableList`|`List`|不変な `List` を返す|
-|`unmodifiableMap`|`Map`|不変な `Map` を返す|
-|`unmodifiableSet`|`Set`|不変な `Set` を返す|
+|`unmodifiableList`|`List`      |不変な `List` を返す|
+|`unmodifiableMap` |`Map`       |不変な `Map` を返す|
+|`unmodifiableSet` |`Set`       |不変な `Set` を返す|
 
->【バージョン】 `emptyIterator` は Java SE 7 で追加されたメソッドです。また、補助的な役割のため上表からは割愛しましたが、Java SE 8 で追加されたメソッドがいくつか存在しています。
+`emptyIterator` は Java SE 7 で追加されたメソッドです。また、補助的な役割のため上表からは割愛しましたが、Java SE 8 で追加されたメソッドがいくつか存在しています。
 
 ### 9.4. 配列とコレクションの相互変換
 

@@ -4,12 +4,12 @@
 
 Java のファイル操作は、入出力の単位 (バイト単位 or 文字単位) と入力/出力の種類によって大きく 4 つのクラスに分かれます。
 
-|入出力単位|入力/出力|クラス|
-|----|----|----|
+|入出力単位|I/O|クラス|
+|------|----|--------|
 |バイト|入力|`InputStream`|
 |バイト|出力|`OutputStream`|
-|文字|入力|`Reader`|
-|文字|出力|`Writer`|
+|文字  |入力|`Reader`|
+|文字  |出力|`Writer`|
 
 4 つのクラスはいずれも抽象クラスであり、入出力の対象 (ファイル、メモリ等) に応じてサブクラスが用意されています。これらのクラス群を「(入出力) ストリーム」といい、バイト単位で処理するものを「バイト・ストリーム」、文字単位で処理するものを「文字ストリーム」と呼んで区別しています。
 
@@ -23,14 +23,14 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 
 ファイル入出力におけるこれらの具象クラスは `FileInputStream` クラスと `FileOutputStream` クラスになります。これらは主にバイナリファイルの入出力を行うために用意されています。主なメソッドを以下に示しますが、読み取り用メソッドと書き込み用メソッドが対になっていることに注目してください。
 
-|操作|`InputStream`|`OutputStream`|
-|----|----|----|
-|ファイルのオープン|`new FileInputStream()`|`new FileOutputStream()`|
-|1 バイトの読み取り/書き込み|`read()`|`write(int b)`|
+|操作                     |`InputStream`           |`OutputStream`          |
+|-------------------------|------------------------|------------------------|
+|ファイルのオープン         |`new FileInputStream()`|`new FileOutputStream()`|
+|1 バイトの読み取り/書き込み|`read()`               |`write(int b)`|
 |配列の要素数だけ読み取り/書き込み|`read(byte[] b, int off, int len)`|`write(byte[] b, int off, int len)`|
 |指定した長さだけ読み取り/書き込み|`read(byte[] b, int off, int len)`|`write(byte[] b, int off, int len)`|
-|ファイルのフラッシュ| N/A |`flush()`|
-|ファイルのクローズ|`close()`|`close()`|
+|ファイルのフラッシュ       | N/A                    |`flush()`               |
+|ファイルのクローズ         |`close()`              |`close()`                |
 
 バイト・ストリームを使用する際には、以下の点に注意してください。
 
@@ -43,15 +43,15 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 
 ファイル入出力におけるこれらの具象クラスは `FileReader` クラスと `FileWriter` クラスになります。これらは主にテキストファイルの入出力を行うために用意されています。主なメソッドを以下に示しますが、読み取り用メソッドと書き込み用メソッドが対になっていることに注目してください。
 
-|操作|`Reader`|`Writer`|
-|----|----|----|
-|ファイルのオープン|`new FileReader()`|`new FileWriter()`|
-|1 文字の読み取り/書き込み|`read()`|`write(int c)`|
+|操作                     |`Reader`                |`Writer`|
+|-------------------------|------------------------|------------------------|
+|ファイルのオープン        |`new FileReader()`       |`new FileWriter()`|
+|1 文字の読み取り/書き込み  |`read()`                |`write(int c)`|
 |配列の要素数だけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
 |指定した長さだけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
-|文字列の読み取り/書き込み| - |`write(String str)`|
-|ファイルのフラッシュ| - |`flush()`|
-|ファイルのクローズ|`close()`|`close()`|
+|文字列の読み取り/書き込み  |N/A                     |`write(String str)`|
+|ファイルのフラッシュ       |N/A                    |`flush()`|
+|ファイルのクローズ        |`close( )`              |`close()`|
 
 文字ストリームを使用する際には、以下の点に注意してください。
 
@@ -71,24 +71,25 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 一般に、入出力ストリームは `read`/`write` のメソッドが呼ばれる度に入出力を行います。そのため、入出力対象がメモリ等の高速なものでない限り、大きな負荷が掛かりやすくなります。そこで、こうした処理の効率化のためにバッファリングを行う入出力ストリームが用意されています。ファイル入出力ではバッファリングを行った方が良いでしょう。
 
 |バッファリングを行う入出力ストリーム|対応する入出力ストリーム|
-|`BufferedInputStream`|`InputStream`|
-|`BufferedOutputStream|OutputStream`|
-|`BufferedReader`|`Reader`|
-|`BufferedWriter`|`Writer`|
+|`BufferedInputStream`            |`InputStream`|
+|`BufferedOutputStream`           |`OutputStream`|
+|`BufferedReader`                 |`Reader`|
+|`BufferedWriter`                 |`Writer`|
 
 バッファリングを行う入出力ストリームは、コンストラクタ引数に対応する入出力ストリームのインスタンスを渡すことで生成します。`BufferedReader` および `BufferedWriter` ではさらに行単位での読み取り/書き込みを行うためのメソッドが追加されます。バッファリングを行う入出力ストリームをクローズすると、対応する入出力ストリームも自動的にクローズされます。
 
-|操作|`BufferedReader`|`BufferedWriter`|
-|----|----|----|
-|バッファの作成|`new BufferedReader()`|`new BufferedWriter()`|
-|1 文字の読み取り/書き込み|`read()`|`write(int c)`|
+|操作                    |`BufferedReader`|`BufferedWriter`|
+|-----------------------|----------------|----------------|
+|バッファの作成          |`new BufferedReader()`|`new BufferedWriter()`|
+|1 文字の読み取り/書き込み|`read()`        |`write(int c)`|
 |配列の要素数だけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
 |指定した長さだけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
-|1 行読み取り (*)|`readLine()`| N/A |
-|改行の書き込み (*)| N/A |`newLine()`|
-|文字列の書き込み (*)| N/A |`write(String str)`|
-|バッファのフラッシュ| N/A |`flush()`|
-|バッファのクローズ|`close()`|`close()`|
+|1 行読み取り (*)        |`readLine()`    | N/A |
+|改行の書き込み (*)      | N/A             |`newLine()`|
+|文字列の書き込み (*)     | N/A            |`write(String str)`|
+|バッファのフラッシュ     | N/A            |`flush()`|
+|バッファのクローズ      |`close()`        |`close()`|
+
 (*) 行単位での入出力を行うためのメソッド。改行コードは OS によって異なるため、その差違を吸収するようなメソッドが用意されている。
 
 >NIO.2 では常にバッファリングを行う入出力ストリームを用いてテキストファイルを扱います。
@@ -99,7 +100,7 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 
 Java は最初のバージョンから入出力ストリームをはじめとする豊富な入出力 API を備えていました。それらは現在でも十分に通用する優秀な API ですが、Java が普及するとともに入出力 API に対する改善要望が多数寄せられるようになりました。それらの要望を吸収し入出力 API の近代化を図ったものが NIO (New I/O) および NIO.2 (New I/O 2) です。ファイル操作に関連する改善は NIO.2 によって行われています。この章ではファイル操作に NIO.2 を利用する前提で話を進めます。
 
->【バージョン】NIO と NIO.2 は大規模な API 刷新プロジェクトであり、すべてを同時リリースすることができませんでした。そこでまず `InputStream`/`OutputStream` の高速化 (チャネルの導入) を中心とした NIO を J2SE 1.4 でリリースし、その後ファイル操作の簡略化を中心とした NIO.2 を Java SE 7 でリリースする形を採りました。
+NIO プロジェクトは Java の I/O そのものを刷新する大規模なプロジェクトであり、すべてを同時リリースすることができませんでした。そこでまず `InputStream`/`OutputStream` の高速化 (チャネルの導入) を中心とした NIO を J2SE 1.4 でリリースし、その後ファイル操作の簡略化を中心とした NIO.2 を Java SE 7 でリリースする形を採りました。
 
 ### 11.2.2. FileSystem クラスと Path インタフェース
 
@@ -131,14 +132,14 @@ Path path = Paths.get("C", "eclipse", "eclipse.ini");
 
 その他、`Path` インタフェースにはパス操作を行うためのメソッドが用意されています。主なものを以下に示します。
 
-|メソッド名|説明|
+|メソッド名       |説明|
 |----------------|--------------------------------|
-|`getFileName`|ファイルまたはディレクトリ名そのもの (ディレクトリ構造を含まない) を取得する|
-|`getParent`|親ディレクトリのパスを取得する (親を持たない場合は `null`)|
-|`resolve`|指定されたパスをこのパスに対して解決する (例: パスの子要素を取得する)|
+|`getFileName`   |ファイルまたはディレクトリ名そのもの (ディレクトリ構造を含まない) を取得する|
+|`getParent`     |親ディレクトリのパスを取得する (親を持たない場合は `null`)|
+|`resolve`       |指定されたパスをこのパスに対して解決する (例: パスの子要素を取得する)|
 |`resolveSibling`|指定されたパスをこのパスの親パスに対して解決する (例: ファイル名を変更する)|
 |`toAbsolutePath`|絶対パスを取得する|
-|`toString`|文字列表現を取得する (書式は OS に依存する)|
+|`toString`      |文字列表現を取得する (書式は OS に依存する)|
 
 ### 11.2.3. Files クラス
 
@@ -160,16 +161,16 @@ Path path = Paths.get("C", "eclipse", "eclipse.ini");
 
 `Files` クラスが提供するメソッドのうち、ファイル操作に関するものには、以下のようなものが用意されています (チャネルが関連するもの等は省略します)。参考までに、具体的なメソッド名を [ ] 内に示します。詳細については API ドキュメントを参照してください。
 
-|メソッド名|説明|
-|----------------|----------------|
+|メソッド名          |説明|
+|-------------------|----------------|
 |`newBufferedReader`|ファイルを読み取り用に開き BufferedReader を返す|
 |`newBufferedWriter`|ファイルを書き込み用に開き BufferedWriter を返す|
-|`newInputStream`|ファイルを読み取り用に開き InputStream を返す|
-|`newOutputStream`|ファイルを書き込み用に開き OutputStream を返す|
-|`readAllBytes`|ファイルからすべてのバイトを読み取り byte[] で返す|
-|`readAllLines`|ファイルからすべての行を読み取り List<String> で返す|
-|`lines`|ファイルからすべての行を読み取り Stream<String> で返す (Java SE 8 以降)|
-|`write`|すべてのバイトまたは行をファイルに書き込む (一部の書式は Java SE 8 以降)|
+|`newInputStream`   |ファイルを読み取り用に開き InputStream を返す|
+|`newOutputStream`  |ファイルを書き込み用に開き OutputStream を返す|
+|`readAllBytes`     |ファイルからすべてのバイトを読み取り byte[] で返す|
+|`readAllLines`     |ファイルからすべての行を読み取り List<String> で返す|
+|`lines`            |ファイルからすべての行を読み取り Stream<String> で返す (Java SE 8 以降)|
+|`write`            |すべてのバイトまたは行をファイルに書き込む (一部の書式は Java SE 8 以降)|
 
 ※`readAllBytes()`、`readAllLines()`、`lines()` および `write()` は、完了後にファイルがクローズされる。
 
@@ -255,5 +256,5 @@ public void writeFile(Path path, List<String> lines) throws IOException {
 
 `readAllLines`/`readAllBytes` および `write` メソッドは大きなファイルの読み書きを想定したものではありませんが、`List` または `byte` 配列を用いて一括でファイルの読み書きができるため、小さなファイルを数多く処理しなければならない場合に威力を発揮します。
 
->【バージョン】 `Files` クラスのメソッドを用いてファイルの読み書きを行う際には `Charset` で文字エンコードをするようになっています。Windows 環境では Shift_JIS (Microsoft CP 932) : `Charset.forName("Windows-31J")` または UTF-8 : `Charset.forName("UTF-8")` を指定することが多いでしょう。文字エンコードの指定は Java SE 7 では必須ですが、Java SE 8 では省略可能です (省略時は UTF-8 とみなされます)。
+【補足】 `Files` クラスのメソッドを用いてファイルの読み書きを行う際には `Charset` で文字エンコードをするようになっています。Windows 環境では Shift_JIS (Microsoft CP 932) : `Charset.forName("Windows-31J")` または UTF-8 : `Charset.forName("UTF-8")` を指定することが多いでしょう。文字エンコードの指定は Java SE 7 では必須ですが、Java SE 8 では省略可能です (省略時は UTF-8 とみなされます)。
 
