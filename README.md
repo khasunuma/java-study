@@ -21,5 +21,6 @@ Java の入門あるいは再入門テキストは世の中に多数で回って
 
 ### 3. 著作権表記
 
-&copy; 2016 HASUNUMA Kenji (Studio Coppermine)
+&copy; 2016 HASUNUMA Kenji ([Studio Coppermine](http://www.coppermine.jp/))
 
+Contact : k.hasunuma@coppermine.jp
