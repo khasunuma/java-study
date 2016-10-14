@@ -125,13 +125,13 @@ List<String> list2 = new ArrayList<>();
 
 前節で述べた通り、コレクションにはそれぞれデータの保持方法が異なる複数の実装クラスがあります。保持方法によりアクセス特性に違いがあるため、最適な実装クラスを選択するようにしましょう。
 
-|保持方法|`Set<E>`|`List<E>`|`Deque<E>`|`Map<K, V>`|
-|----|--------|--------|---------|--------|
-|ハッシュ表|`HashSet`|`--`|`--`|`HashMap`|
-|可変配列|`--`|`ArrayList`|`ArrayDeque`|`--`|
-|B ツリー|`TreeSet`|`--`|`--`|`TreeMap`|
-|連結リスト|`--`|`LinkedList`|`LinkedList`|`--`|
-|ハッシュ表 + 連結リスト|`LinkedHashSet`|`--`|`--`|`LinkedHashMap`|
+|保持方法  |`Set<E>` |`List<E>`  |`Deque<E>`|`Map<K, V>`|
+|---------|:-------:|:---------:|:--------:|:---------:|
+|ハッシュ表|`HashSet`|N/A        |N/A       |`HashMap`|
+|可変配列  |N/A      |`ArrayList`|`ArrayDeque`|N/A|
+|B ツリー  |`TreeSet`|N/A        |N/A       |`TreeMap`|
+|連結リスト|N/A      |`LinkedList`|`LinkedList`|N/A|
+|ハッシュ表 + 連結リスト|`LinkedHashSet`|N/A|N/A|`LinkedHashMap`|
 
 |保持方法|順次アクセス|直接アクセス|挿入・削除|
 |--------|--------|--------|--------|

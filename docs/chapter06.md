@@ -40,6 +40,7 @@ throw new IllegalArgumentException();  // 引数に不正な値が渡された
 |`SQLException`            |○       |JDBC での SQL 実行時にエラーが発生した|
 |`RuntimeException`        |×       |被チェック例外 (ランタイム例外) のスーパークラス|
 |`NullPointerException`    |×       |引数が null である|
+|`ClassCastException`      |×       |データ型のキャストに失敗した|
 |`IllegalArgumentException`|×       |引数に不正な値が渡された (引数が null の場合にも用いる場合がある)|
 |`NumberFormatException`   |×       |文字列が数値に変換できない書式になっている|
 |`ArithmeticException`     |×       |異常な算術演算が行われた、例えば数値を 0 で割ったなど|

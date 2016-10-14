@@ -30,7 +30,7 @@ if 文とブロックの組み合わせは、他にも if-else 文、while 文�
 
 ## 5.2. if-else 文
 
-- 書式: `if ( expr ) stmt1 else stmt2` (`expr`: 論理型、`stmt1`, `stmt2`: 文)
+- 書式: `if ( expr ) stmt1 else stmt2` (`expr`: 論理型、`stmt1` `stmt2`: 文)
 - 条件式 `expr` の値が `true` のとき `stmt1` を、`false` のとき `stmt2` を実行します。
 - `stmt1` には if 文 (もしくは if 文が連なる文) 以外を指定します。
 - `stmt2` には任意の文を指定できます。
@@ -98,7 +98,7 @@ else
 
 条件式の判定は先頭の if から順番に行います。従って、if-else 文で多肢分岐を行う場合には優先順位の高い条件式ほど上位に記述するのが定石です。
 
->Java では多肢分岐専用の構文として switch 文を用意しています。switch 文については分岐先に優先順位はありません。
+なお、Java では多肢分岐専用の構文として switch 文 (後述) を用意しています。switch 文については分岐先に優先順位はありません。
 
 ## 5.3. while 文
 
