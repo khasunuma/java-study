@@ -526,7 +526,7 @@ OR 演算式 (InclusiveOrExpression) は XOR 演算式に次いで 11 番目に�
 |`lhs >>= expr`|`lhs = lhs >>> expr`|`lhs >>>= lhs >>>= expr`|`lhs >>>= (lhs >>>= expr)`|
 |`lhs &= expr`|`lhs = lhs & expr`|`lhs &= lhs &= expr`|`lhs &= (lhs &= expr)`|
 |`lhs ^= expr`|`lhs = lhs ^ expr`|`lhs^ = lhs ^= expr`|`lhs^ = (lhs ^= expr)`|
-|`lhs |= expr`|`lhs = lhs | expr`|`lhs |= lhs |= expr`|`lhs |= (lhs |= expr)`|
+|`lhs \|= expr`|`lhs = lhs \| expr`|`lhs \|= lhs \|= expr`|`lhs \|= (lhs \|= expr)`|
 
 - lhs: 左辺式 - 変数、フィールド・アクセス式、配列アクセス式 ([9 章](chapter09.md))
 - expr: 式 - 代入式を含むすべての式
