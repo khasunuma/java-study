@@ -514,7 +514,7 @@ OR 演算式 (InclusiveOrExpression) は XOR 演算式に次いで 11 番目に�
 代入演算式 (AssignmentExpression) は変数に値を代入するために使用し、最も低い優先順位で評価される式です。代入式には単純代入演算式と複合代入演算式があります。
 
 <table border>
-<tr><th>複合代入演算式</th><th>単純代入演算式</th><th>結合順序 (評価前)</th><th>結合順序 (評価後)</th></td>
+<tr><th>複合代入演算式</th><th>単純代入演算式</th><th>結合順序 (評価前)</th><th>結合順序 (評価後)</th></tr>
 <tr><td>N/A</td><td><code>lhs = expr</code></td><td><code>lhs = lhs = expr</code></td><td><code>lhs = (lhs = expr)</code></td></tr>
 <tr><td><code>lhs *= expr</code></td><td><code>lhs = lhs * expr</code></td><td><code>lhs *= lhs *= expr</code></td><td><code>lhs *= (lhs *= expr)</code></td></tr>
 <tr><td><code>lhs /= expr</code></td><td><code>lhs = lhs / expr</code></td><td><code>lhs /= lhs /= expr</code></td><td><code>lhs /= (lhs /= expr)</code></td></tr>
