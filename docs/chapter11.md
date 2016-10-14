@@ -26,9 +26,9 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 |操作                     |`InputStream`           |`OutputStream`          |
 |-------------------------|------------------------|------------------------|
 |ファイルのオープン         |`new FileInputStream()`|`new FileOutputStream()`|
-|1 バイトの読み取り/書き込み|`read()`               |`write(int b)`|
-|配列の要素数だけ読み取り/書き込み|`read(byte[] b, int off, int len)`|`write(byte[] b, int off, int len)`|
-|指定した長さだけ読み取り/書き込み|`read(byte[] b, int off, int len)`|`write(byte[] b, int off, int len)`|
+|1 バイトの読み取り/書き込み|`read()`               |`write(int)`|
+|配列の要素数だけ読み取り/書き込み|`read(byte[], int, int)`|`write(byte[], int, int)`|
+|指定した長さだけ読み取り/書き込み|`read(byte[], int, int)`|`write(byte[], int, int)`|
 |ファイルのフラッシュ       | N/A                    |`flush()`               |
 |ファイルのクローズ         |`close()`              |`close()`                |
 
@@ -46,10 +46,10 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 |操作                     |`Reader`                |`Writer`|
 |-------------------------|------------------------|------------------------|
 |ファイルのオープン        |`new FileReader()`       |`new FileWriter()`|
-|1 文字の読み取り/書き込み  |`read()`                |`write(int c)`|
-|配列の要素数だけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
-|指定した長さだけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
-|文字列の読み取り/書き込み  |N/A                     |`write(String str)`|
+|1 文字の読み取り/書き込み  |`read()`                |`write(int)`|
+|配列の要素数だけ読み取り/書き込み|`read(char[], int, int)`|`write(char[], int, int)`|
+|指定した長さだけ読み取り/書き込み|`read(char[], int, int)`|`write(char[], int, int)`|
+|文字列の読み取り/書き込み  |N/A                     |`write(String)`|
 |ファイルのフラッシュ       |N/A                    |`flush()`|
 |ファイルのクローズ        |`close( )`              |`close()`|
 
@@ -82,11 +82,11 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 |-----------------------|----------------|----------------|
 |バッファの作成          |`new BufferedReader()`|`new BufferedWriter()`|
 |1 文字の読み取り/書き込み|`read()`        |`write(int c)`|
-|配列の要素数だけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
-|指定した長さだけ読み取り/書き込み|`read(char[] cbuf, int off, int len)`|`write(char[] cbuf, int off, int len)`|
+|配列の要素数だけ読み取り/書き込み|`read(char[], int, int)`|`write(char[], int, int)`|
+|指定した長さだけ読み取り/書き込み|`read(char[], int, int)`|`write(char[], int, int)`|
 |1 行読み取り (*)        |`readLine()`    | N/A |
 |改行の書き込み (*)      | N/A             |`newLine()`|
-|文字列の書き込み (*)     | N/A            |`write(String str)`|
+|文字列の書き込み (*)     | N/A            |`write(String)`|
 |バッファのフラッシュ     | N/A            |`flush()`|
 |バッファのクローズ      |`close()`        |`close()`|
 

@@ -5,7 +5,7 @@
 - 書式: `if ( expr ) stmt` (`expr`: 論理型、`stmt`: 文)
 - 条件式 `expr` の値が `true` のとき `stmt` を実行します。それ以外の場合は何も行いません。
 - `stmt` には任意の文を指定できます。
-- if 文は、C、C++、JavaScript および Python の if 文、Visual Basic の If ... Then 構文に相当します。
+- if 文は、C、C++、JavaScript および Python の if 文、Visual Basic の If...Then 構文に相当します。
 
 ### 5.1.1. if 文とブロック
 
@@ -68,7 +68,7 @@ else
 - `expr1` が `false` の場合:
   - 何もしない
 
-なぜこのような解釈の相違が発生するのかというと、「`else` は最も近い `if` と結びつく」という Java の構文解釈があるためです。同様の問題は C、C++ および JavaScript にも存在しています。Python ではこの曖昧さを回避する目的も合わせてインデント (オフサイド・ルール) によるブロックを採用しており、Visual Basic では Begin ... End 形式のブロック構文を採用しているため、このような問題は起こりません。
+なぜこのような解釈の相違が発生するのかというと、「`else` は最も近い `if` と結びつく」という Java の構文解釈があるためです。同様の問題は C、C++ および JavaScript にも存在しています。Python ではこの曖昧さを回避する目的も合わせてインデント (オフサイド・ルール) によるブロックを採用しており、Visual Basic では Begin...End 形式のブロック構文を採用しているため、このような問題は起こりません。
 
 上記のコードを意図した通りに動作させるには、以下のようにブロックを使用します。
 
@@ -106,7 +106,7 @@ else
 - 条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
 - while 文が、if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、`stmt` には if 文以外を指定します。そうでない場合は任意の文を指定できます。
 
-while 文は、C、C++ および JavaScript の while 文と同じで、Python の while 文、Visual Basic の Do While ... Loop 構文 (または While ... Wend 構文) に相当します。
+while 文は、C、C++ および JavaScript の while 文と同じで、Python の while 文、Visual Basic の Do While...Loop 構文 (または While...Wend 構文) に相当します。
 
 ## 5.4. do-while 文
 
@@ -114,7 +114,7 @@ while 文は、C、C++ および JavaScript の while 文と同じで、Python �
 - 最初に `stmt` を実行し、その後は条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
 - `stmt` には任意の文を指定できます。
 
-do-while 文は、C、C++ および JavaScript の do-while 文と同じで、Visual Basic の Do ... While Loop 構文に相当します。Python には相当する構文がありません。
+do-while 文は、C、C++ および JavaScript の do-while 文と同じで、Visual Basic の Do...While Loop 構文に相当します。Python には相当する構文がありません。
 
 実際には、Java における do-while 文は、以下の while 文に相当します (ほとんどの場合、下記のように書き換えることができます)。
 
@@ -142,7 +142,7 @@ while ( expr ) {
 }
 ```
 
-Java の for 文は、C、C++ および JavaScript の for 文とほぼ同じです。Visual Basic の For ... Next 構文に相当しますが、Visual Basic のそれが純粋な指定回数繰り返しであるのに対して、Java は制約が緩い (3 式の選び方で繰り返しをどのようにも制御できる) ことに注意してください。Python の for 文は後述の拡張 for 文に相当するもので、Java の for 文とは異なることに注意してください。
+Java の for 文は、C、C++ および JavaScript の for 文とほぼ同じです。Visual Basic の For...Next 構文に相当しますが、Visual Basic のそれが純粋な指定回数繰り返しであるのに対して、Java は制約が緩い (3 式の選び方で繰り返しをどのようにも制御できる) ことに注意してください。Python の for 文は後述の拡張 for 文に相当するもので、Java の for 文とは異なることに注意してください。
 
 ## 5.6. 拡張 for 文
 
@@ -152,13 +152,13 @@ Java の for 文は、C、C++ および JavaScript の for 文とほぼ同じで
 - 拡張 for 文が、if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、`stmt` には if 文以外を指定します。そうでない場合は任意の文を指定できます。
 - 拡張 for 文の詳細は [9 章](chapter09.md)で取り上げます。
 
-拡張 for 文は、JavaScript の foreach 文、Python の for 文、Visual Basic の For Each ... Next 構文に相当します。C には拡張 for 文に相当するものはありません。C++ は言語仕様には含まれていませんが、標準ライブラリに Java の拡張 for 文に相当する機能が用意されています。
+拡張 for 文は、JavaScript の foreach 文、Python の for 文、Visual Basic の For Each...Next 構文に相当します。C には拡張 for 文に相当するものはありません。C++ は言語仕様には含まれていませんが、標準ライブラリに Java の拡張 for 文に相当する機能が用意されています。
 
 ## 5.7. break 文と continue 文
 
 break 文と continue 文は、処理の流れを強制的に変えるための文です。
 
-break 文は繰り返し (while 文/do-while 文、for 文) の中で使用し、繰り返しの中止に使用します。また continue 文は繰り返しの中で使用し、繰り返しを中断して次の繰り返しの実行を指示します。一般的な説明は以上ですが感覚的でないため疑似的なコードを用いて説明します。
+break 文は繰り返し (while/do-while 文、for/拡張 for 文) の中で使用し、繰り返しの中止に使用します。また continue 文は繰り返しの中で使用し、繰り返しを中断して次の繰り返しの実行を指示します。一般的な説明は以上ですが感覚的でないため疑似的なコードを用いて説明します。
 
 ```java
 // while 文の処理内における break 文の使用例

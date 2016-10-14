@@ -48,7 +48,7 @@ throw new IllegalArgumentException();  // 引数に不正な値が渡された
 
 上記のうち特に `NullPointerException` は、`null` のインスタンスのメソッドを呼び出そうとした場合に Java VM がスローする例外でもあります。特にメソッドの戻り値が `null` になりうる場合において、`null` に対する処理 (`null` の場合はメソッドを呼び出さない、など) が漏れているときに発生しやすいバグです。
 
-チェック例外はアプリケーションのどこかでキャッチしてリカバリ処理を行う必要があります。非チェック例外の場合はキャッチの対象外ですが (Java VM が処理します)、`RuntimeException` とそのサブクラスについては必要であればキャッチしても構いません。
+チェック例外はアプリケーションのどこかでキャッチしてリカバリ処理を行う必要があります。非チェック例外の場合はキャッチの対象外ですが (Java VM が処理します)、必要であればキャッチしても構いません。
 
 例外の処理方法については、メソッド内で例外を処理する try-catch 文と、呼び出し元に例外処理をゆだねる throws 句の 2 通りがあります。
 
@@ -158,7 +158,7 @@ try {
 
 try-catch 文はリソースのオープンとクローズを伴って使用されることが多く、finally 節によるリソースのクローズが必須です。そこで、try-catch 文にリソースのオープンと自動クローズを合わせた簡略記法である try-with-resources 文も用意されています。
 
->try-with-resources 文は Java SE 7 で導入された構文です。try-with-resources 文の導入に合わせて Java SE API でクローズ処理を必要とするものの多くが自動クローズに対応するよう書き換えられましたが、XML パーサーなど一部の API では対応がなされていないため注意が必要です (XML パーサーの仕様には Java 外部の標準化団体も関わっているため容易に変更できなかったものと推察されます)。
+>try-with-resources 文は Java SE 7 で導入された構文です。try-with-resources 文の導入に合わせて Java SE API でクローズ処理を必要とするものの多くが自動クローズに対応するよう書き換えられましたが、XML パーサーなど一部の API では対応がなされていないため注意が必要です。
 
 - 書式: `try ( resources ) try_block catch ( CatchType e ) catch_block finally finally_block`
 - `try ( resources ) try_block` を try 節、`catch ( CatchType e ) catch_block` を catch 節、`finally finally_block` を finally 節と呼びます。

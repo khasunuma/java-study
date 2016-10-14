@@ -37,7 +37,7 @@ Java における処理の記述を文 (Statement) といいます。主な構�
 
 空文 (EmptyStatement) は、何も処理をしない文です。`;` (セミコロン) だけで表します。
 
-空文は後述の while 文、do-while 文、for 文においてダミー処理が必要になった時に使用します。C、C++ および JavaScript には空文は存在しており記法・用途も Java と同様ですが、Python および Visual Basic には空文の概念がないため注意が必要です。
+空文は後述の while 文、do-while 文、for 文においてダミー処理が必要になった時に使用します。C、C++ および JavaScript には空文は存在しており記法・用途も Java と同様ですが、Python および Visual Basic には空文の概念はありません。
 
 ## 4.3. ブロック
 
@@ -75,7 +75,7 @@ final int round = 0;  // データ型: int、ローカル変数名: round、初�
 
 ### 4.4.1. 整数リテラル
 
-整数リテラルは (IntegerLiteral) 10 進数、16 進数、8 進数および 2 進数の各表記があります。
+整数リテラル (IntegerLiteral) は 10 進数、16 進数、8 進数および 2 進数の各表記があります。
 
 #### 4.4.1.1. 10 進数整数リテラル
 
@@ -154,7 +154,7 @@ Java とその他の言語 (C、C++、Python、JavaScript、Visual Basic) との
 
 16 進数浮動小数点数リテラルの型は、末尾に `f` `F` が付加された場合は `float` 型、`d` `D` が付加された場合は `double` 型となります。省略時には `double` 型とみなされます。
 
-なお、C および C++ には Java と同じ記法の 16 進数浮動小数点数リテラルが存在します。Python、JavaScript、Visual Basic には 16 進数浮動小数点数リテラルは存在しません。
+なお、C および C++ には Java と同じ記法の 16 進数浮動小数点数リテラルが存在します。JavaScript、Python および Visual Basic には 16 進数浮動小数点数リテラルは存在しません。
 
 ### 4.4.3. 文字リテラルと文字列リテラル
 
@@ -185,13 +185,13 @@ Java とその他の言語 (C、C++、Python、JavaScript、Visual Basic) との
 
 論理リテラル (BooleanLiteral) は論理値を表すリテラルで、真 `true`、偽 `false` の 2 値となります。また、`boolean` 型の値となります。
 
-論理リテラルは C、C++、JavaScript、Python および Visual Basic にも存在します (ただしデータ型の表記は言語により異なります)。他の言語では論理型と整数型は変換可能ですが (多くは 真 = 1、偽 = 0 だが、Visual Basic だけは真 = -1、偽 = 0)、Java ではできないことに注意してください。
+論理リテラルは C、C++、JavaScript、Python および Visual Basic にも存在します (ただしデータ型名は言語により異なります)。他の言語では論理型と整数型は変換可能ですが (多くは 真 = 1、偽 = 0 だが、Visual Basic だけは真 = -1、偽 = 0)、Java ではできないことに注意してください。
 
 #### 4.4.4.2. Null リテラル
 
 いずれのインスタンスも参照しないことを示すリテラルを Null リテラル (NullLiteral) といい、キーワード `null` で表します。
 
-C には言語レベルの Null はなく、マクロ定数 `NULL` が相当します (定義値はコンパイラに依存します)。C++ と JavaScript は `null`、Python は `None`、Visual Basic は `Nothing` がそれぞれ相当します。
+C には言語レベルの Null はなく、マクロ定数 `NULL` が相当します (定義値はコンパイラに依存します)。C++ および JavaScript は `null`、Python は `None`、Visual Basic は `Nothing` がそれぞれ相当します。
 
 ## 4.5. 式
 
@@ -222,7 +222,7 @@ Java において最も単純な式を一次式 (Primary) と呼びます。一�
 
 - 書式: `プリミティブ型名 . class`、`クラス名 . class` または `void . class`
 - 実行中の Java アプリケーションのデータ型を表します。
-- 評価後の式の値は `Class` クラスのインスタンスとなります。`Class` クラスは 7 章で取り上げる `Object` クラスの `getClass()` メソッドの戻り値でもあります。
+- 評価後の式の値は `Class` クラスのインスタンスとなります。`Class` クラスは [7 章](chapter07.md)で取り上げる `Object` クラスの `getClass()` メソッドの戻り値でもあります。
 - クラス・リテラルをアプリケーション内で処理することは稀です。多くの場合、引数の型が `Class` であるメソッドを呼び出すために使用します。
 
 #### 4.5.1.3. this 参照
@@ -295,7 +295,7 @@ Java において最も単純な式を一次式 (Primary) と呼びます。一�
   - 同様に `ｎ` の値が `3` の場合に式 `var--` の値は `3` と評価され、その後 `var` の値が `2` となります。
 - 式の結合順序: `var++++` は `(var++)++`、`var----` は `(var--)--` として評価されます。
 
-参考まで、後置インクリメント式および後置デクリメント式は C、C++ および JavaScript には存在しますが、Python および Visual Basic には存在しません。
+後置インクリメント式および後置デクリメント式は C、C++ および JavaScript には存在しますが、Python および Visual Basic には存在しません。
 
 ### 4.5.3. 単項式
 
@@ -317,7 +317,7 @@ Java において最も単純な式を一次式 (Primary) と呼びます。一�
 - 式の結合順序 (1): `++++var` は `++(++var)`、`----var` は `--(--var)` として評価されます。
 - 式の結合順序 (2): `++var++` は `++(var++)`、`--var--` は `--(var--)` として評価されます (後置インクリメント式および後置デクリメント式の方が優先順位が高いため)。
 
-参考までに、前置インクリメント式および前置デクリメント式は C、C++ および JavaScript には存在しますが、Python および Visual Basic には存在しません。
+前置インクリメント式および前置デクリメント式は C、C++ および JavaScript には存在しますが、Python および Visual Basic には存在しません。
 
 #### 4.5.3.2. 符号
 
@@ -333,7 +333,7 @@ Java において最も単純な式を一次式 (Primary) と呼びます。一�
 - 浮動小数点型は単純な 2 進数表記ではないため (IEEE 754 浮動小数点数)、ビット反転は適用できません。
 - 結合順序: `~~n` は `~(~n)` として評価され、最終的には `(n)` と評価されます。
 
-参考までに、C、C++、Python および Javascript のビット反転は Java と同じ `~` となります。Visual Basic ではビット反転は否定 (次項) と同じ `Not` であり、文脈により判断されます。
+C、C++、Python および Javascript のビット反転は Java と同じ `~` となります。Visual Basic ではビット反転は否定 (次項) と同じ `Not` であり、文脈により判断されます。
 
 #### 4.5.3.4. 否定
 
@@ -341,7 +341,7 @@ Java において最も単純な式を一次式 (Primary) と呼びます。一�
 - 式の値 (論理型) を否定します。式の値が `true` の場合は `false` として評価され、`false` の場合は `true` として評価されます。
 - 主に後述の関係演算式、等価演算式、条件 AND/OR 演算式に対して適用します (何れも式の値は論理型です)。
 
-参考までに、C、C++ および JavaScript の否定は Java と同じ `!` です。Python の否定は `not` です。Visual Basic では否定はビット反転 (前項) と同じ `Not` であり、文脈により判断されます。
+C、C++ および JavaScript の否定は Java と同じ `!` です。Python の否定は `not` です。Visual Basic では否定はビット反転 (前項) と同じ `Not` であり、文脈により判断されます。
 
 #### 4.5.3.5. キャスト
 
@@ -380,7 +380,7 @@ double d = (double) x / (double) y;
 BigDecimal decimal = (Number) number;
 ```
 
->C は Java と同じ書式のキャストがあります (データ型は異なります)。C++ は C 相当のキャストに加え、より安全な型変換を行うためのキャストが複数用意されています。JavaScript、Python および Visual Basic ではデータ型変換の関数を利用します (例えば、Visual Basic の場合は `CStr`、`CInt`、`CDouble` など)。
+C は Java と同じ書式のキャストがあります (データ型は異なります)。C++ は C 相当のキャストに加え、より安全な型変換を行うためのキャストが複数用意されています。JavaScript、Python および Visual Basic ではデータ型変換の関数を利用します (例えば、Visual Basic の場合は `CStr`、`CInt`、`CDouble` など)。
 
 ### 4.5.4. 乗算式と加算式 (四則演算)
 
@@ -393,7 +393,7 @@ BigDecimal decimal = (Number) number;
 - `0` による除算 (`x / 0`) を行うと非チェック例外 `ArithmeticException` がスローされます (例外については 6 章を参照のこと)。
 - 結合順序: `x * y * z`、`x / y / z`、`x % y % z` はそれぞれ `(x * y) * z`、`(x / y) / z`、`(x % y) % z` として評価されます。
 
-参考まで、乗算式・除算式・剰余式は C、C++、JavaScript、Python および Visual Basic でサポートされます。ただし、剰余式で浮動小数点数を使用できるのは Java と JavaScript だけです。また、剰余の記号は Visual Basic のみ `Mod` となります。
+乗算式・除算式・剰余式は C、C++、JavaScript、Python および Visual Basic でもサポートされます。ただし、剰余式で浮動小数点数を使用できるのは Java と JavaScript だけです。また、剰余の記号は Visual Basic のみ `Mod` となります。
 
 加算式 (AdditiveExpression) は乗算式に次いで 5 番目に高い優先順位で評価される式です。
 
@@ -405,7 +405,7 @@ BigDecimal decimal = (Number) number;
 
 括弧、符号、乗算式、加算式の優先順位は、括弧 (1 位) > 符号 (3 位) > 乗算式 (4 位) > 加算式 (5 位) となり、数式における優先順位と一致します。
 
-参考まで、加算式・減算式は C、C++、JavaScript、Python および Visual Basic でサポートされます。加算演算子 `+` は文字列結合にも使用しますが (演算子オーバーライド)、C では文字列リテラル同士の結合にしか使用できない点、Visual Basic では `&` による文字列結合が推奨される点がそれぞれ異なります。
+加算式・減算式は C、C++、JavaScript、Python および Visual Basic でもサポートされます。加算演算子 `+` は文字列結合にも使用しますが (演算子オーバーライド)、C では文字列リテラル同士の結合にしか使用できない点、Visual Basic では `&` による文字列結合が推奨される点がそれぞれ異なります。
 
 ### 4.5.5. シフト演算式
 
@@ -416,20 +416,20 @@ BigDecimal decimal = (Number) number;
 - 浮動小数点数型は単純な 2 進数表記ではないため (IEEE 754 浮動小数点数)、シフト演算式は適用できません。
 - 結合順序: `n << m << k` は `(n << m) << k` として評価されます。他も同様です。
 
-参考まで、シフト演算式は C、C++、Python、JavaScript に存在し、Visual Basic には存在しません。JavaScript のシフト演算式は Java と同一です。Python は論理シフト `>>>` がなく、すべて算術シフトになります。C および C++ は `>>>` 演算子がない代わりに、データ型の符号の有無により算術シフトと論理シフトが切り替わります。
+シフト演算式は C、C++、JavaScript および Python に存在し、Visual Basic には存在しません。JavaScript のシフト演算式は Java と同一です。Python は論理シフト `>>>` がなく、すべて算術シフトになります。C および C++ は `>>>` 演算子がない代わりに、データ型の符号の有無により算術シフトと論理シフトが切り替わります。
 
 ### 4.5.6. 関係演算式と等価演算式
 
 関係演算式 (RelationalExpression) はシフト演算式に次いで 7 番目に高い優先順位で評価される式です。
 
-- 書式 (1):  より小さい `expr1 < expr2`、より大きい `expr1 > expr2`、以下 `expr1 <= expr2`、以上 `expr1 => expr2` (`expr1`, `expr2`: 整数型・浮動小数点型)
+- 書式 (1): より小さい `expr1 < expr2`、より大きい `expr1 > expr2`、以下 `expr1 <= expr2`、以上 `expr1 => expr2` (`expr1`, `expr2`: 整数型・浮動小数点型)
 - 書式 (2): `ref instanceof type` (`ref`: インスタンスへの参照、`type`: クラス)
 - 書式 (1) は式 `expr1` と `expr2` を評価し、大小関係が条件を満たしている場合には式の値を `true`、そうでない場合は `false` とします。
 - 書式 (2) はインスタンスの参照 `ref` がクラス `type` のインスタンスである場合には式の値を `true`、そうでない場合は `false` とします。
 - 書式 (1)、書式 (2) のいずれも、評価後の式の値は論理型となります。
 - 結合順序: `expr1 < expr2 < expr3` は `(expr1 < expr2) < expr3` として評価されます。他も同様です。
 
-参考まで、関係演算式 (`instanceof` を除く) は C、C++、JavaScript、Python および Visual Basic に存在し、記法・用法も同じです。C++ に限っては、キャストの一種である `dynamic_cast` も用意されており、Java の `instanceof` により近い働きをします。
+参考まで、関係演算式 (`instanceof` を除く) は C、C++、JavaScript、Python および Visual Basic に存在し、記法・用法も同じです。C++ にはキャストの一種である `dynamic_cast` が、Java の `instanceof` に近い働きをします。
 
 等価演算式 (EqualityExpression) は関係演算式に次いで 8 番目に高い優先順位で評価される式です。
 
@@ -438,7 +438,7 @@ BigDecimal decimal = (Number) number;
 - 評価後の式の値は論理型となります。
 - 結合順序: `expr1 == expr2 == expr3` は `(expr1 == expr2) == expr3` として評価されます。他も同様です。
 
-参考まで、等価演算式は C、C++、JavaScript、Python および Visual Basic に存在しますが、Visual Basic のみ記法が異なり等号 `=`、不等号 `<>` となります。
+等価演算式は C、C++、JavaScript、Python および Visual Basic に存在しますが、Visual Basic のみ記法が異なり等号 `=`、不等号 `<>` となります。
 
 ### 4.5.7. ビット演算式
 
@@ -471,7 +471,7 @@ OR 演算式 (InclusiveOrExpression) は XOR 演算式に次いで 11 番目に�
 - 式 `expr1` および `expr2` は論理型であっても必ず両方が評価されます (条件 OR 演算式 `expr1 || expr2` では `expr1` が `true` の場合には `expr2` は評価されません)。
 - 結合順序: `expr1 | expr2 | expr3` は `(expr1 | expr2) | expr3` として評価されます。
 
->ビット演算式は C、C++、JavaScript、Python および Visual Basic に存在しますが、Visual Basic のみ記法が異なり `And`、`Or`、`Xor` となります。
+ビット演算式は C、C++、JavaScript、Python および Visual Basic にも存在しますが、Visual Basic のみ記法が異なり `And`、`Or`、`Xor` となります。
 
 ### 4.5.8. 条件 AND/OR 演算式
 
@@ -493,11 +493,11 @@ OR 演算式 (InclusiveOrExpression) は XOR 演算式に次いで 11 番目に�
 - 式 `expr1` を評価した結果が `true` の場合、`expr2` は評価されません (OR 演算式 `expr1 | expr2` で論理型を使用した場合は `expr1` と `expr2` の両方が必ず評価されます)。
 - 結合順序: `expr1 || expr2 || expr3` は `(expr1 || expr2) || expr3` として評価されます。
 
-参考まで、条件 AND/OR 演算式は C、C++、JavaScript、Python および Visual Basic に存在しますが、Visual Basic のみ記法が異なり `And`、`Or` となります。
+条件 AND/OR 演算式は C、C++、JavaScript、Python および Visual Basic にも存在しますが、Visual Basic のみ記法が異なり `And`、`Or` となります。
 
-### 4.5.9. 条件演算式 (三項演算子)
+### 4.5.9. 条件演算式
 
-条件演算式 (ConditionalExpression) は条件 OR 演算式に次いで 14 番目に高い優先順位で評価される式です。
+条件演算式 (ConditionalExpression) は条件 OR 演算式に次いで 14 番目に高い優先順位で評価される式です。条件演算子は「三項演算子」と呼ばれることもあります。
 
 - 書式: `cond ? expr1 : expr2` (`cond`: 論理型、`expr1`, `expr2`: 整数型・浮動小数点型・論理型・クラス)
 - `cond` が `true` の場合は式の値として `expr1` を、`false` の場合は `expr2` を選択します。
@@ -506,7 +506,7 @@ OR 演算式 (InclusiveOrExpression) は XOR 演算式に次いで 11 番目に�
 - `expr1` と `expr2` の一方が整数型または浮動小数点型の場合は、他方も整数型または浮動小数点型である必要があります。ただし式の値の適用先 (多くは代入式) に合わせられる必要があります。
 - `expr1` と `expr2` の一方がインスタンスの場合は、他方はインスタンスまたは `null` である必要があります。なお、両方とも式の値の適用先 (多くは代入式) のクラスで参照できるインスタンスでなければなりません。
 
-なお、条件演算子 (三項演算子) は C、C++ および JavaScript に同一の構文があります。Python にも三項演算子は存在しますが構文が異なります。Visual Basic には三項演算子がなく、`IIf` 関数で代用します。
+条件演算子は C、C++ および JavaScript に同一の構文があります。Python にも条件演算子は存在しますが構文が異なります。Visual Basic には条件演算子がなく、`IIf` 関数で代用します。
 
 ### 4.5.10. 代入演算式
 

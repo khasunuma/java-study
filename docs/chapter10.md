@@ -103,12 +103,12 @@ Servlet はレスポンスを向上させるためにプロセスではなくス
 
 JSP は HTML にコードを埋め込む「PHP スタイル」のコーディングで簡単にサーバーサイド Java アプリケーションを構築可能な技術ではありますが、PHP とは異なり、実行時に同じ処理を行う Servlet に変換する仕組みとなっています。そのため、JSP も最終的には Servlet に変換されマルチスレッドで動作することとなり、上記の問題点がすべてそのまま当てはまることになります。
 
-## Thread クラスを用いたマルチスレッド
+## Thread クラス
 
 
-## Concurrency Utilities を用いたマルチスレッド
+## Concurrency Utilities
 
 
-## CompletableFuture を用いたマルチスレッド
+## CompletableFuture クラス
 
 
