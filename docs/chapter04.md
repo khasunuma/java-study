@@ -513,20 +513,21 @@ OR 演算式 (InclusiveOrExpression) は XOR 演算式に次いで 11 番目に�
 
 代入演算式 (AssignmentExpression) は変数に値を代入するために使用し、最も低い優先順位で評価される式です。代入式には単純代入演算式と複合代入演算式があります。
 
-|複合代入演算式|単純代入演算式      |結合順序 (評価前)    |結合順序 (評価後)|
-|:-----------:|:----------------:|:------------------:|:------------------:|
-|N/A          |`lhs = expr`      |`lhs = lhs = expr`  |`lhs = (lhs = expr)`|
-|`lhs *= expr`|`lhs = lhs * expr`|`lhs *= lhs *= expr`|`lhs *= (lhs *= expr)`|
-|`lhs /= expr`|`lhs = lhs / expr`|`lhs /= lhs /= expr`|`lhs /= (lhs /= expr)`|
-|`lhs %= expr`|`lhs = lhs % expr`|`lhs %= lhs %= expr`|`lhs %= (lhs %= expr)`|
-|`lhs += expr`|`lhs = lhs + expr`|`lhs += lhs += expr`|`lhs += (lhs += expr)`|
-|`lhs -= expr`|`lhs = lhs - expr`|`lhs -= lhs -= expr`|`lhs -= (lhs -= expr)`|
-|`lhs <<= expr`|`lhs = lhs << expr`|`lhs <<= lhs <<= expr`|`lhs <<= (lhs <<= expr)`|
-|`lhs >>= expr`|`lhs = lhs >> expr`|`lhs >>= lhs >>= expr`|`lhs >>= (lhs >>= expr)`|
-|`lhs >>= expr`|`lhs = lhs >>> expr`|`lhs >>>= lhs >>>= expr`|`lhs >>>= (lhs >>>= expr)`|
-|`lhs &= expr`|`lhs = lhs & expr`|`lhs &= lhs &= expr`|`lhs &= (lhs &= expr)`|
-|`lhs ^= expr`|`lhs = lhs ^ expr`|`lhs ^= lhs ^= expr`|`lhs ^= (lhs ^= expr)`|
-|`lhs &#124;= expr`|`lhs = lhs &#124; expr`|`lhs &#124;= lhs &#124;= expr`|`lhs &#124;= (lhs &#124;= expr)`|
+<table border>
+<tr><th>複合代入演算式</th><th>単純代入演算式</th></th>結合順序 (評価前)</th></th>結合順序 (評価後)</th></td>
+<tr><td>N/A</td><td><code>lhs = expr</code></td><td><code>lhs = lhs = expr</code></td><td><code>lhs = (lhs = expr)</code></td></tr>
+<tr><td><code>lhs *= expr</code></td><td><code>lhs = lhs * expr</code></td><td><code>lhs *= lhs *= expr</code></td><td><code>lhs *= (lhs *= expr)</code></td></tr>
+<tr><td><code>lhs /= expr</code></td><td><code>lhs = lhs / expr</code></td><td><code>lhs /= lhs /= expr</code></td><td><code>lhs /= (lhs /= expr)</code></td></tr>
+<tr><td><code>lhs %= expr</code></td><td><code>lhs = lhs % expr</code></td><td><code>lhs %= lhs %= expr</code></td><td><code>lhs %= (lhs %= expr)</code></td></tr>
+<tr><td><code>lhs += expr</code></td><td><code>lhs = lhs + expr</code></td><td><code>lhs += lhs += expr</code></td><td><code>lhs += (lhs += expr)</code></td></tr>
+<tr><td><code>lhs -= expr</code></td><td><code>lhs = lhs - expr</code></td><td><code>lhs -= lhs -= expr</code></td><td><code>lhs -= (lhs -= expr)</code></td></tr>
+<tr><td><code>lhs <<= expr</code></td><td><code>lhs = lhs << expr</code></td><td><code>lhs <<= lhs <<= expr</code></td><td><code>lhs <<= (lhs <<= expr)</code></td></tr>
+<tr><td><code>lhs >>= expr</code></td><td><code>lhs = lhs >> expr</code></td><td><code>lhs >>= lhs >>= expr</code></td><td><code>lhs >>= (lhs >>= expr)</code></td></tr>
+<tr><td><code>lhs >>= expr</code></td><td><code>lhs = lhs >>> expr</code></td><td><code>lhs >>>= lhs >>>= expr</code></td><td><code>lhs >>>= (lhs >>>= expr)</code></td></tr>
+<tr><td><code>lhs &= expr</code></td><td><code>lhs = lhs & expr</code></td><td><code>lhs &= lhs &= expr</code></td><td><code>lhs &= (lhs &= expr)</code></td></tr>
+<tr><td><code>lhs ^= expr</code></td><td><code>lhs = lhs ^ expr</code></td><td><code>lhs ^= lhs ^= expr</code></td><td><code>lhs ^= (lhs ^= expr)</code></td></tr>
+<tr><td><code>lhs != expr</code></td><td><code>lhs = lhs | expr</code></td><td><code>lhs |= lhs |= expr</code></td><td><code>lhs |= (lhs |= expr)</code></td></tr>
+</table>
 
 - lhs: 左辺式 - 変数、フィールド・アクセス式、配列アクセス式 ([9 章](chapter09.md))
 - expr: 式 - 代入式を含むすべての式
