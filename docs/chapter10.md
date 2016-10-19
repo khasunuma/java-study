@@ -120,9 +120,20 @@ Thread thread = new Thread(task);
 thread.start();
 ```
 
+上記の `thread.start()` 呼び出し後は制御がすぐに呼び出し元のメソッドに戻り、タスクはバックグラウンドで処理されます。ただし、タスクの実行が完了したという通知は呼び出し元メソッドには行われません。つまり、**呼び出し元メソッドでは別スレッドで実行中のタスクの進捗状況を把握することができない**のです。
+
+なお、`Runnable` インタフェースは引数も戻り値も持たず、例外をスローすることもできないとても単純なインタフェースです。後述の `Callable` インタフェースは `Runnable` をより柔軟に扱いたいという要望から追加されたものです。
+
+```java
+@FunctionalInterface
+public interface Runnable {
+    void run();
+}
+```
+
 ### 10.3.2. スレッドの待機
 
-`Thread` クラスには、実行中のスレッドが終了するまで待機する `join` メソッドがあります。
+前節では**呼び出し元のスレッドでは別スレッドで実行中のタスクの進捗状況を把握することができない**と説明しましたが、タスクの完了を把握できないことはしばしば問題を引き起こします。そこで `Thread` クラスには、実行中のスレッドが終了するまで呼び出し元のメソッドを待機する `join` メソッドが用意されています。
 
 ```java
 Thread thread = new Thread(task);
@@ -132,7 +143,11 @@ thread.start();
 thread.join();
 ```
 
-`join` メソッドはチェック例外 `InterruptedException` をスローします。`join` メソッドは完了まで長時間かかる場合もあり、他のスレッドからの割り込み要求を受け付けるようにするためです。`InterruptedException` の簡単でかつ安全な処理方法は以下の 2 通りです。
+上記の書き換え例では、`thread.join()` でタスクの実行が完了するまで呼び出し元のメソッドの実行がブロックされてしまうという難点があります。しかし、`Thread` メソッドでできることと言えばこのくらいなのです。
+
+>実際には呼び出し元やタスクを複雑に連携させて擬似的にタスクの進捗状況を把握することは可能ですが、ソースコードが複雑化してバグの温床となる (特にマルチスレッドのバグは発見が困難である) ことから、避けた方が無難でしょう。
+
+なお、`join` メソッドの制約として、チェック例外 `InterruptedException` をスローすることが挙げられます。`join` メソッドは完了まで長時間かかる場合もあり、他のスレッドからの割り込み要求を受け付けるようにするためです。`InterruptedException` の簡単でかつ安全な処理方法は以下の 2 通りです。
 
 - `throws` 句に `InterruptedException` を追加して、呼び出し元に処理を委ねる。
 - `InterruptedException` をキャッチして、`Thread.currentThread().interrupt()` を実行する。
@@ -182,6 +197,7 @@ public void run() {
 ```java
 /**
  * InterruptedException の処理としてやってはいけない -- InterruptedException を握りつぶす。
+ * ただし、実務ではこのようなコードを頻繁に見かけるので、決して真似をしないように。
  */
 public void run() {
     ...
@@ -200,7 +216,7 @@ public void run() {
 
 ### 10.3.3. スレッドのスリープ
 
-`Thread` クラスには、現在のスレッドをスリープ (一定時間だけ待機) するための `sleep` メソッドがあります。`sleep` メソッドは `static` メソッドです。`sleep` も `InterruptedException` をスローするため、`join` と同様の注意が必要です。
+`Thread` クラスには、現在のスレッドをスリープ (一定時間だけ待機) するための `sleep` メソッドがあります。`sleep` メソッドは `static` メソッドです。`Thread.sleep` メソッドはマルチスレッドとは直接関係なく、現在のメソッドで一定の待ち時間を設けたい場合にもよく使われます。実は `sleep` も `InterruptedException` をスローするため、`join` と同様の注意が必要です。
 
 ```java
 /**
@@ -221,16 +237,122 @@ public void run() {
 
 ### 10.3.4. Thread クラスの問題点
 
-実のところ、`Thread` クラスにはいくつかの問題点があります。
+実のところ、`Thread` クラスにはいくつかの問題点があります。これは Java のマルチスレッドが抱える宿命的な問題点と言い換えることもできます。
 
-- `Thread` クラスはスレッドを開始することはできるが、明示的に終了させることはできない。
-- `Thread` クラスではスレッドを無制限に生成および実行できるため、使いすぎるとパフォーマンスが悪化する。
-- タスクを表す `Runnable` インタフェースは実行結果を返すことも、チェック例外をスローすることもできない。
+- `Thread` クラスはスレッドを開始することはできるが、実行中のスレッドを強制終了させることができない。スレッドの実行を強制的に制御するための `Thread.stop`、`Thread.suspend`、`Thread.resume` の各メソッドが初期から実装されているが、設計者の思い通りに動かなかった (ちなこに `Thread.stop` は現在使用できなくなっている)。
+- `Thread` はスレッドの作成、タスクの割り当て、スレッド (タスク) の実行など、スレッドに関わる一切を引き受けている。マルチスレッドという複雑な問題に対して `Thread` クラスだけに任せるのはさすがに無理があった。
+- `Thread` クラスを支えるクラスとインタフェースは初期の段階から整備されていたものの、お世辞にも使いやすいものとは言えなかった。
 
-これらの問題点は次節で取り上げる Concurrency Utilities によって解消されています。そのため、Java のマルチスレッド・プログラミングでは Concurrency Utilities を利用するようにしましょう。
+これらの問題点は次節で取り上げる Concurrency Utilities (Java SE 5.0 から導入) によって多くが解消されています。そのため、Java のマルチスレッド・プログラミングでは Concurrency Utilities を利用するようにしましょう。
 
 ## 10.4. Concurrency Utilities
 
+Concurrency Utilities は Java のマルチスレッドに関する扱いを大幅に改善するためのフレームワークです。並行処理プログラミングの世界的権威である Brian Goetz が中心となって設計・開発した API です。大きな特徴は、スレッドの作成、タスクの割り当て、スレッド (タスク) の実行をそれぞれ専用のクラスとインタフェースに分離して、マルチスレッドの複雑性を整理したところにあります。
+
+### 10.4.1. Executor インタフェース
+
+`Executor` インタフェースは、タスクを割り当ててスレッドを実行するだけのものです。タスクがいつ実行されるのかについては、インタフェースですので規定はしていません。`Executor` の実装は非常に簡単なものです。
+
+```java
+public Executor {
+    void execute(Runnable command);
+}
+```
+
+`Executor` の具体的な使い方は、以下のようになります。
+
+```java
+Runnable task1 = ... ;
+Runnable task2 = ... ;
+
+Executor executor = ... ;  // Executor の実装が別途必要
+executor.execute(task1);
+executor.execute(task2);
+```
+
+`Executor` の真価は、それがインタフェースであり、アプリケーションの都合に合わせて自由に実装できることにあります。幸い、Concurrency Utilities では `Executors` クラスにすぐに使える `Executor` の実装が定義されているため、これを使うのが手っ取り早いでしょう (そして、ほとんどのケースで事足りるはずです)。
+
+`Executors` クラスが用意している `Executor` 実装のうち、主なものを下記に示します。`static` メソッドで簡単にインスタンスを取得できるため、扱いは非常に簡単です。これらは「スレッドプール」と呼ばれています。
+
+|`static` メソッド名       |説明                                               |
+|-------------------------|---------------------------------------------------|
+|`newFixedThreadPool`     |固定サイズのスレッドプールを作り、プールサイズが一定になるよう努める|
+|`newChachedThreadPool`   |処理要求に応じてスレッドプールのサイズを動的に変更する|
+|`newSingleThreadExecutor`|必ず 1 つのスレッドを提供する (当然、プールサイズは固定)|
+|`newScheduledThreadPool` |スレッド実行のスケジューリングを考慮、プールサイズは固定|
+
+上記のコードは、`Executors` が提供するスレッドプールを使用すると、例えば以下のように書き換えられます。
+
+```java
+Runnable task1 = ... ;
+Runnable task2 = ... ;
+
+Executor executor = Executors.newFixedThreadPool(20);
+executor.execute(task1);
+executor.execute(task2);
+```
+
+### 10.4.2. ExecutorService インタフェース
+
+`Executor` を使用するだけでは、`Thread` を使用するのとあまり変化を感じないかもしれません。しかし、`Executor` のサブインタフェースである　`ExecutorService` はスレッドの実行を細かく制御できるメソッドが多数追加されています。前節で取り上げた `Executors` クラスが提供するメソッドの戻り値は、`Executor` ではなく実は `ExecutorService` となっています。
+
+`ExecutorService` には、タスクの実行に関わるメソッドと、スレッドの制御に関わるメソッドが用意されています。
+
+#### 10.4.2.1. タスクの実行に関するメソッド
+
+タスクの実行に関わるメソッドは、`Thread` クラスよりも柔軟に設計されています。単一のスレッドを実行する `submit`、複数のスレッドを同時に実行してすべての完了を待つ `invokeAll` メソッド、複数のスレッドを同時に実行するがどれか 1 つの完了を待つ `invokeAny` メソッドがあります。タスクの表現にも、`Runnable` インタフェースの他に、戻り値や例外スローを可能にした `Callable` インタフェースが追加されており、必要に応じて使い分けることができるようになっています。
+
+|メソッド名  |引数                                               |戻り値                |説明|
+|-----------|---------------------------------------------------|---------------------|----|
+|`submit`   |`Callable<T>`                                      |`<T> Future<T>`      |タスクを実行する。例外スロー可|
+|`submit`   |`Runnable`                                         |`Future<?>`          |タスクを実行する。|
+|`submit`   |`Runnable, T`                                      |`<T> Future<T>`      |タスクを実行する。戻り値の型は `T`|
+|`invokeAll`|`Collection<? extends Callable<T>>`                |`<T> List<Future<T>>`|タスクをすべて実行して結果を返す。
+|`invokeAll`|`Collection<? extends Callable<T>>, long, TimeUnit`|`<T> List<Future<T>>`|タスクをすべて実行して結果を返す (タイムアウトあり)|
+|`invokeAny`|`Collection<? extends Callable<T>>`                |`<T> T`              |タスクを実行して最初に完了した結果を返す。|
+|`invokeAny`|`Collection<? extends Callable<T>>, long, TimeUnit`|`<T> T`              |タスクを実行して最初に実行した結果を返す (タイムアウトあり)。|
+
+`Callable` インタフェースは `Runnable` インタフェース同様、非常にシンプルなインタフェースです。
+
+```java
+@FunctionalInterface
+public interface Callable<V> {
+    V call() throws Exception;
+}
+```
+
+参考まで、`Callable` インタフェースでも戻り値を返さず例外もスローしない方法があります。
+
+```java
+@FunctionalInterface
+public interface MyCallable extends Callable<Void> {
+    Void call();
+}
+```
+
+なぜこのような表記が可能なのかについては、各自の宿題としておきます (対して難しいことではありません)。
+
+#### 10.4.2.2. スレッド状態に関わるメソッド
+
+`ExecutorService` では、実はスレッドのシャットダウンがサポートされています。ただし、思い出してください。
+
+>`Thread` クラスはスレッドを開始することはできるが、実行中のスレッドを強制終了させることができない。
+
+Concurrency Utilities でもこの束縛から完全に逃れられる訳ではありません。ただし、`Thread` クラスに比べるとスレッドのシャットダウン処理が洗練化され、より安全な形でスレッドを終了させられるようにはなっています (ただし、完全ではありません)。
+
+|メソッド名         |引数            |戻り値           |説明|
+|------------------|----------------|----------------|------------------------------------------------------------|
+|`shutdown`        |N/A             |`boolean`       |スレッドのシャットダウン。既に実行要求済みのスレッドは実行される。|
+|`shutdownNow`     |N/A             |`List<Runnable>`|スレッドのシャットダウン。既に要求済みのスレッドは破棄される。|
+|`isShutdown`      |N/A             |`boolean`       |このexecutorがシャットダウンしていた場合、trueを返す。|
+|`isTerminated`    |N/A             |`boolean`       |シャットダウンに続いてすべてのタスクが完了していた場合、trueを返す。|
+|`awaitTermination`|`long, TimeUnit`|`boolean`       |タスク完了、タイムアウト、割り込みのいずれかが発生するまで待機する。|
+
+### 10.4.3. Future インタフェース
+
+### 10.4.4. 並行処理コレクション
+
+### 10.4.5. その他のユーティリティ
 
 ## 10.5. CompletableFuture クラス
 
