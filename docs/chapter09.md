@@ -395,10 +395,10 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html
 |`singletonMap`    |N/A         |指定されたインスタンスだけを格納する不変の `Map` を返す|
 |`sort`            |N/A         |リストを昇順ソートする|
 |`swap`            |`List`      |リストの指定された位置にある要素を入れ替える|
-|`synchronizedCollection`|`Collection`|スレッドセーフな `Collection` を返す|
-|`synchronizedList`|`List`      |スレッドセーフな `List` を返す|
-|`synchronizedMap` |`Map`       |スレッドセーフな `Map` を返す|
-|`synchronizedSet` |`Set`       |スレッドセーフな `Set` を返す|
+|`synchronizedCollection`|`Collection`|同期化 ([10 章](chapter10.md)) された `Collection` を返す|
+|`synchronizedList`|`List`      |同期化 ([10 章](chapter10.md)) された `List` を返す|
+|`synchronizedMap` |`Map`       |同期化 ([10 章](chapter10.md)) された `Map` を返す|
+|`synchronizedSet` |`Set`       |同期化 ([10 章](chapter10.md)) された `Set` を返す|
 |`unmodifiableCollection`|`Collection`|不変な `Collection` を返す|
 |`unmodifiableList`|`List`      |不変な `List` を返す|
 |`unmodifiableMap` |`Map`       |不変な `Map` を返す|

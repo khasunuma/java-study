@@ -29,7 +29,9 @@ Java では言語仕様と標準 API の双方でマルチスレッドを強力�
 - 非同期処理イベントの処理を単純化できる (非同期処理を複数の同期処理で置き換えることができる)。
 - 応答性の良いユーザーインタフェースを実現できる。
 
-一方で、スレッドは以下のようなリスクも抱えています。
+Java に限っては、GUI ライブラリである AWT、Swing および JavaFX は、いずれもイベントハンドラの記述にスレッドを用いています。Java の最初のバージョンから備わっている AWT は、当時の他の GUI ライブラリが複雑な非同期処理を用いていたのに対して、スレッドを用いたシンプルで確実な方法を採用した点で画期的でした。
+
+いいことずくめのようですが、一方で、スレッドは以下のようなリスクも抱えています。
 
 - 同期化が不適切の場合、複数のスレッドの実行順が予測不可能となり、意図しない実行結果となる。
 - ハング状態を生むエラーが様々で (デッドロックなど)、かつそれらは開発時や試験時に検出困難である。
@@ -143,7 +145,7 @@ thread.start();
 thread.join();
 ```
 
-上記の書き換え例では、`thread.join()` でタスクの実行が完了するまで呼び出し元のメソッドの実行がブロックされてしまうという難点があります。しかし、`Thread` メソッドでできることと言えばこのくらいなのです。
+上記の書き換え例では、`thread.join()` でタスクの実行が完了するまで呼び出し元のメソッドの実行がブロックされてしまうという難点があります。さらに悪いことに、`Thread.join()` にはスレッドの実行結果を返す手段がありません。しかし、`Thread` メソッドでできることと言えばこのくらいなのです。
 
 >実際には呼び出し元やタスクを複雑に連携させて擬似的にタスクの進捗状況を把握することは可能ですが、ソースコードが複雑化してバグの温床となる (特にマルチスレッドのバグは発見が困難である) ことから、避けた方が無難でしょう。
 
@@ -262,17 +264,17 @@ public Executor {
 `Executor` の具体的な使い方は、以下のようになります。
 
 ```java
-Runnable task1 = ... ;
-Runnable task2 = ... ;
+Runnable task1 = ... ;  // タスク 1 の記述
+Runnable task2 = ... ;  // タスク 2 の記述
 
 Executor executor = ... ;  // Executor の実装が別途必要
-executor.execute(task1);
-executor.execute(task2);
+executor.execute(task1);  // タスク 1 の実行
+executor.execute(task2);  // タスク 2 の実行
 ```
 
 `Executor` の真価は、それがインタフェースであり、アプリケーションの都合に合わせて自由に実装できることにあります。幸い、Concurrency Utilities では `Executors` クラスにすぐに使える `Executor` の実装が定義されているため、これを使うのが手っ取り早いでしょう (そして、ほとんどのケースで事足りるはずです)。
 
-`Executors` クラスが用意している `Executor` 実装のうち、主なものを下記に示します。`static` メソッドで簡単にインスタンスを取得できるため、扱いは非常に簡単です。これらは「スレッドプール」と呼ばれています。
+`Executors` クラスが用意している `Executor` 実装のうち、主なものを下記に示します。`static` メソッドで簡単にインスタンスを取得できるため、扱いは非常に簡単です。これらはルールに基づいてあらかじめスレッドを生成して保持することから「スレッドプール」と呼ばれています。
 
 |`static` メソッド名       |説明                                               |
 |-------------------------|---------------------------------------------------|
@@ -284,13 +286,17 @@ executor.execute(task2);
 上記のコードは、`Executors` が提供するスレッドプールを使用すると、例えば以下のように書き換えられます。
 
 ```java
-Runnable task1 = ... ;
-Runnable task2 = ... ;
+Runnable task1 = ... ;  // タスク 1 の記述
+Runnable task2 = ... ;  // タスク 2 の記述
 
+// Executor の取得 = スレッドプールの作成
 Executor executor = Executors.newFixedThreadPool(20);
-executor.execute(task1);
-executor.execute(task2);
+
+executor.execute(task1);  // タスク 1 の実行
+executor.execute(task2);  // タスク 2 の実行
 ```
+
+>スレッドプールのサイズを超えてタスクにスレッドを割り当てようとすると待ちが発生します。それによりプログラムの挙動がおかしくなることはありませんが、パフォーマンスは明らかに低下するため、適切なサイズのスレッドプールとなるよう種類やサイズを検討してください。
 
 ### 10.4.2. ExecutorService インタフェース
 
@@ -309,8 +315,8 @@ executor.execute(task2);
 |`submit`   |`Runnable, T`                                      |`<T> Future<T>`      |タスクを実行する。戻り値の型は `T`|
 |`invokeAll`|`Collection<? extends Callable<T>>`                |`<T> List<Future<T>>`|タスクをすべて実行して結果を返す。
 |`invokeAll`|`Collection<? extends Callable<T>>, long, TimeUnit`|`<T> List<Future<T>>`|タスクをすべて実行して結果を返す (タイムアウトあり)|
-|`invokeAny`|`Collection<? extends Callable<T>>`                |`<T> T`              |タスクを実行して最初に完了した結果を返す。|
-|`invokeAny`|`Collection<? extends Callable<T>>, long, TimeUnit`|`<T> T`              |タスクを実行して最初に実行した結果を返す (タイムアウトあり)。|
+|`invokeAny`|`Collection<? extends Callable<T>>`                |`<T> T`              |タスクを実行して最初に完了したときその結果を返す。|
+|`invokeAny`|`Collection<? extends Callable<T>>, long, TimeUnit`|`<T> T`              |タスクを実行して最初に実行したときその結果を返す (タイムアウトあり)。|
 
 `Callable` インタフェースは `Runnable` インタフェース同様、非常にシンプルなインタフェースです。
 
@@ -350,10 +356,224 @@ Concurrency Utilities でもこの束縛から完全に逃れられる訳では�
 
 ### 10.4.3. Future インタフェース
 
-### 10.4.4. 並行処理コレクション
+前節で取り上げた `ExecutorService` クラスの `submit`、`invokeAll` の各メソッドは、呼び出し後すぐに制御を返し、その際に `Future` インタフェースのインスタンス (`invokeAll` の場合はそのリスト) を返します。この `Future` インタフェースは実行中のスレッドと紐付いていて、スレッドの状態を取得する、実行完了まで待機する、スレッドの実行をキャンセルする、などの操作を行うことができます。
 
-### 10.4.5. その他のユーティリティ
+|メソッド名|引数|戻り値|説明|
+|-----------|----|------|----|
+|`get`|N/A|`V`|スレッド実行が完了するまで待機、タスクが `Callable` の場合は値を取得する。|
+|`get`|`long, TimeUnit`|`V`|スレッド実行が完了するまで待機、タスクが `Callable` の場合は値を取得する (タイムアウトあり)。|
+|`cancel`|`boolean`|`boolean`|スレッドの実行をキャンセルする。|
+|`isCancelled`|N/A|`boolean`|スレッドの実行がキャンセルされた場合に `true` を返す。|
+|`isDone`|N/A|`boolean`|スレッドが停止している場合に `true` を返す。|
 
-## 10.5. CompletableFuture クラス
+ここで Concurrency Utilities の中核となる `ExecutorService` と `Future` が揃いました。これらを使った例を見てみましょう。
 
+```java
+// ExecutorService にスレッドプールを割り当てる
+ExecutorService executor = Executors.newFixedThreadPool(20);
 
+// Callable を使用してタスクを作成する
+Callable<Integer> task = new Callable<>() {
+    Integer execute() throws Exception {
+        // タスクの処理
+        ...
+    }
+};
+
+// タスクをスレッドに割り当てる
+Future<Integer> future = executor.submit(task);
+
+try {
+    // タスクを実行し、完了するまで待機する
+    // このタスクは Integer (int) を返すので、戻り値を取得する
+    int value = future.get();
+} catch (InterruptedException e) {
+    // スレッドが割り込まれた場合
+    // 基本的に Thread.join() や Thread.sleep() と同じように処理すること
+    ...
+} catch (ExecutionException e) {
+    // タスク (Callable) が例外をスローした場合
+    // 基本的に例外連鎖となっているはずなので、原因例外を取得して処理すること
+    ...
+} finally {
+    // 例外スロー時、スレッドはキャンセルしておくと安全
+    // スレッドが正常に終了した場合は特に何も起こらない
+    future.cancel(true);
+}
+```
+
+`Thread` クラスの場合に比べるとコードそのものは長くなっていますが、各クラスの役割が明確になり、読みやすいコードになりました。タスクに `Callable` を使用できるため、スレッドの実行結果を返すことも (さらにはスレッド実行中にスローされた例外をキャッチすることも) できるようになっています。
+
+参考まで、`Future` インタフェースの標準的な実装に `FutureTask` クラスがあります。主に `ExecutorService` の `submit`、`invokeAny` メソッドが返す `Future` の実装として用いられますが、実は単独で使用することもできます。スレッドプールが必要なければ、`FutureTask` を使用する方法もあります。
+
+```java
+// Callable を使用してタスクを作成する
+Callable<Integer> task = ... ;
+
+// FutureTask でタスクにスレッドを割り当てる
+Future<Integer> future = FutureTask<>(task);
+
+// 以下、省略
+...
+```
+
+`Future` インタフェースの実装には、非常に強力な機能を持つ `CompleteableFuture` クラスが用意されています。これについては後述します。
+
+### 10.4.4. 同期化コレクションと並行コレクション
+
+[9 章](chapter09.md) で取り上げたコレクションは同期化されないため、コレクションをそのままフィールドに用いると先に述べたような問題が発生します。最悪の場合、コレクションが保持するデータが破壊されてしまうことさえあります。コレクションへのアクセスをすべて同期化する方法も考えられますが、`Collections` クラスにコレクション自体をラップして同期化するメソッド `synchronizedList`、`synchronizedSet`、`synchronizedMap` が用意されているため、これらを使うのが得策です。これらを同期化コレクションと呼びます。
+
+```java
+// 同期化された List
+private List<String> list = Collections.synchronizedList(new ArrayList<>());
+
+// 同期化された Set
+private Set<Integer> set = Collections.synchronizedSet(new HashSet<>());
+
+// 同期化された Map
+private Map<Integer, String> map = Collections.synchronizedMap(new HashMap<>());
+```
+
+ただし、同期化コレクションを使用しているからといって、すべての操作が上手くいくとは限りません。以下に示すコードは同期化された List に対して末尾の要素の取得と削除を同時に行う場合です。このコードの結果は保証されません。
+
+```java
+// getLast メソッドは
+// 1. deleteLast と同時に呼ばれるかもしれない
+// 2. deleteLast と同じ list インスタンスが設定されるかもしれない
+public static String getLast(List<String> list) {
+    int lastIndex = list.size() - 1;
+    return list.get(lastIndex);
+}
+
+// deleteLast メソッドは
+// 1. getLast と同時に呼ばれるかもしれない
+// 2. getLast と同じ list インスタンスが設定されるかもしれない
+public static void deleteLast(List<String> list) {
+    int lastIndex = list.size() - 1;
+    list.remove(lastIndex);
+}
+```
+
+同期化コレクションには、コレクションが持つイテレータが同期化されないという欠点があります。そのため、直接的あるいは間接的にイテレータを使用する操作については、同期化コレクションであっても追加で同期化が必要になります。
+
+先にメソッドの同期化をご紹介しましたが、上記でメソッドの同期化を行うとメソッドの待機時間が長くなり過ぎる可能性があります。同期化における待機時間が長くなると、処理が複雑になるにつれてデッドロックなどの問題が発生しがちです。そのため、Java ではメソッドの同期化の他に、ブロックの同期化も可能になっています。
+
+- 書式: `synchronized (object) { ... }` (`object`: ロックするインスタンス、`{ ... }`: ブロック)
+
+それでは、上記のコードをブロックの同期化を用いて書き換えてみましょう。
+
+```java
+// getLast メソッドは
+// 1. deleteLast と同時に呼ばれるかもしれない
+// 2. deleteLast と同じ list インスタンスが設定されるかもしれない
+public static String getLast(List<String> list) {
+    // イテレータ操作のため追加の同期化
+    synchronized (list) {
+        int lastIndex = list.size() - 1;
+        return list.get(lastIndex);
+    }
+}
+
+// deleteLast メソッドは
+// 1. getLast と同時に呼ばれるかもしれない
+// 2. getLast と同じ list インスタンスが設定されるかもしれない
+public static void deleteLast(List<String> list) {
+    // イテレータ操作のため追加の同期化
+    synchronized (list) {
+        int lastIndex = list.size() - 1;
+        list.remove(lastIndex);
+    }
+}
+```
+
+同期化コレクションがあるとはいえ、同期化を完全にするためにはさらなる同期化が必要になることがあります。同期化コレクション自体が元のコレクションよりパフォーマンスで不利になるにもかかわらず、さらにパフォーマンスを犠牲にしなければならない場合もあるということです。こうした同期化コレクションの欠点をカバーするため、Concurrency Utilities では新たにスレッドセーフなコレクションを提供します。それが並行コレクションです。
+
+並行コレクションはいくつか用意されていますが、基本となるのは以下の 3 種類です。
+
+|インタフェース|並行コレクションクラス|
+|----|----|
+|`Set`|`CopyOnWriteArraySet`|
+|`List`|`CopyOnWriteArrayList`|
+|`Map`|`ConcurrentHashMap`|
+
+>`CopyOnWriteArrayList` と `CopyOnWriteArraySet` は要素を変更不可の形で保持し、書き込み操作が発生する都度コピーを作成することで同期化を完全なものとしています。その性質から要素数の少ないデータや読み取りが多いデータの保持を得意としますが、要素数が多く書き込みの多いデータはそれほど得意ではありません。`ConcurrentHashMap` は同期化された `HashMap` に比べて小さな粒度のロックを行うことで全体のパフォーマンスを向上させていますが、`Map.size()` メソッドの精度は低下します。ただし、これらのデメリットを差し引いても、同期化コレクションより並行コレクションを使用した方が良いでしょう。
+
+### 10.5. アトミック変数クラス
+
+アトミック変数とは、ロックを行わなくても並行処理が可能な変数をいいます。Concurrency Utilities には専用のアトミック変数クラスが用意されており、手軽に使用することができます。アトミック変数クラスには様々なものが用意されていますが、最も簡単なものとして `AtomicInteger`、`AtomicLong`、`AtomicBoolean` があります。
+
+|プリミティブ型|アトミック変数への変換|プリミティブ型への変換|
+|----|----|----|
+|`boolean`|`AtomicBoolean.set()`|`AtomicBoolean.get()`|
+|`int`|`AtomicInteger.set()`|`AtomicInteger.get()`|
+|`long`|`AtomicLong.set()`|`AtomicLong.get()`|
+
+`byte`、`short` は `int` へキャストして対応します。また、`float` は `Float.floatToIntBits()`/`Float.intBitsToFloat()` で `int` と相互変換、`Double` は `Double.doubleToLongBits()`/`Double.longBitsToDouble()` で `long` と相互変換することで対応します。
+
+以下に `AtomicInteger` が持つメソッド (主に算術演算) を抜粋します。`AtomicLong` にも対応するプリミティブ型が `long` 型である同一のメソッドが備わっています。
+
+|メソッド|引数|戻り値|説明|
+|----|----|----|----|
+|`addAndGet`|`int`|`int`|値を加算して、更新後の値を返す (引数が負数の場合は減算)|
+|`getAndAdd`|`int`|`int`|値を加算して、更新前の値を返す (引数が負数の場合は減算)|
+|`incrementAndGet`|N/A|`int`|値をインクリメントして、更新後の値を返す (`++value` に相当)|
+|`decrementAndGet`|N/A|`int`|値をデクリメントして、更新後の値を返す (`--value` に相当)|
+|`getAndIncrement`|N/A|`int`|値をインクリメントして、更新前の値を返す (`value++` に相当)|
+|`getAndDecrement`|N/A|`int`|値をデクリメントして、更新前の値を返す (`value--` に相当)|
+|`get`|`int`|`int`|現在の値を返す|
+|`set`|`int`|N/A|値を更新する|
+|`getAndSet`|`int`|`int`|値を更新して、更新前の値を返す|
+|`compareAndSet`|`int, int`|`boolean`|現在の値==予想される値の場合、値を更新して `true` を返す|
+
+アトミック変数は並行処理が可能なだけでなく、パフォーマンスも良好であるため、様々な用途に適用可能です (最も多く使用される用途はカウンタです)。アトミック変数クラスの詳細については、[Java SE API ドキュメント](http://docs.oracle.com/javase/jp/8/docs/api/)を参照してください。
+
+## 10.6. CompleteableFuture クラス
+
+前述の `FutureTask` クラス (あるいは `Future` インタフェース) には、タスクにスレッドを割り当てる方法として以下の 3 種類がありました。
+
+- `submit` メソッド : 1 つのタスクをスレッドに割り当て、スレッドの完了を待つ。
+- `invokeAll` メソッド : 複数のタスクをスレッドに割り当て、すべてのスレッドの完了を待つ。
+- `invokeAny` メソッド : 複数のタスクをスレッドに割り当て、一番早いスレッドの完了を待つ。
+
+スレッド実行のバリエーションは様々で、`FutureTask` では実現が難しい処理も存在します。その中でもわかりやすい例が「複数のタスクをスレッドに割り当て、順次実行して完了を待つ」処理です。`FutureTask` は ThreadA、ThreadB、ThreadC を同時に実行することはできても、順番に実行することができないのです。このような問題を解消するために Java SE 8 で追加された API が `CompleteableFuture` クラスです。
+
+`CompleteableFuture` クラスを使用すれば、以下のように複数のタスクをマルチスレッドで順次実行することが可能になります。
+
+```java
+Runnable task1 = ... ;  // タスク 1 の記述
+Runnable task2 = ... ;  // タスク 2 の記述
+Runnable task3 = ... ;  // タスク 3 の記述
+
+// CompleteableFuture インスタンスの取得
+CompleteableFuture<Void> future = CompleteableFuture.runAsync(task1).andThen(task2).andThen(task3);
+
+// CompleteableFuture 実行の待機; future.join() でも可
+future.get();
+```
+
+`CompleteableFuture` の実行には、既定では Java SE 7 から追加された Fork/Join Framework が使用されます。Fork/Join Framework は小さなデータを「分割統治法」を用いて効率よく処理することに特化した仕組みで、これまで紹介したスレッドプールとは動作特性が異なります。`CompleteableFuture` でスレッドプールを使用したい場合には、上記のコードを以下のように書き換えてください。
+
+```java
+Runnable task1 = ... ;  // タスク 1 の記述
+Runnable task2 = ... ;  // タスク 2 の記述
+Runnable task3 = ... ;  // タスク 3 の記述
+
+// スレッドプールの作成
+ExecutorService executor = Executors.newCachedThreadPool();
+
+// CompleteableFuture インスタンスの取得
+CompleteableFuture<Void> future = CompleteableFuture.runAsync(task1, executor).andThen(task2).andThen(task3);
+
+// CompleteableFuture 実行の待機; future.join() でも可
+future.get();
+```
+
+Concurrency Utilities にはスレッド間で歩調を合わせる機能―ラッチ、セマフォ、バリア―が備わっています。また、`BlockingQueue` をはじめとするスレッドのスケジューリングに役立つ機能も持っています。`CompleteableFuture` はこれらの機能で実現可能なバリエーションのうち使用頻度が高いものを、非常に簡単な操作だけで実現してしまうクラスです。`CompleteableFuture` は [12 章](chapter12.md)で取り上げるラムダ式とも相性がよく、Java の並行処理プログラミングの切り札として今後普及していくことでしょう。
+
+`CompleteableFuture` の詳細については、以下の記事を参考にしてください。
+
+**参考: Java 技術最前線「Java SE 6完全攻略」**
+
+- [詳解 Java SE 8 第19回](http://itpro.nikkeibp.co.jp/atcl/column/14/224071/010400014/)
+- [詳解 Java SE 8 第20回](http://itpro.nikkeibp.co.jp/atcl/column/14/224071/010400015/)
+- [詳解 Java SE 8 第21回](http://itpro.nikkeibp.co.jp/atcl/column/14/224071/012900016/)
