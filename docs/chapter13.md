@@ -1,8 +1,12 @@
 # 13. Date and Time API
 
->【バージョン】 Date and Time API は Java SE 8 で導入された API です。Java SE 6/7 では Date and Time API の開発者が提供する互換ライブラリ "ThreeTen backport" を追加することでほとんどの機能を利用することが可能です。
+Date and Time API は Java SE 8 で導入された API です。Java には最初のバージョンから日付と時刻を表す `java.util.Date` クラスを用意しており、JDK 1.1 からはワールド・クロックに対応した `java.util.Calendar` クラスなどを追加しましたが、当初から使い勝手に難があることで知られていました。Date and Time API は古く使いづらい `java.util.Date` や `java.util.Calendar` を置き換えるため 8 年の歳月をかけて開発された新世代の日付・時刻 API です。
+
+>Java SE 6/7 であっても、Date and Time API の開発者が提供する互換ライブラリ "ThreeTen backport" を追加することでほとんどの機能を利用することが可能です。
 
 ## 13.1. 「時」に関する基礎事項
+
+Date and Time API は最も身近で、かつ複雑な「時」を扱う API です。最初の一歩として、まずは「時」に関する知識を整理することから始めましょう。
 
 ### 13.1.1. 「時」とは？
 
@@ -16,9 +20,7 @@
 
 >分や秒に 100 等分でなく 60 等分が採用されているのは、現在の「時」を作り上げた古代メソポタミア文明のバビロニア王朝において 60 進法が日常的に使われていたためと言われています。また、1 日を 10 でなく 12 等分としているのは、インドで 0 の概念が発見される前に「時」が成立していたことによります。 0 が発見されるまで 10 進法はマイナーなもので、古くから 2、3、4、6 のいずれでも割り切れる 12 が位取りとして世界各所で好まれていました。
 
->現在のように「秒」を時の基準とするようになったのは 20 世紀半ば以降です。 観測技術が進み 1 日の長さが厳密には一定でないことがわかり、代わりに秒を超高精度に刻むことが可能な原子時計を基準とすることにしました。原子時計に関する詳細は割愛しますが、天体観測の結果より桁違いに精度が高く体感的な時刻とかけ離れてしまうことから、現在では原子時計の時刻に「うるう秒」を加えて天体観測の結果に近づけた UTC (協定世界時) が基準として用いられています。
-
->Date and Time API では、うるう秒は考慮しません（仕様検討時には考慮するモードもありました）。
+>現在のように「秒」を時の基準とするようになったのは 20 世紀半ば以降です。 観測技術が進み 1 日の長さが厳密には一定でないことがわかり、代わりに秒を超高精度に刻むことが可能な原子時計を基準とすることにしました。原子時計に関する詳細は割愛しますが、天体観測の結果より桁違いに精度が高く体感的な時刻とかけ離れてしまうことから、現在では原子時計の時刻に「うるう秒」を加えて天体観測の結果に近づけた UTC (協定世界時) が基準として用いられています。なお、Date and Time API ではうるう秒までは考慮していません（仕様検討時にはうるう秒に対する考慮も含まれていました）。
 
 ### 13.1.2. 地方時と時差
 
@@ -131,6 +133,8 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 
 ### 13.3.1. パッケージ
 
+Date and Time API は、`java.time` パッケージとそのサブパッケージの 5 パッケージから構成されており、クラス数は 69 (Java SE 8) となります。ただし、そのすべてを使用しなければならないわけではなく、実際の使用頻度には大きな偏りがあります。使用するクラスはアプリケーションによっても異なってきますが、多くの場合は `java.time` 配下の基本的なクラスを中心に 20 程度のクラスを使用することになるでしょう。
+
 |パッケージ         |説明           |頻度|
 |------------------|---------------|---------|
 |`java.time`       |基本的なクラス  |高       |
@@ -139,7 +143,9 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 |`java.time.temporal`|低水準 API    |低       |
 |`java.time.zone`  |低水準 API      |低       |
 
-### 13.3.2. Date and Time classes
+### 13.3.2. 日付・時刻クラス
+
+Date and Time API には 6 つの基本的な日付・時刻クラスが用意されており、日付のみ、時刻のみ、日付と時刻、タイムゾーン表現の有無などによるバリエーションが存在します。最も基本となるクラスは `LocalDate` クラスで、日付のみでタイムゾーンを持たない分だけ、小回りが利くように作られています。実際のアプリケーション開発でもおそらく最も使用頻度の高いクラスとなるでしょう。
 
 |クラス           |日付/時刻|タイムゾーン表現|対応する ISO 8601 書式|
 |:--------------:|:-------:|:------------:|-------------------------|
@@ -150,7 +156,9 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 |`OffsetTime`    |Time     |`ZoneOffset`  |hh:mm:ss±hh:mm|
 |`ZonedDateTime` |Date/Time|`ZoneId`      |N/A|
 
-### 13.3.3. Factory methods
+### 13.3.3. ファクトリ・メソッド
+
+日付・時刻クラスには、いずれも共通したファクトリ・メソッドが用意されており、それを用いてインスタンスを取得します。メソッド名もクラス間で統一されており、いずれか 1 つのクラスについて覚えれば、他のクラスについても概ね適用できるように工夫されています。以下に代表的なファクトリ・メソッドの一覧を示します。
 
 |メソッド|説明                             |例                         |
 |:-----:|---------------------------------|---------------------------|
@@ -161,14 +169,41 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 
 ### 13.3.4. "of" methods (examples)
 
-- `LocalDate.of(2015, 7, 11)`
-- `LocalDateTime.of(2015, 7, 11, 13, 30, 45, 250)`
-- `LocalTime.of(13, 30, 45, 250)`
-- `OffsetDateTime.of(2015, 7, 11, 13, 30, 45, 250, ZoneOffset.ofHours(9))`
-- `OffsetTime.of(13, 30, 45, 250, ZoneOffset.ofHours(9))`
-- `ZonedDateTime.of(2015, 7, 11, 13, 30, 45, 250, ZoneId.of("Asia/Tokyo"))`
+ファクトリ・メソッド `of` は日付・時刻クラスのインスタンスを取得する最も基本的な手段です。以下にサンプルコードを示しますが、フィールドに適切な値を設定するだけなので、特に難しいところはないでしょう。
 
-### 13.3.5. Convertion methods
+```java
+// LocalDate : 引数に年・月・日を指定
+LocalDate.of(2015, 7, 11);
+
+// LocalDateTime : 引数に年・月・日・時・分・秒・秒以下を指定
+LocalDateTime.of(2015, 7, 11, 13, 30, 45, 250);
+
+// LocalTime : 引数に時・分・秒・秒以下を指定
+LocalTime.of(13, 30, 45, 250);
+
+// ZoneOffset : 時差を表す (ここでは時差 +09:00)
+// ZoneOffset クラスの詳細については後述
+ZoneOffset offset = ZoneOffset.ofHours(9);
+
+// OffsetDateTime : 引数に年・月・日・時・分・秒・秒以下・時差を指定
+OffsetDateTime.of(2015, 7, 11, 13, 30, 45, 250, offset);
+
+// OffsetTime : 引数に時・分・秒・秒以下・時差を指定
+OffsetTime.of(13, 30, 45, 250, offset);
+
+// ZoneId : タイムゾーンを表す (ここでは "Asia/Tokyo" = 東京)
+// ZoneId クラスの詳細については後述
+ZoneId zoneId = ZoneId.of("Asia/Tokyo");
+
+// ZonedDateTime : 引数に年・月・日・時・分・秒・秒以下・タイムゾーンを指定
+ZonedDateTime.of(2015, 7, 11, 13, 30, 45, 250, zoneId);
+```
+
+### 13.3.5. 変換メソッド
+
+日付・時刻クラスのメソッドのうち、`at-` で始まるものはフィールドを拡張し、`to-` で始まるものはフィールドを切り捨てます。戻り値のクラスは操作後のフィールドに合わせて変更されます。これらのメソッドは日付・時刻クラス間の相互変換に使用されます。
+
+Date and Time API はすべて変更不可能 (イミュータブル) なインスタンスとなっているため、`at-`/`to-` メソッドの戻り値は新しく生成されたインスタンスであり、変換元のインスタンスには影響がありません。
 
 |メソッド|説明              |例                                                       |
 |:-----:|------------------|---------------------------------------------------------|
@@ -176,7 +211,23 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 |       |                  |`LocalDateTime.of(2015, 7, 11, 13, 30, 45).atOffset(ZoneOffset.ofHours(9))`|
 |`to-`  |フィールドを縮小する|`LocalDateTime.of(2015, 7, 11, 13, 30, 45).toLocalDate()`|
 
-### 13.3.6. Obtain/Modify methods
+|変換元クラス|変換メソッド|変換後クラス|
+|:------------:|:------------:|:------------:|
+|`LocalDate`|`atTime`|`LocalDateTime`|
+|`LocalDate`|`atTime`|`OffsetDateTime`|
+|`LocalDateTime`|`atZone`|`ZonedDateTime`|
+|`LocalDateTime`|`toLocalDate`|`LocalDate`|
+|`LocalDateTime`|`toLocalTime`|`LocalTime`|
+|`OffsetDateTime`|`toZonedDateTime`|`ZonedDateTime`|
+|`OffsetDateTime`|`toOffsetTime`|`OffsetTime`|
+|`OffsetDateTime`|`toLocalDate`|`LocalDate`|
+|`OffsetDateTime`|`toLocalTime`|`LocalTime`|
+
+### 13.3.6. フィールド値の取得と設定
+
+フィールド値の取得メソッドは `get-` または `get` (汎用)、設定メソッドは `with-` または `with` (汎用) です。ここでは `LocalDate` クラスの例を示しますが、その他の日付・時刻クラスでも共通です。
+
+Date and Time API はすべて変更不可能 (イミュータブル) なインスタンスとなっているため、`with-`/`with` メソッドの戻り値はフィールド値を変更したコピーとなります。
 
 |メソッド|説明|例|
 |:----:|--------|--------|
@@ -185,18 +236,24 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 |`with-`|フィールドの値を変更し、コピーを返す|`LocalDate.now().withYear(2016)`|
 | | |`LocalDate.now().with(2016, YEAR)`|
 
+汎用の `get` および `with` は、引数に取得/設定するフィールドを `ChronoField` 列挙型で指定します。
+
 |ChronoField|Obtain|Modify|
 |:------------:|:--------:|:--------:|
 |`YEAR`|`getYear`|`withYear`|
 |`MONTH_OF_YEAR`|`getMonthValue`|`withMonth`|
 |`DAY_OF_MONTH`|`getDayOfMonth`|`withDayOfMonth`|
-|`DAY_OF_WEEK`|`getDayOfWeek`|`N/A`|
+|`DAY_OF_WEEK`|`getDayOfWeek`|N/A|
 |`HOUR_OF_DAY`|`getHour`|`withHour`|
 |`MINUTE_OF_HOUR`|`getMinute`|`withMinute`|
 |`SECOND_OD_MINUTE`|`getSecond`|`withSecond`|
 |`NANO_OF_SECOND`|`getNano`|`withNano`|
 
-### 13.3.7. Arithmetric methods
+### 13.3.7. 日付・時刻の加算・減算
+
+日付・時刻の加算メソッドは `plus-` または `plus` (汎用)、減算メソッドは `minus-` または `minus` (汎用) です。ここでは `LocalDate` クラスの例を示しますが、その他の日付・時刻クラスでも共通です。
+
+Date and Time API はすべて変更不可能 (イミュータブル) なインスタンスとなっているため、`plus-`/`plus` および `minus-`/`minus` メソッドの戻り値は日付・時刻を加算または減算したコピーとなります。
 
 |メソッド|説明|例|
 |:----:|--------|--------|
@@ -204,6 +261,8 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 | | |`LocalDate.now().plus(7, DAYS)`|
 |`minus-`|フィールドの値を減算し、コピーを返す|`LocalDate.now().minusDays(7)`|
 | | |`LocalDate.now().minus(7, DAYS)`|
+
+汎用の `plus` および `minus` は、加算・減算の単位を `ChronoUnit` 列挙型で指定します。
 
 |ChronoUnit|Add|Subtract|
 |:--------:|:--------:|:--------:|
@@ -216,7 +275,9 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 |`SECONDS`|`plusSeconds`|`minusSeconds`|
 |`NANOS`|`plusNanos`|`minusNanos`|
 
-### 13.3.8. Compare methods
+### 13.3.8. 日付・時刻の比較
+
+日付・時刻の比較には、`isBefore`、`isEqual`、`isAfter` といったメソッドを使用します。以下に例を示しますが、`isBefore` や `isAfter` は比較対象が同一の日付・時刻の場合に `false` を返しますので、必要に応じて `isEqual` を組み合わせます。
 
 |メソッド|例|
 |:----:|--------|
@@ -230,50 +291,377 @@ ISO 8601 における時刻の表現は、良く見慣れた時・分・秒の�
 | |`today.isAfter(today)` ; false|
 | |`today.isAfter(tomorrow)` ; false|
 
+なお、`LocalTime` など一部のクラスでは `isEqual` ではなく `equals` メソッドのオーバーライドとなっていますが、使用方法は同じです。
+
 ### 13.3.9. Format/Parse methods
+
+`LocalDate` をはじめとする日付・時刻クラスには、以下のような文字列との相互変換 (フォーマット／パース）メソッドを持っています。既定のフォーマッタはいずれも ISO 8601 形式であることを想定してます。
 
 |メソッド|説明|
 |--------|--------|
-|`toString`|デフォルトのフォーマッタを使用して文字列化する|
+|`toString`|既定のフォーマッタを使用して文字列化する|
 |`format(DateTimeFormatter f)`|指定したフォーマッタを使用して文字列化する|
-|`parse(String s)`|デフォルトのフォーマッタを使用して文字列から日付/時刻を生成する (ファクトリ・メソッド)|
+|`parse(String s)`|既定のフォーマッタを使用して文字列から日付/時刻を生成する (ファクトリ・メソッド)|
 |`parse(String s, DateTimeFormatter f)`|指定したフォーマッタを使用して文字列から日付/時刻を生成する (ファクトリ・メソッド)|
 
-DateTimeFormatter
+一方で、日本国内では日付の表現としてスラッシュ ('/') 区切りがよく使われており、ISO 8601 形式とは異なることからそのままでは使用できません。そこで、フォーマッタを独自に定義する必要があります。
 
-1. `ofPattern` ファクトリ・メソッドを使用する *e.g.* ofPattern("uuuu/MM/dd")
-2. 定義済みパターンから選択する
-  - `ISO_LOCAL_DATE`
-  - `ISO_OFFSET_TIME`
-  - `ISO_ZONED_DATE_TIME`
-3. DateTimeFomatterBuilder
+フォーマッタは `DateTimeFormatter` クラスで表現され、インスタンスは以下の 3 通りの方法で取得することができます。
 
-ResolverStyle
+1. `DateTimeFormatter` の定義済みパターンから選択する
+2. `DateTimeFormatter` の `ofPattern` ファクトリ・メソッドを使用する *e.g.* ofPattern("uuuu/MM/dd")
+3. `DateTimeFomatterBuilder` クラスを使用して `DateTimeFormatter` を構築する。
 
-- One of formatter option (enum)
-- LENIENT, SMART (default), STRICT
-- Modifing method: withResolverStyle
-- If it is STRICT mode, Pattern 'y' must be used with 'G' *e.g.* NO: yyyy/MM/dd, OK: Gyyyy/MM/dd
+`DateTimeFormatter` の定義済みパターンには以下のようなものがあります。この中には日付・時刻クラスの既定値も含まれています。
+
+|フィールド|リゾルバ|説明
+|----------------|------|------------------------|
+|`BASIC_ISO_DATE`|`STRICT`|時差なし ISO 日付・基本形式 (例: "20111203")|
+|`ISO_DATE`|`STRICT`|時差任意の ISO 日付 (例: "2011-12-03"、"2011-12-03+01:00")|
+|`ISO_DATE_TIME`|`STRICT`|時差任意の日付/時刻 (例: "2011-12-03T10:15:30"、"2011-12-03T10:15:30+01:00"、"2011-12-03T10:15:30+01:00[Europe/Paris]")|
+|`ISO_INSTANT`|`STRICT`|UTC インスタント (例: "2011-12-03T10:15:30Z")|
+|`ISO_LOCAL_DATE`|`STRICT`|時差なし ISO 日付、`LocalDate` 既定値 (例: "2011-12-03")|
+|`ISO_LOCAL_DATE_TIME`|`STRICT`|時差なし ISO 日付/時刻、`LocalDateTime` 既定値 (例: "2011-12-03T10:15:30")|
+|`ISO_LOCAL_TIME`|`STRICT`|時差なし ISO 時刻、`LocalTime` 既定値 (例: "10:15"、"10:15:30")|
+|`ISO_OFFSET_DATE`|`STRICT`|時差あり ISO 日付 (例: "2011-12-03+01:00")|
+|`ISO_OFFSET_DATE_TIME`|`STRICT`|時差あり ISO 日付/時刻、`OffsetDateTime` 既定値 (例: 「2011-12-03T10:15:30+01:00」など)|
+|`ISO_OFFSET_TIME`|`STRICT`|時差あり ISO 時刻、`OffsetTime` 既定値 (例: 「10:15+01:00」、「10:15:30+01:00」など)|
+|`ISO_ORDINAL_DATE`|`STRICT`|時差なし ISO 年間通算日 (例: 「2012-337」など)|
+|`ISO_TIME`|`STRICT`|時差任意 ISO 時間 (例: 「10:15」、「10:15:30」、「10:15:30+01:00」など)。
+|`ISO_WEEK_DATE`|`STRICT`|時差なし ISO 暦週日付 (例: 「2012-W48-6」など)。
+|`ISO_ZONED_DATE_TIME`|`STRICT`|時差・ゾーンあり日付/時刻、`ZonedDateTime` 既定値 (例: 「2011-12-03T10:15:30+01:00[Europe/Paris]」など)|
+|`RFC_1123_DATE_TIME`|`SMART`|RFC-1123 日付/時刻 (例: "Tue, 3 Jun 2008 11:05:30 GMT")|
+
+定義済みパターンにない書式を使用する場合には、`ofPattern` ファクトリ・メソッドの引数にパターンを渡して、インスタンスを生成します。パターン文字列は書式の一部となる文字に加え、以下のパターン文字 (日付・時刻のフィールドに置き換えられる) を含めることができます。
+
+|文字|意味|表現|例|
+|:--:|----|----|----|
+|`G`|紀元 (era)|文字列|AD; Anno Domini; A|
+|`u`|年 (year)|年|2004; 04|
+|`y`|紀元の年 (year-of-era)|年|2004; 04|
+|`D`|年の日 (day-of-year)|数値|189|
+|`M`/`L`|年の月 (month-of-year)|数値/文字列|7; 07; Jul; July; J|
+|`d`|月の日 (day-of-month)|数値|10|
+
+|`Q`/`q`|四半期 (quarter-of-year)|数値/文字列|3; 03; Q3; 3rd quarter|
+|`Y`|週基準の年 (week-based-year)|年|1996; 96|
+|`w`|週基準の年の週 (week-of-week-based-year)|数値|27|
+|`W`|月の週 (week-of-month)|数値|4|
+|`E`|曜日 (day-of-week)|文字列|Tue; Tuesday; T|
+|`e`/`c`|ローカライズされた曜日 (localized day-of-week)|数値/文字列|2; 02; Tue; Tuesday; T|
+|`F`|月の週 (week-of-month)|数値|3|
+
+|`a`|午前・午後 (am-pm-of-day)|文字列|PM|
+|`h`|時 (1-12) (clock-hour-of-am-pm (1-12))|数値|12|
+|`K`|時 (0-11) (hour-of-am-pm (0-11))|数値|0|
+|`k`|時 (1-24) (clock-hour-of-am-pm (1-24))|数値|0|
+
+|`H`|時 (0-23) (hour-of-day (0-23))|数値|0|
+|`m`|分 (minute-of-hour)|数値|number|30|
+|`s`|秒 (second-of-minute)|数値|55|
+|`S`|秒の小数部 (fraction-of-second)|小数部|978|
+|`A`|日のミリ秒 (milli-of-day)|数値|1234|
+|`n`|ナノ秒 (nano-of-second)|数値|987654321|
+|`N`|日のナノ秒 (nano-of-day)|数値|1234000000|
+
+|`V`|タイムゾーン ID (time-zone ID)|ゾーン ID|America/Los_Angeles; Z; -08:30|
+|`z`|タイムゾーン名 (time-zone name)|ゾーン名|Pacific Standard Time; PST|
+|`O`|ローカライズされた時差 (localized zone-offset)|オフセット O|GMT+8; GMT+08:00; UTC-08:00;|
+|`X`|時差、ゼロの場合は 'Z' (zone-offset 'Z' for zero)|オフセット X|Z; -08; -0830; -08:30; -083015; -08:30:15;|
+|`x`|時差 (zone-offset)|オフセット x|+0000; -08; -0830; -08:30; -083015; -08:30:15;|
+|`Z`|時差 (zone-offset)|オフセット Z|+0000; -0800; -08:00;|
+
+|`p`|パディング (pad next)|パディング修飾子|1|
+
+|`'`|エスケープ (escape for text)|delimiter| |
+|`''`|シングルクォート (single quote)|literal|'|
+|`[`|オプションのセクション開始 (optional section start)| |
+|`]`|オプションのセクション終了 (optional section end)| |
+|`#`|予約 (reserved for future use)| |
+|`{`|予約 (reserved for future use)| |
+|`}`|予約 (reserved for future use)| |
+
+パターン文字の桁数により、表現が変わってきます。
+
+- テキスト: 4 未満 = 短縮形式、4 = フル形式、5 = 縮小形式 (`L`、`c`、`q` は、スタンドアロン形式のテキスト・スタイル)。
+- 数値: 1 = 最小桁数・パディングなし、それ以外 = 出力幅・ゼロパディング (ただし `c`、`F` は 1、`d`、`H`、`h`、`K`、`k`、`m`、`s` は 2 以下、`D` は 3 以下)。
+- 数値/テキスト: 3 以上はテキスト扱い。2 以下は数値扱い。
+- 小数: ナノ秒フィールド (1～9)。
+- 年: 2 = 2 桁の縮小形式、符号の出力は、4 未満 (ただし 2 以外) = 負の年のみ、それ以外 = パディング幅を超える場合。
+- ゾーンID: 2 のみ。
+- ゾーン名: 1～3 = 短い名前、4 = 完全。
+- オフセット X/オフセット x: 1 = 分がゼロのときは時 ("+01")、分がゼロでないときは時・分 ("+0130")、2 = 時・分コロンなし ("+0130")、3 = 時・分コロン付き ("+01:30")、4 = 時・分・秒コロンなし ("+013015")、5 = 時・分・秒コロン付き ("+01:30:15")。オフセットがゼロの場合、オフセット X は"Z"、オフセット x は "+00"、"+0000"、"+00:00"。
+- オフセット O: 1 = ローカライズされたオフセットの短縮形式 ("GMT+8")、4 = フル形式 ("GMT+08:00")
+- オフセット Z: 1、2、3 = 時・分コロンなし ("+0130")、オフセットがゼロの場合 "+0000"。4 = ローカライズされたオフセットのフル形式 (O の4文字と等価)。5 = 時・分・秒コロン付き、オフセットがゼロの場合 "Z"。
+- パディング修飾子: 直後にスペース n 文字
+
+リゾルバは、フォーマッタの動作モードの 1 つで、パースを行う際の妥当性チェックのレベルについて規定するものです。`ResolverStyle` 列挙型として定義され、`LENIENT` (非厳密)、`SMART` (スマート)、`STRICT` (厳密) の 3 種類があります。`DateTimeFormatter` 自体の既定値は `SMART` です。それぞれの特徴は以下の通りです。
+
+- LENIENT (非厳密) : 無効な値であっても何らかの形で処理する。
+- SMART (スマート) : フィールドに応じて `LENIENT` と `STRICT` を切り替える (独自の処理をする場合もある)。
+- STRICT (厳密) : 無効な値は拒否され、必ず有効な値となる。
+
+リゾルバの変更には `DateTimeFormatter` クラスの `withResolverStyle` メソッドを使用します。
+
+```java
+// リゾルバを STRICT にしてフォーマッタを生成する
+DateTimeFormatter formatter = DateTimeFormatter.withResolverStyle(ResolverStyle.STRICT).ofPattern("uuuu/MM/dd");
+```
+
+`STRICT` はパターン文字列自体も厳密にチェックします。以下のコードはパターン文字列 "yyyy/MM/dd" のフォーマッタを 2 つ生成するコードですが、`formatter1` の生成には成功するものの、`formatter2` を生成しようとするとエラーとなってしまいます。なぜ `formatter2` の生成だけエラーになってしまうのでしょうか？
+
+```java
+// リゾルバを既定値 (SMART) でフォーマッタを生成する
+DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+// リゾルバを STRICT にしてフォーマッタを生成する → エラー！
+DateTimeFormatter formatter2 = DateTimeFormatter.withResolverStyle(ResolverStyle.STRICT).ofPattern("yyyy/MM/dd");
+```
+
+`DateTimeFormatter` のパターン文字で「年」を表すものとして、`y` と `u` の 2 種類があります。仕様では、`y` は時代 (era) を表す `G` との組み合わせが必須となっており、年を単独で表すには `u` を使う必要があります。ただし、リゾルバが `LENIENT` の場合はパターンに `y` が存在する場合に `G` が含まれていなくても無視する動作となり、`SMART` の場合も `y` に関する既定の動作は `LENIENT` と同一になります。しかし、`STRICT` の場合はパターンを厳密にチェックするため、`y` が存在する場合に `G` が含まれていないと無効なパターンと判断してエラーとなるのです。
 
 ## 13.4. 高度なトピック
 
-この章の内容は高度なトピックのため、最初は飛ばしてしまっても構いません。
-
 ### 13.4.1. Instant と Clock
 
-スライドを参照してください。
+Date and Time API が扱う日付・時刻表現には、人間向けの表現とコンピュータ向けの内部表現があります。ここまで見てきたのは、主に人間向けの表現でした。
+
+人間向けの表現は、`LocalDate` をはじめとする日付・時刻クラスを中心に構成され、これらは ISO 8601 の表現に準拠するように定義されていました。人間向けの表現のうち、まだ取り上げていないものは、2 つの日付または時刻の間隔を表現する方法です。Date and Time API では 2 つの日付の間隔を `Period` クラスで、2 つの時刻の間隔を `Duration` クラスでそれぞれ表します。これらの文字列表現は ISO 8601 の日付間隔に準拠します。例えば 1 年 2 ヶ月 と 3 日間を表す `Period` は "P1Y2M3D"、15 時間 30 分と 45 秒を表す `Duration` は "PT15H30M45D" となります。
+
+>ISO 8601 では、時間量および日付量を durarion、時間間隔および日付間隔を period と定義していますが、Date and Time API では `Duration` は時間間隔、`Period` は日付間隔を表します。本 API における数少ない ISO 8601 との相違点であるため注意してください。
+
+一方、コンピュータ向けの内部表現には、原点、時刻、時間間隔 (時間) および時間軸によって構成されます。それぞれ `Instant.EPOCH`、`Instant`、`Duration`、`Clock` の各クラス (および定数) にて表現されます。起点である `Instant.EPOCH` は、Unix 時刻のエポック (起点) と同じ 1970-01-01T00:00:00Z として定義されています。時刻は `Instant` クラスで表現され、ナノ秒の精度を持ちます。2 つの `Instant` の間隔は `Duration` クラスで表現します (これは人間向け表現と同じです)。
+
+なお、`Instant` クラスは `java.util.Date` との相互変換を行うための唯一のインタフェースでもあります。
+
+>内部表現の構成要素は、ニュートン力学で扱う時刻・時間の概念に類似しています。
+
+ここまで取り上げた内容を下表にまとめます。
+
+|要素|人間向け表現|内部表現|
+|----|--------|--------|
+|原点|N/A|`Instant.EPOCH`|
+|日付・時刻|`LocalDate` 等|`Instant`|
+|日付・時間間隔|`Period`、`Duration`|`Duration`|
+|時間軸|N/A|`Clock`|
+
+この節の最後の話題として、`Clock` の詳細を取り上げましょう。
+
+先の説明では `Clock` は時間軸を表現するクラスとしました。`Clock` をより正確な表現をするならば、呼び出しの度に `Instant` を返すオブジェクトです。システム標準の `Clock` は、呼び出したときの既定のタイムゾーンに基づく現在時刻を表す `Instant` を返します。以下に `Clock` クラスが提供する `Instant` 取得メソッドを示します。
+
+|メソッド|引数|説明|
+|--------|--------|--------|
+|`system`|`ZoneId`|指定したタイムゾーンに基づく現在時刻を表す `Instant` を返す|
+|`systemDefaultZone`|N/A|既定のタイムゾーンに基づく現在時刻を表す `Instant` を返す (`LocalDateTime.now()` 等が用いる)|
+|`systemUTC`|N/A|UTC に基づく現在時刻を表す `Instant` を返す|
+|`fixed`|`Instant, ZoneId`|常に引数で指定した `Instant` を返す (Fixed Clock)|
+
+ 4 つ目の `fixed` は、常に同じ `Instant` を返す特殊な `Clock` で、Fixed Clock と呼ばれているものです。Fixed Clock は現在時刻が常に一定となる性質を利用して、内部で現在時刻を取得して処理に用いるようなプログラムの単体テストを実施するのに適しています。
+
+Fixed Clock の簡単な使用例を以下に示します。
+
+```java
+// 常に返す Instant
+Instant instant = ... ;
+
+// Fixed Clock
+Clock clock = Clock.fixed(instant, ZoneId.systemDefaultZone());
+
+// Fixed Clock を使用 → dateTime は常に同じ値となる
+LocalDateTime dateTime = LocalDateTime.now(clock);
+```
 
 ### 13.4.2. ZoneId と ZoneOffset
 
-スライドを参照してください。
+#### 13.4.2.1. ZoneId とは？
 
-### 13.4.3. Temporal オブジェクトとは？
+`ZoneId` クラスはタイムゾーンに付けられた ID あるいはタグのようなものです。`ZoneId` のインスタンスは Date and Time API が内部で保持しているタイムゾーンに関する情報 (`ZoneRules` クラスなどで構成される) と関連付けられています。そのため、タイムゾーンに関する情報を取得するためには、キーとなる `ZoneId` を指定する必要があります。
 
-スライドを参照してください。
+`ZoneId` 自身は抽象クラスであり、具象クラスは `ZoneRegion` クラス (パッケージ・プライベート) と `ZoneOffset` クラスになります。どちらの具象クラスが用いられるかは、`ZoneId` の取得方法によって変わってきます。
+
+`ZoneOffset` クラスは、UTC からの時差を指定するタイプの `ZoneId` です。前述の通り、`OffsetDateTime` や `OffsetTime` のインスタンス取得時に時差を指定するために用いられるクラスですが、`ZoneId` のサブクラスであるため実は `ZonedDateTime` のインスタンス取得にも使用できます。
+
+`ZoneRegion` クラスは、`ZoneOffset` 以外のケースで用いられる `ZoneId` であり、"Asia/Tokyo" のような tz database 名を指定した場合にはこちらが用いられます。パッケージ・プライベートとして宣言されているため直接操作することはありませんが、`ZoneOffset` との対比のため意識しておいた方が良いでしょう。通常は `ZoneId` として `ZonedDateTime` インスタンス取得に使用されます。
+
+#### 13.4.2.2. ZoneId の取得方法
+
+`ZoneId` にはいくつかのファクトリ・メソッドが用意されており、それを用いてインスタンスを取得するようになっています。ファクトリ・メソッドの一覧を以下に示します。
+
+|メソッド|引数|説明|
+|----|----|----|
+|`of`|`String`|固定オフセットまたは地理的地域を指定してインスタンスを取得する|
+|`of`|`String, Map`|上と同じだが、最初にエイリアスの `Map` を適用する|
+|`systemDefault`|N/A|システム既定のタイムゾーンを取得する|
+|`from`|`TemporalAccessor`|例えば `ZonedDateTime` などからタイムゾーンを抽出する|
+
+基本的には第 1 の書式である `of(String)` ファクトリ・メソッドを使用します。引数の指定方法にいくつかのバリエーションがあり、それによって取得されるインスタンスの具象クラスが変わってきます。
+
+1. 固定オフセット (例: "+09:00"、"Z") を指定した場合 → `ZoneOffset` のインスタンス
+2. 地理的地域 (例: "Asia/Tokyo"、"America/Los_Angeles") を指定した場合 → `ZoneRegion` のインスタンス
+
+これ以外のパターンはエラーになります。例えば "JST" などの 3 文字コードは使用できません。3 文字コードを使用するには、エイリアスの `Map` を指定する第 2 の書式である `of(String, Map)` を使用する必要があります。既知の 3 文字コードについては `ZoneId.SHORT_IDS` として事前定義されているため、`of("JST", ZoneId.SHORT_IDS)` のように使用します。
+
+システムの既定値を取得する場合には、`ZoneId.systemDefault()` メソッドを使用します。
+
+#### 13.4.2.3. ZoneOffset の取得方法
+
+`ZoneOffset` には、`ZoneId` のファクトリ・メソッドに加えて、以下に示すような時差を指定するいくつかのファクトリ・メソッドが用意されています (通常はこちらを使用します)。また、UTC を表す定数 `ZoneOffset.UTC` が定義されています。
+
+|メソッド|引数|説明|
+|----|----|----|
+|`ofHours`|`int`|時差 (時) を指定する|
+|`ofHoursMinutes`|`int, int`|時差 (時・分) を指定する|
+|`ofHoursMinutesSeconds`|`int, int, int`|時差 (時・分・秒) を指定する|
+|`ofTotalSeconds`|`int`|時差の合計値 (秒) を指定する|
+
+>現在、世界で設定されている時差はすべて時または時・分のいずれかで表現可能です。
+
+#### 13.4.2.4. OffsetDateTime vs. ZonedDateTime
+
+Date and Time API には、時差・タイムゾーンを含む日付・時刻クラスとして `OffsetDateTime` と `ZonedDateTime` の 2 種類が用意されています。一見すると重複しているように感じられる仕様ですが、これらが独立したクラスとして存在しているのには理由があります。
+
+- `OffsetDateTime` は ISO 8601 に準拠したクラスです。一方で `ZonedDateTime` は ISO 8601 には準拠しない利便のためのクラスです。
+- `ZonedDateTime` は夏時間や過去のタイムゾーン改訂に対応できるクラスです。一方で `OffsetDateTime` にはそのような機能はありません。
+- タイムゾーンはそれを管轄する国や地域の都合により変更されることがあるため、`ZonedDateTime` はその影響を受けます。一方で UTC からの時差は変化しないため、UTC からの時差に依存する `OffsetDateTime` はタイムゾーン変更の影響を受けません。
+
+`OffsetDateTime` と `ZonedDateTime` には以上のようなトレードオフがあるため、状況に応じて使い分けることが肝心です。
+
+### 13.4.3. TemporalAdjuster
+
+#### 13.4.3.1. Temporal オブジェクトと TemporalAdjuster
+
+`Temporal` オブジェクトとは、これまで見てきた `LocalDate`、`LocalDateTime`、`LocalTime`、`OffsetDateTime`、`OffsetTime`、`ZonedDateTime` と、年を表す `Year` と年月を表す `YearMonth` の総称であり、`Temporal` インタフェースの実装であるという共通点があります。`TemporalAdjuster` は、`Temporal` オブジェクトを調整あるいは変更するためのものです。その目的は、日付・時刻に対する操作を `Temoral` オブジェクトというデータ構造と `TemporalAdjuster` というアルゴリズムに分離することです。
+
+`TemporalAdjuster` は、例えば日付操作を次のように定義します。
+
+- 起点日の月の最初の日を求める (起点日: 2015-03-07 → 2015-03-01)
+- 起点日の次の月曜日を求める (起点日: 2015-03-07 → 2015-03-09)
+- 起点日の月の最後の日を求める (起点日: 2015-03-07 → 2015-03-31)
+
+`TemporalAdjuster` がない場合は、起点日ごとに月や曜日の情報を参照しながら該当する日を算出する必要がありましたが、`TemporalAdjuster` があればアプリケーションは起点日のみ渡すことで細かな日付計算から解放されます。
+
+#### 13.4.3.2. TemporalAdjuster の使い方
+
+`Temporal` オブジェクトはすべてファクトリ・メソッド `from` を持ちます。その引数に `TemporalAdjuster` を指定することで、`TemporalAdjuster` 適用後の値を求めることができます。以下のサンプルコードを参照してください。
+
+```java
+// 次の月曜日を求める TemporalAdjuster
+TemporalAdjuster nextMondayAdjuster = ... ;
+
+// 今日
+LocalDate today = LocalDate.now();
+
+// 次の月曜日
+LocalDate nextMonday = today.from(nextMondayAdjuster);
+```
+
+#### 13.4.3.3. TemporalAdjusters ユーティリティ
+
+Date and Time API には、良く使用する `TemporalAdjuster` を `TemporalAdjusters` ユーティリティ・クラスに事前定義しています。`TemporalAdjuster` の実装は難易度の高い仕事ですが、出来合いの `TemporalAdjuster` を使用するだけなら簡単です。
+
+|メソッド|引数|説明|
+|---------|--------|---------|
+|`dayOfWeekInMonth`|`int, DayOfWeek`|序数形式の曜日を持つ同じ月の新しい日付を返す、月の曜日アジャスタを返します。|
+|`firstDayOfMonth`|N/A|月の最初の日を求める|
+|`firstDayOfNextMonth`|N/A|翌月の最初の日を求める|
+|`firstDayOfNextYear`|N/A|翌年の最初の日を求める|
+|`firstDayOfYear`|N/A|年の最初の日を求める|
+|`firstInMonth`|`DayOfWeek`|その曜日を持つ、月の最初の日を求める|
+|`lastDayOfMonth`|N/A|月の最後の日を求める|
+|`lastDayOfYear`|N/A|年の最後の日を求める|
+|`lastInMonth`|`DayOfWeek`|その曜日を持つ、月の最後の日を求める|
+|`next`|`DayOfWeek`|次の曜日 (同日の場合は翌週) を求める|
+|`nextOrSame`|`DayOfWeek`|次の曜日 (同日の場合はその日) を求める|
+|`previous`|`DayOfWeek`|前の曜日 (同日の場合は前週) を求める|
+|`previousOrSame`|`DayOfWeek`|前の曜日 (同日の場合はその日) を求める|
+
+冒頭に挙げた日付操作の例は、すべて `TemporalAdjusters` ユーティリティ・クラスを用いて実現可能です。以下のサンプルコードを参照してください。
+
+```java
+// 起点日 (2015-03-07)
+LocalDate today = LocalDate.of(2015, 3, 7);
+
+// 起点日の月の最初の日 (2015-03-01)
+LocalDate firstDay = today.from(TemporalAdjusters.firstDayOfMonth());
+
+// 起点日の次の月曜日 (2015-03-09)
+LocalDate nextMonday = today.from(TemporalAdjusters.next(DayOfWeek.MONDAY));
+
+// 起点日の月の最後の日 (2015-03-31)
+LocalDate lastDay = today.from(TemporalAdjusters.lastDayOfMonth());
+```
 
 ### 13.4.4. 暦のサポート
 
-スライドを参照してください。
+#### 13.4.4.1. 暦フレームワーク
+
+Date and Time API では、ISO 8601 以外のローカルな暦として、和暦 (日本)、民国紀元 (台湾)、仏暦 (タイ) およびヒジュラ暦 (イスラム圏) を用意しています。また、それ以外の暦をユーザーが定義できるように暦フレームワークを整備し、提供しています。暦フレームワークは、サポートする暦ごとに `Chronology`、`Era`、`ChronoLocalDate` といった構成要素が存在します。
+
+- `Chronology` : 暦そのものを表現します。その暦の `ChronoLocalDate` インスタンスを生成するためのメソッドを持ち、その暦における `ChronoField` の定義域を保持します。
+- `Era` : 暦の紀元を表現します。ほとんどの暦では紀元前と紀元後だけを持つ列挙型として定義されます。和暦のみ各元号に対応する値を持つクラスとして定義されます。
+- `ChronoLocalDate` : 暦における日付を表現します。基本的には紀元・年・月・日の各フィールドを持ちます。
+
+標準でサポートする暦における暦フレームワークの構成要素を以下に示します。
+
+|暦|`Chronology`|`Era`|`ChronoLocalDate`|
+|--------|----------------|--------|----------------|
+|ISO 8601|`IsoChronology`|`IsoEra`|`LocalDate`|
+|和暦 (日本)|`JapaneseChronology`|`JapaneseEra`|`JapaneseDate`|
+|民国紀元 (台湾)|`MinguoChronology`|`MinguoEra`|`MinguoDate`|
+|仏暦 (タイ)|`ThaiBuddhistChronology`|`ThaiBuddhistEra`|`ThaiBuddhistDate`|
+|ヒジュラ暦 (イスラム圏)|`HijrahChronology`|`HijrahEra`|`HijrahDate`|
+
+これまで扱ってきた `LocalDate` クラスも、暦フレームワークの一部をなしています (ISO 8601 として)。
+
+ある暦の `ChronoLocalDate` の `from` メソッドは、他の暦の `ChronoLocalDate` を設定することで、暦の変換を行えるようになっています。この機能を利用して `LocalDate` (ISO 8601 の `ChronoLocalDate`) を他の暦に変換するサンプルを以下に示します。
+
+```java
+LocalDate today = LocalDate.of(2014, 3, 21);
+System.out.println(today);
+System.out.println(JapaneseDate.from(today));
+System.out.println(MinguoDate.from(today));
+System.out.println(ThaiBuddhistDate.from(today));
+System.out.println(HijrahDate.from(today));
+```
+
+上記の実行結果は以下のようになるはずです。上記の例の基準日である 2014 年 3 月 21 日は、和暦で表現すると平成 26 年 3 月 21 日です。その点に注目して実行結果を見てください。
+
+```
+2014-03-21
+Japanese Heisei 26-03-21
+Minguo ROC 103-03-21
+ThaiBuddhist BE 2557-03-21
+Hijrah-umalqura AH 1435-05-20
+```
+
+>Date and Time API の拡張ライブラリである Threeten Extra では、Java SE API のサイズの関係で割愛されたローカル暦が収録されています。ユリウス暦 (グレゴリオ暦以前の標準的な暦)、コプト暦 (エジプトで使用されていたキリスト教系の暦)、IFRS 会計年度、ディスコルディア暦 (Linux の `ddate` コマンドで表示されるジョークの暦)、いくつかの 13 の月を持つ暦などです。暦フレームワークの柔軟性を示す例と言えるでしょう。
+
+暦フレームワークは柔軟で強力である反面、アプリケーションに複数の暦が持ち込まれ、日付処理が不必要に複雑化する可能性があります。また、ISO 8601 は異なるシステム間で日付・時刻を受け渡しする方法として国際標準化されていますが、ローカル暦は Date and Time API の暦フレームワーク独自のものであり、システム間での受け渡しには不向きです。こうしたことから、ローカル暦の使用はアプリケーション内の必要最小限にとどめ、原則として ISO 8601 に準拠した日付・時刻の処理を行うのが確実と言えるでしょう。
+
+#### 13.4.4.2. 和暦
+
+和暦における `ChronoLocalDate` は `JapaneseDate` クラスとなります。`JapaneseDate` はいくつかのファクトリ・クラスでインスタンスを取得します。主なファクトリ・メソッドを以下に示します。
+
+|メソッド名|引数|説明|
+|----|--------|--------|
+|`now`|N/A|現在日時から和暦の日付を取得する|
+|`of`|`JapaneseEra, int, int, int`|元号・年・月・日から和暦の日付を取得する|
+|`from`|`TemporalAccessor`|他の暦の日付から和暦の日付を取得する|
+
+`JapaneseEra` は元号を表し、明治 = `JapaneseEra.MEIJI`、大正 = `JapaneseEra.TAISHO`、昭和 = `JapaneseEra.SHOWA`、平成 = `JapaneseEra.HEISEI` と定義されています。
+
+`JapaneseDate.toString()` メソッドにより "Japanese Heisei 26-03-21" のような形式の文字列表現を取得できます。和暦の表現は JIS X 0301 規格にて "NYY.MM.DD" (N:元号) のように定められており、残念ながら `JapaneseDate` の標準的な書式は JIS 規格に適合していません。これを解決するには独自に `DateTimeFormatter` を定義する必要があります。以下のサンプルコードを参照してください。
+
+```java
+// JIS X 0301 準拠の DateTimeFormatter
+DateTimeFormatter japaneseFormat = DateTimeFormatter.ofPattern("GGGGGyy.MM.dd");
+
+// 和暦日付 (任意)
+JapaneseDate date = JapaneseDate.of(JapaneseEra.HEISEI, 26, 3, 21);
+
+// NYY.MM.DD 形式で標準出力へ表示
+System.out.println(date.format(japaneseFormat));
+```
 
 ## 13.5. Date and Time API のまとめ
 
