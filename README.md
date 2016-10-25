@@ -22,7 +22,7 @@ Java の入門あるいは再入門テキストは世の中に多数で回って
 
 ### 蓮沼賢志 (HASUNUMA Kenji)
 
-日本国内における著名な Java エンジニアのひとり。日本人 2 人目の Java Champion である寺田佳央氏 (現・日本マイクロソフトに師事し、Java EE および [GlassFish Server](http://www.glassfish.org/) に関する理解を深める。現在は[日本 GlassFish ユーザー会](http://www.glassfish.jp/)の会長を務めながら、[Payara Community](http://www.payara.fish/) のコントリビュータ (コミッタ) としても活躍中。また、'Date and Time API' ([JSR 310](https://jcp.org/en/jsr/detail?id=310)) には初期から仕様策定メンバーの末席に名を連ね、日本で最も 'Date and Time API' を知る人物として、日本人最初の Java Champion である櫻庭祐一氏からも一目置かれている。目標としている人物は、ドイツの著名な Java Champion である [Adam Bien](http://www.adam-bien.com/) 氏。
+日本国内における著名な Java エンジニアのひとり。日本人 2 人目の Java Champion である寺田佳央氏に師事し、Java EE および [GlassFish Server](http://www.glassfish.org/) に関する理解を深める。現在は[日本 GlassFish ユーザー会](http://www.glassfish.jp/)の会長を務めながら、[Payara Community](http://www.payara.fish/) のコントリビュータ (コミッタ) としても活躍中。また、'Date and Time API' ([JSR 310](https://jcp.org/en/jsr/detail?id=310)) には初期から仕様策定メンバーの末席に名を連ね、日本で最も 'Date and Time API' を知る人物として、日本人最初の Java Champion である櫻庭祐一氏からも一目置かれている。目標としている人物は、ドイツの著名な Java Champion である [Adam Bien](http://www.adam-bien.com/) 氏。
 
 **【著書・査読付き論文】**
 
