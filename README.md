@@ -6,8 +6,6 @@ Java の入門あるいは再入門テキストは世の中に多数で回って
 
 全くのプログラミング初心者に対する説明を行う余裕はないため、対象とする読者には構造化プログラミングに関する基本的な知識を前提としました。C/C++、JavaScript、Python、Visual Basic などの経験が多少なりともあれば読み進めることはできるでしょう。また、研修で Java を習ったけれどもよく分からなかったという読者にとっても、復習教材として活用できるのではないかと思います。
 
-**2016 年 10 月 26 日現在、このテキストは執筆途中です。あらかじめご了承ください。**
-
 ## 2. 参考文献
 
 この資料は新たに書き下ろしたものですが、執筆に当たっては以下の資料を参考にしました。
@@ -24,27 +22,7 @@ Java の入門あるいは再入門テキストは世の中に多数で回って
 
 ### 蓮沼賢志 (HASUNUMA Kenji)
 
-日本国内における著名な Java エンジニアのひとり。専門は Java EE (特に JAX-RS) であり、日本人 2 人目の Java Champion である寺田佳央氏の弟子に当たる。国内外で [Payara Community](http://www.payara.fish/) の外部協力者として知られており、[Payara Server の推薦文](http://www.payara.fish/testimonials)も寄稿している。
-
-クライアントサイド技術にも造詣があり、Java SE 8 で導入された 'Date and Time API' ([JSR 310](https://jcp.org/en/jsr/detail?id=310)) の初期から仕様策定メンバーの末席に名を連ねている。日本で最も 'Date and Time API' を知る人物として、日本人最初の Java Champion である櫻庭祐一氏からも一目置かれている。「設計者 Stephen Colebourne には敵わないが、保守リーダーの Roger Riggsよりは深く理解している」つもり、とのこと。
-
-そのキャリアに比して代表的な作品は存在していないが、常日頃から Java のエバンジェリスト的な活動を行っており、国内の主要なカンファレンス (JJUG CCC 等) では常連の登壇者である。目標とする人物は、ドイツの著名な Java Champion である [Adam Bien](http://www.adam-bien.com/) 氏である (彼も Java EE と JavaFX の双方について造詣が深いことで知られている)。
-
-出自が C/C++ プログラマだったことも影響してか、いまだに Java の言語仕様についてケチを付けることがまれにある。基本的に思いつきで深い意味はないため、スルーするのが得策である。
-
-**【所属学会・団体】**
-
-- [ACM (Association for Computing Machinery)](https://www.acm.org/), Member
-- [JCP (Java Community Process)](https://jcp.org/), Associate Member
-- [JJUG (Japan Java User Group)](http://www.java-users.jp/), Member
-- [GlassFish Users Group Japan](http://www.glassfish.jp/), President
-
-**【関連リソース】**
-
-- ブログ "Promised Land" -- http://www.copppermine.jp/docs/promised/
-- 旧ブログ "Programming Studio" -- http://www.copppermine.jp/docs/programming/
-- SlideShare -- https://www.slideshare.net/khasunuma
-- GitHub -- https://github.com/khasunuma
+日本国内における著名な Java エンジニアのひとり。日本人 2 人目の Java Champion である寺田佳央氏 (現・日本マイクロソフトに師事し、Java EE および [GlassFish Server](http://www.glassfish.org/) に関する理解を深める。現在は[日本 GlassFish ユーザー会](http://www.glassfish.jp/)の会長を務めながら、[Payara Community](http://www.payara.fish/) のコントリビュータ (コミッタ) としても活躍中。また、'Date and Time API' ([JSR 310](https://jcp.org/en/jsr/detail?id=310)) には初期から仕様策定メンバーの末席に名を連ね、日本で最も 'Date and Time API' を知る人物として、日本人最初の Java Champion である櫻庭祐一氏からも一目置かれている。目標としている人物は、ドイツの著名な Java Champion である [Adam Bien](http://www.adam-bien.com/) 氏。
 
 **【著書・査読付き論文】**
 
