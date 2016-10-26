@@ -15,4 +15,3 @@
 - [12 章 : ラムダ式と Stream API](docs/chapter12.md)
 - [13 章 : Date and Time API](docs/chapter13.md)
 - [14 章 : 標準 API を活用しよう](docs/chapter14.md)
-- [終章 : Java 開発最前線](docs/chapter99.md)
