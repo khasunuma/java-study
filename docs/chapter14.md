@@ -6,16 +6,16 @@
 
 ### 14.1.1. Properties クラスの基本構造
 
-`Properties` クラスは、各設定情報 (エントリ) について名称 (キー) とプロパティ (設定値) がペアとなっており、その集合体となっています。コレクションの `Map` とよく似ています (実際に `Map` インタフェースも実装しています) が、実際にはコレクションの登場によりあまり使用されなくなった `Hashtable` のサブクラスとして実装されています。`Hashtable` に対して、Java VM やアプリケーションの設定情報をファイルから読み込んだり書き出したりする (= 設定情報をファイルに退避させる) ための入出力機能と、若干のユーティリティ・メソッドを追加したものが `Properties` クラスとなります。
+`Properties` クラスは、各設定情報 (エントリ) についてキー (名称) とプロパティ (設定値) がペアとなっており、その集合体となっています。コレクションの `Map` とよく似ています (実際に `Map` インタフェースも実装しています) が、実際にはコレクションの登場によりあまり使用されなくなった `Hashtable` のサブクラスとして実装されています。`Hashtable` に対して、Java VM やアプリケーションの設定情報をファイルから読み込んだり書き出したりする (= 設定情報をファイルに退避させる) ための入出力機能と、若干のユーティリティ・メソッドを追加したものが `Properties` クラスとなります。
 
 以下に `Properties` メソッドが用意しているユーティリティ・メソッドを示します。ただし、`Properties` は `Hashtable` のサブクラス (および `Map` の実装) であるため、これらが持つ汎用的なメソッドを使用することも可能です。
 
 |メソッド名|引数|戻り値|説明|
 |--------|--------|--------|--------|
-|`getProperty`|`String`|`String`|指定された名称 (キー) のプロパティ (設定値) を取得する (ない場合は `null`)|
-|`getProperty`|`String`, `String`|`String`|指定された名称 (キー) のプロパティ (設定値) を取得する (ない場合は第 2 引数で指定した値)|
-|`setProperty`|`String, String`|`Object`|指定された名称 (キー) とプロパティ (設定値) を設定する (存在する場合は置き換える)|
-|`stringPropertyNames`|N/A|`Set<String>`|すべての名称 (キー) を含む `Set` を取得する|
+|`getProperty`|`String`|`String`|指定されたキーのプロパティを取得する (ない場合は `null`)|
+|`getProperty`|`String`, `String`|`String`|指定されたキーのプロパティを取得する (ない場合は第 2 引数で指定した値)|
+|`setProperty`|`String, String`|`Object`|指定されたキーとプロパティを設定する (存在する場合は置き換える)|
+|`stringPropertyNames`|N/A|`Set<String>`|すべてのキーを含む `Set` を取得する|
 |`list`|`PrintStream`|N/A|指定された `PrintStream` (`System.out` 等) にプロパティの一覧を出力する|
 |`list`|`PrintWriter`|N/A|指定された `PrintWriter` にプロパティの一覧を出力する|
 
@@ -28,7 +28,7 @@
 - Java VM の動作環境によって決められているもの (プラットフォーム間の移植性向上の目的で使用、アプリケーションで変更してはいけない)。
 - Java VM の起動オプションによって決まってくるもの (いわゆるシステム情報、アプリケーションで変更してはいけない)。
 - Java VM の起動時にユーザーによって設定されたもの (`java` の `-D` オプションで設定可能、アプリケーションで変更してもよい)。
-- 実行時にアプリケーションによって追加されたもの。
+- 実行時にアプリケーションによって追加されたもの (`System.getProperty()` メソッドで設定)。
 
 `System` クラスにはシステム・プロパティを操作するためのユーティリティ・メソッドが用意されています。
 
@@ -41,34 +41,74 @@
 
 ### 14.1.3. Properties クラスとプロパティ・ファイル
 
+`Properties` が保持するプロパティは、ファイルから読み取む、あるいは書き込むことができます。プロパティの入出力の対象となるファイルをプロパティ・ファイルと呼びます。プロパティ・ファイルには、行指向形式と XML 形式の 2 種類のフォーマットから選択することが可能です (一般には単純な行指向形式を使用します)。
+
+>プロパティの入出力には `InputStream`/`OutputStream` または `Reader`/`Writer` を使用するため、入出力の対象は必ずしもファイルである必要はありませんが、最も多く使用されるのがファイルであるため、ここではプロパティ・ファイルとしました。
+
 |メソッド名|引数|戻り値|説明|
 |--------|--------|--------|--------|
 |`load`|`InputStream`|N/A|プロパティ一覧 (行指向形式、ISO-8859-1) を `InputStream` から読み取る|
 |`load`|`Reader`|N/A|プロパティ一覧 (行指向形式、UTF-8) を `Reader` から読み取る|
 |`loadFromXML`|`InputStream`|プロパティ一覧 (XML 形式、UTF-8) を `InputStream` から読み取る|
-|`store`|`OutputStream, String`|プロパティ一覧 (行指向形式、ISO-8859-1) を `OutputStream` に書き込む、第 2 引数はコメント|
-|`store`|`Writer, String`|プロパティ一覧 (行指向形式、UTF-8) を `Writer` に書き込む、第 2 引数はコメント|
-|`storeToXML`|`OutputStream, String`|プロパティ一覧 (XML 形式、UTF-8) を `OutputStream` に書き込む、第 2 引数はコメント|
+|`store`|`OutputStream, String`|プロパティ一覧 (行指向形式、ISO-8859-1) を `OutputStream` へ書き込む、第 2 引数はコメント|
+|`store`|`Writer, String`|プロパティ一覧 (行指向形式、UTF-8) を `Writer` へ書き込む、第 2 引数はコメント|
+|`storeToXML`|`OutputStream, String`|プロパティ一覧 (XML 形式、UTF-8) を `OutputStream` へ書き込む、第 2 引数はコメント|
 
-行指向形式
+#### (1) 行指向形式
 
-comments引数がnullでない場合は、ASCII文字の#、commentsの文字列、および行区切り文字が最初に出力ストリームに書き込まれます。このため、commentsは識別コメントとして使うことができます。改行(「\n」)、キャリッジ・リターン(「\r」)、改行が直後に続くキャリッジ・リターン、のいずれかがコメント内に現れると、それは、Writerによって生成された1個の行区切り文字で置き換えられます。そして、コメント内の次の文字が文字#でも文字!でもなかった場合、その行区切り文字のあとにASCII #が書き出されます。
+- 行指向形式のプロパティ・ファイルの各行には、自然行 (物理行) と論理行があります。
+- 自然行は、改行文字または終端で終わる 1 行の文字列として定義されます。
+- 論理行は、キーと値のペアを保持し、キー=値 (区切り文字 '=' (イコール)) または キー:値 (区切り文字 ':' (コロン)) で表されます。論理行は複数の自然行からなる場合もあり、自然行の末尾に '\' (バックスラッシュ) を置くことで次の自然行にまたがることを示します。
+- 空白文字 (' ' (スペース)、'\t' (タブ)、'\f' (フォームフィード) および改行) のみを含む自然行は、空白と見なされて無視されます。
+- 先頭が '#' (シャープ) または '!' (エクスクラメーション) の自然行は、コメント行と見なされて無視されます。ただし、コメント行の目印である '#' と '!' は自然行のみに対して作用するため、複数の自然行からなる論理行をコメント行とするには、論理行を構成するすべての自然行の先頭に '#' または '!' を挿入する必要があります。
+- キーの中で '#'、'!' または空白文字自体を使用する場合には、これらの先頭に '\' を付加してエスケープします。
+- 値の中で '#'、'!'、'=' または ':' を使用する場合には、これらの先頭に '\' を付加してエスケープします。
+- キーまたは値の中で '\' 自体を使用する場合には、'\\' で表してエスケープします。
 
-次に、ASCII文字の#、現在の日時(DateのtoStringメソッドによって現在時刻が生成されるのと同様 'dow mon dd hh:mm:ss zzz yyyy')、およびWriterによって生成される行区切り文字からなるコメント行が書き込まれます。
+行指向形式にはさらに ISO-8859-1 (Latin-1) エンコードと UTF-8 エンコードがあり、ISO-8859-1 の場合は非 ASCII 文字を直接記述することができないという制約があります。その場合は非 ASCII 文字を \u*nnnn* のように Unicode エスケープ形式の文字列に置き換える必要があります。これを行うものが [2 章](chapter02.md) で紹介した `native2ascii` ユーティリティです。ただし、`native2ascii` と同等の機能は統合開発環境に備わっていることが多く、また UTF-8 エンコードを選択した場合は直接 Unicode 文字を記述できるため処理自体が不要となります。
 
-続いて、このProperties表内のすべてのエントリが1行に1つずつ書き出されます。各エントリのキー文字列、ASCII文字の=、関連付けられた要素文字列が書き込まれます。キーの場合、すべての空白文字は、前に\文字を付けて書き込まれます。要素の場合、埋込み空白文字でも後書き空白文字でもない先行空白文字は、前に\を付けて書き込まれます。キーと要素の文字#、!、=、および: は、必ず正しくロードされるように、前にバックスラッシュを付けて書き込まれます。
+以下に行指向形式のプロパティ・ファイルの例を示します。
 
-XML 形式
+```
+# store メソッドの第 2 引数で指定したコメント
+# Wed Oct 26 10:30:45 JST 2016
+key1=value-no1
+key2=value \
+     -no2
+key3=value\=no3
+#key4=value-no4
+key5=\u30d7\u30ed\u30d1\u30c6\u30a3
+```
+
+`store` メソッドが出力するプロパティ・ファイルの場合、1 行目に `store` の第 2 引数で指定したコメント、2 行目に現在時刻 ('dow mon dd hh:mm:ss zzz yyyy' 形式) を挿入します。これらはいずれもコメント行であるため、`load` メソッドでは無視されます。
+
+#### (2) XML 形式
+
+XML 形式は以下の DTD 定義に従います。ファイルは基本的に UTF-8 エンコードとなります。XML 形式は現在ではあまり使用されていません。
 
 ```xml
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!-- DTD for properties -->
-    <!ELEMENT properties ( comment?, entry* ) >
-    <!ATTLIST properties version CDATA #FIXED "1.0">
-    <!ELEMENT comment (#PCDATA) >
-    <!ELEMENT entry (#PCDATA) >
-    <!ATTLIST entry key CDATA #REQUIRED>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DTD for properties -->
+<!ELEMENT properties ( comment?, entry* ) >
+<!ATTLIST properties version CDATA #FIXED "1.0">
+<!ELEMENT comment (#PCDATA) >
+<!ELEMENT entry (#PCDATA) >
+<!ATTLIST entry key CDATA #REQUIRED>
+```
+
+上記のプロパティ・ファイルを XML 形式で書き直すと以下のようになります。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<properties version="1.0">
+  <comment>store メソッドの第 2 引数で指定したコメント</comment>
+  <entry key="key1">value-no1</entry>
+  <entry key="key2">value-no2</entry>
+  <entry key="key3">value=no3</entry>
+  <!-- entry key="key4">value-no4</entry -->
+  <entry key="key5">プロパティ</entry>
+</properties>
 ```
 
 ## 14.2. JAXB
@@ -235,19 +275,72 @@ Person person = JAXB.unmarshal(new File("johndoe"), Person.class);
 
 ## 14.3. Pattern & Matcher
 
-Java の正規表現実装です。正規表現そのものを表す `Pattern` クラスと、正規表現にマッチするかを判定する `Matcher` クラスから構成されます (`Matcher` クラスはマッチの判定だけでなく、マッチ箇所を他の文字列に置換する機能も持ちます)。`String` クラスなどにも正規表現を扱うメソッドが存在していますが、`Pattern` と `Matcher` はその裏方として働きます。ある意味当然のことですが、`Pattern` と `Matcher` を直接使用した方がパフォーマンス上優れています。
+Java の正規表現の実装です。正規表現そのものを表す `Pattern` クラスと、正規表現にマッチするかを判定する `Matcher` クラスから構成されます (`Matcher` クラスはマッチの判定だけでなく、マッチ箇所を他の文字列に置換する機能も持ちます)。`String` クラスなどにも正規表現を扱うメソッドが存在していますが、`Pattern` と `Matcher` はその裏方として働きます。ある意味当然のことですが、`Pattern` と `Matcher` を直接使用した方がパフォーマンス上優れています。
 
 ### 14.3.1. 簡単なパターンマッチング
 
+正規表現によるパターンマッチングは、以下の手順で行います。
+
+1. 正規表現を表す `Pattern` のインスタンスを生成する。
+2. `Pattern` とマッチさせる文字列から `Matcher` のインスタンスを生成する。
+3. `Matcher.matches()` メソッドで判定する。
+
+```java
+// A-Z で始まり、1 文字以上の a-z が続く正規表現 (不変) 
+Pattern pattern = Pattern.compile("[A-Z][a-z]+");
+
+// 正規表現を文字列 "Abc" とマッチさせる
+Matcher matcher = pattern.matcher("Abc");
+
+// matcher.matches() = 正規表現にマッチした場合 true
+System.out.println(matcher.matches());
+
+// matcher を新たに文字列 "4bc" とマッチングする (Matcher のインスタンスは再利用可能)
+matcher.reset("4bc");
+
+// matcher.matches() = 正規表現にマッチしない場合 false
+System.out.println(matcher.matches());
+```
 
 ### 14.3.2. 正規表現を用いた文字列置換
 
+正規表現による文字列置換は、以下の手順で行います。
+
+1. 正規表現を表す `Pattern` のインスタンスを生成する。
+2. `Pattern` とマッチさせる文字列から `Matcher` のインスタンスを生成する。
+3. `Matcher.replaceFirst()` または `Matcher.replaceAll()` メソッドでマッチした部分を置換する。
+
+```java
+// XXX を表す正規表現 (不変)
+Pattern pattern = Pattern.compile("XXX");
+
+// 正規表現を文字列 abcXXXdefXXXghiXXXjkl にマッチさせる
+Matcher matcher = pattern.matcher("abcXXXdefXXXghiXXXjkl");
+
+// 正規表現と最初にマッチした部分を "-" で置き換える → abc-defXXXghiXXXjkl
+System.out.println(matcher.replaceFirst("abcXXXdefXXXghiXXXjkl"), "-")
+
+// 正規表現とマッチしたすべての部分を "-" で置き換える → abc-def-ghi-jkl
+System.out.println(matcher.replaceAll("abcXXXdefXXXghiXXXjkl", "-"))
+```
 
 ### 14.3.3. String クラスのメソッドとの対応
 
+`String` クラスにも正規表現マッチおよび置換を行うメソッドが用意されています。呼び出しのたびに内部で `Pattern` や `Matcher` のインスタンスを生成するため効率的ではありませんが、簡便な方法として使用できます。以下に `String` のインスタンス `s` に対する正規表現マッチおよび置換を行うメソッドと、`Pattern` および `Matcher` による書き換えの対応表を示します。
 
-### 14.3.4. CSV ファイルを正規表現で解析するには
+|`String` のメソッド|`Pattern` および `Matcher` による書き換え|
+|------------------------|----------------------------------------|
+|`s.matches(String regex)`|`Pattern.compile(regex).matcher(s).matches()`|
+|`s.replaceFirst(String regex, String replacement)`|`Pattern(regex).matcher(s).replaceFirst(replacement)`|
+|`s.replaceAll(String regex, String replacement)`|`Pattern(regex).matcher(s).replaceAll(replacement)`|
 
+### 14.3.4. 正規表現の学習
+
+ここでは正規表現そのものについては触れませんでしたが、参考書籍として以下を推薦します。
+
+- Jeffrey E.F. Friedl : [詳説 正規表現 第3版](https://www.oreilly.co.jp/books/9784873113593/)、オライリー・ジャパン、2008 年、ISBN978-4-87311-359-3
+
+この書籍は正規表現の入門から発展的な話題までを網羅した 1 冊です。Java を含む様々なプログラミング言語における正規表現を取り扱っており、数多くの有益なサンプルコードが掲載されています。その中には CSV ファイル (" " で囲む改行・特殊文字エスケープ処理を含む) を解析する正規表現パターンも含まれます。
 
 ## 14.4. ネットワークで多用するユーティリティ・クラス
 
@@ -321,9 +414,159 @@ byte[] digest = md.digest();
 byte[] encoded = Base64.getEncoder().encode(digest);
 ```
 
-## 14.5. Logger
+## 14.5. ログ・サービス
 
-Java の標準 API にはログ出力 API が含まれています。Java の黎明期にはログ出力ライブラリとして "Apache Log4J" が普及しており、現在でも標準ではないが高機能な "Logback" や "JBoss LogManager" などが支持されています。Java 標準のログ出力 API (パッケージ名から `java.util.logging` やその略称の "JUL" でも呼ばれます) は "Logback" や "JBoss LogManager" に比べると機能は限定されますが、必要最低限の機能は有しており、標準で使用できるというメリットがあります。
+Java の標準 API にはログ・サービスが含まれています。Java の黎明期にはログ出力ライブラリとして "Apache Log4J" が普及しており、現在でも標準ではないが高機能な "Logback" や "JBoss LogManager" などが支持されています。Java 標準のログ・サービス (パッケージ名から `java.util.logging` やその略称の "JUL" でも呼ばれます) は "Logback" や "JBoss LogManager" に比べると機能は限定されますが、必要最低限の機能は有しており、標準で使用できるというメリットがあります。
 
-### 14.5.1. Logger の基礎知識
+### 14.5.1. レベル
 
+レベルは `Level` クラスで表され、出力するログの重み付けを行います。レベルは整数値として表現され、あるレベルのログ出力を有効にすると、それよりも高いレベルのログ出力がすべて有効になります。`Level` クラスは `SEVERE`、`WARNING`、`INFO`、`CONFIG`、`FINE`、`FINER`、`FINEST` の 7 種類をレベル定数として事前定義しています。その他に特殊なレベル定数として、すべてを出力する `ALL` (レベル `Integer.MIN_VALUE`) と、ログを出力しない `OFF` (Integer.MAX_VALUE`) も定義されています。
+
+レベル定数の詳細について以下にまとめます。
+
+|レベル定数|レベル|説明|想定される用途|
+|------|---:|------|----------------|
+|`SEVERE`|1000|重大な障害を示す|致命的な状況やエラーについての情報。問題が発生しており、処理が続行不能な状況。|
+|`WARNING`|900|潜在的な問題を示す|警告についての情報。問題が発生しているものの、処理は続行可能な状況。|
+|`INFO`|800|メッセージを情報として提供する|正常系の情報。特に重要なポイントを通過した。|
+|`CONFIG`|700|静的な構成メッセージ|設定情報に関する情報。|
+|`FINE`|500|トレース情報|デバッグ情報。比較的重要だが運用時にロギングする必要のない情報。|
+|`FINER`|400|かなり詳細なトレース情報|特定の処理についての開始および終了の情報。内部的に発生した例外に関する情報。|
+|`FINEST`|300|非常に詳細なトレース情報|トレース情報。|
+
+### 14.5.2. ロガー
+
+ロガーは `Logger` クラスで表される、ログを記録するためのオブジェクトです。`Logger` のインスタンスはアプリケーション全体で共有の名前を付け、必要に応じて複数作成することが可能です。ログの記録はロガー単位で行います。すなわち、ロガー A に記録したログはロガー B には記録されません。
+
+>高度な使い方のため割愛しますが、ロガーは名前の付け方によりグルーピングすることが可能で、グルーピングしたロガーに対しては同時にログを出力することができます。
+
+`Logger` のインスタンスは、以下に示す static メソッド (ファクトリ・メソッド) で取得または作成します。
+
+|メソッド名|引数|戻り値|説明|
+|--------|--------|--------|--------|
+|`getLogger`|`String`|`Logger`|指定された名前のロガーを取得する (なければ作成する)|
+|`getGlobal`|N/A|`Logger`|`Logger.GLOBAL_LOGGER_NAME` という名前のロガー (グローバル・ロガー) を取得する|
+|`getAnonymousLogger`|N/A|`Logger`|匿名ロガーを作成する|
+
+ログの記録は、以下に示す `Logger` の各メソッドで行います。ここに挙げたものは基本的かつ代表的なもので、ほとんどの用途に適しています。この他にクラス名・メソッド名・例外を出力できるメソッド、詳細な形式で出力できるメソッド、ラムダ式と組み合わせて使用できるメソッドなどが備わっています。
+
+|メソッド名|引数|説明|
+|--------|--------|--------|
+|`log`|`Level, String`|指定したレベルのログを記録する|
+|`severe`|`String msg`|`SEVERE` レベルのログを記録する|
+|`warning`|`String msg`|`WARNING` レベルのログを記録する|
+|`info`|`String msg`|`INFO` レベルのログを記録する|
+|`config`|`String msg`|`CONFIG` レベルのログを記録する|
+|`fine`|`String msg`|`FINE` レベルのログを記録する|
+|`finer`|`String msg`|`FINER` レベルのログを記録する|
+|`finest`|`String msg`|`FINEST` レベルのログを記録する|
+
+### 14.5.3. フォーマッタ
+
+フォーマッタはログの出力形式を規定するクラスで、`Formatter` クラスのサブクラスとなります。標準では簡単な形式 (1～2 行程度) で出力する `SimpleFormatter` と XML 形式で出力する `XMLFormatter` が用意されています。
+
+多くのアプリケーションでは `XMLFormatter` は使用せず、`SimpleFormatter` または独自に実装したフォーマッタを利用する傾向にあります。独自フォーマッタの例としては、[GlassFish Server](http://www.glassfish.org/)/[Payara Server](http://www.payara.fish/) が使用する [`com.sun.enterprise.server.logging.UniformLogFormatter`](https://github.com/payara/Payara/blob/master/nucleus/core/logging/src/main/java/com/sun/enterprise/server/logging/UniformLogFormatter.java) (Sun 形式) や [`com.sun.enterprise.server.logging.ODLLogFormatter`](https://github.com/payara/Payara/blob/master/nucleus/core/logging/src/main/java/com/sun/enterprise/server/logging/ODLLogFormatter.java) (Oracle Fusion Middleware 形式) 等があります。
+
+### 14.5.4. ハンドラ
+
+ログ出力先を指定するオブジェクトをハンドラと呼び、`Handler` クラスのサブクラスとなります。標準では以下の 5 種類が用意されていますが、主に使用するものは `ConsoleHandler` と `FileHandler` です。
+
+|ハンドラ|ログ出力先|レベル|フォーマッタ|
+|`MemoryHandler`|メモリ (特殊用途)|`Level.ALL`|N/A|
+|`StreamHandler`|`OutputStream` (汎用)|`Level.INFO`|`SimpleFormatter`|
+|`ConsoleHandler`|標準エラー出力|`Level.INFO`|`SimpleFormatter`|
+|`FileHandler`|ファイル|`Level.ALL`|`XMLFormatter`|
+|`SocketHandler`|ネットワーク|`Level.ALL`|`XMLFormatter`|
+
+標準のハンドラにはログ出力先の他、出力するログのレベルと使用するフォーマッタがあらかじめ決められています。これらはログ・システム固有のプロパティによって指定されている値であり、変更にはログ・マネージャを使用する必要があります。
+
+### 15.5.5. ログ・サービスの管理
+
+`LogManager` クラスは、ログ・サービス全体を管理するクラスで、アプリケーションの初期化時に唯一のインスタンスが作成されます。`LogManager` のインスタンスは `LogManager.getLogManager()` メソッドで取得します。
+
+`LogManager` には様々なメソッドが用意されていますが、ハンドラの設定等を保持するプロパティを変更するには `readConfiguration(InputStream)` メソッドを使用します。このメソッドの引数は `InputStream` クラスとなっていますが、想定される書式は `Properties` ファイルで用いる行指向形式のプロパティ・ファイルとなっています。
+
+以下に `ConsoleHandler` および `FileHandler` の動作を制御するプロパティを示します。`readConfiguration` メソッドで読み込むプロパティ・ファイルは以下を置き換えるための記述を行います。
+
+|ハンドラ|キー|値の意味|値の既定値|
+|--------|--------|--------|---------|
+|(共通)|`handlers`|使用するハンドラ・クラスの完全名 (複数あるときはスペースで区切る)|`java.util.logging.ConsoleHandler`|
+|(共通)|`.level`|出力レベル (すべてに優先する)|`Level.INFO`|
+|`ConsoleHandler`|`java.util.logging.ConsoleHandler.level`|出力レベル|`Level.INFO`|
+|`ConsoleHandler`|`java.util.logging.ConsoleHandler.filter`|`Filter` クラス名|N/A|
+|`ConsoleHandler`|`java.util.logging.ConsoleHandler.formatter`|`Formatter` クラス名|`java.util.logging.SimpleFormatter`|
+|`ConsoleHandler`|`java.util.logging.ConsoleHandler.encoding`|文字エンコード|プラットフォーム既定値|
+|`FileHandler`|`java.util.logging.FileHandler.level`|出力レベル|`Level.ALL`|
+|`FileHandler`|`java.util.logging.FileHandler.filter`|`Filter` クラス名|N/A|
+|`FileHandler`|`java.util.logging.FileHandler.formatter`|`Formatter` クラス名|`java.util.logging.XMLFormatter`|
+|`FileHandler`|`java.util.logging.FileHandler.encoding`|文字エンコード|プラットフォーム既定値|
+|`FileHandler`|`java.util.logging.FileHandler.limit`|1 ファイルに書き込む最大量 (バイト)、`0` は無制限|`50000`|
+|`FileHandler`|`java.util.logging.FileHandler.count`|循環する出力ファイル数|`1`|
+|`FileHandler`|`java.util.logging.FileHandler.pattern`|出力ファイル名のパターン|%h/java%u.log|
+|`FileHandler`|`java.util.logging.FileHandler.append`|`true`: 既存ファイルに追記、`false`: 既存ファイルを上書き)|`false`|
+
+#### 15.5.5.1. クラス・パス上のプロパティ・ファイルからの読み取り
+
+`ConsoleHandler` は既定では `INFO` レベル以上のログしか出力しないように設定されています。ここでは、`ConsoleHandler` ですべてのレベルのログを出力するように設定する手順を示します。変更するプロパティは、以下の 2 つです。
+
+- `.level`
+- `java.util.logging.ConsoleHandler.level`
+
+これらの値を `ALL` に設定するようなプロパティ・ファイルを作成して、プロパティ・ファイルをオープンして作成した `InputStream` を `LogManager.readConfiguration()` メソッドで読み込めば良いわけです。ここではクラス・パス上 (つまりクラス・ファイルと同じ場所) に存在するプロパティ・ファイルを `Class.getResourceAsStream()` メソッドでオープンする例を示します。設定ファイル類はクラス・パス上に置くことも多いため、知っておくと便利な方法です。
+
+まず、クラス・パス上に logging.properties という内容で以下のプロパティ・ファイルを作成しておきます。
+
+```
+# logging.properties
+handlers=java.util.logging.ConsoleHandler
+.level=ALL
+java.util.logging.ConsoleHandler.level=ALL
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+```
+
+次に、以下のようなコードで logging.properties をオープンして `InputStream` を作成し、`LogManager.readConfiguration()` メソッドに渡します。`static { }` というブロックは static ブロックと呼ばれる特殊なブロックで、`static` フィールド初期化と同じタイミングで内部のコードが実行されます (つまりコンストラクタよりも早い段階で実行されます)。
+
+```java
+public class LoggingSample {
+    // プロパティ・ファイルの読み取り
+    static {
+        try (InputStream in = LoggingSample.class.getResourceAsStream("logging.properties")) {
+            LogManager.getLogManager().readConfiguration(in);
+        } catch (IOException e) {
+            // プロパティ・ファイルの読み取りに失敗した
+            ...
+        }
+    }
+    
+    // 以下省略
+    ...
+}
+```
+
+#### 15.5.5.2. メモリからのプロパティ・ファイルの読み取り
+
+先に示したプロパティ・ファイルは非常に小さいため、ファイルとして作成せずに内容をフィールド (変数) として用意する方法も考えられます。以下のコードはプロパティ・ファイルを文字列のフィールドとして作成して、`byte` 配列に変換した上で `ByteArrayInputStream` で `InputStream` を作成します。実際のアプリケーションではファイルとして用意することが多いと思われますが、よりシンプルな別解として紹介しておきます。
+
+```java
+public class LoggingSample {
+    // プロパティ・ファイルの内容
+    private static final String LOGGING_PROPERTIES
+        = "handlers=java.util.logging.ConsoleHandler\n"
+        + ".level=ALL\n"
+        + "java.util.logging.ConsoleHandler.level=ALL\n"
+        + "java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter";
+
+    // プロパティ・ファイルの読み取り
+    static {
+        try (InputStream in = new ByteArrayInputStream(LOGGING_PROPERTIES.getBytes())) {
+            LogManager.getLogManager().readConfiguration(in);
+        } catch (IOException e) {
+            // プロパティ・ファイルの読み取りに失敗した
+            ...
+        }
+    }
+    
+    // 以下省略
+    ...
+}
+```
