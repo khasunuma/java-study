@@ -10,8 +10,10 @@ Java における配列は、配列全体としてみた場合はクラスに準
 
 配列を生成するための式を「配列生成式」といいます。配列生成式で用いる記号 `[ ]` を配列演算子と呼び、宣言するものが配列であることと、配列の要素数を表します。
 
-- 書式 (1): `new Type [ n ]` (`Type`: 要素型、`n`: 要素数)
-- 書式 (2): `new Type [] { [ value [, value ...] ] }` (`Type`: 要素型、`value`: 初期値)
+- 書式 (1): `new Type [ n ]`
+  - `Type`: 要素型、`n`: 要素数
+- 書式 (2): `new Type [] { [ value [, value ...] ] }`
+  - `Type`: 要素型、`value`: 初期値
 - 要素型 `Type` は配列の各要素のデータ型を表し、具体的にはプリミティブ型またはクラスとなります。基本データ型と配列演算子 `[ ]` が組み合わさることで配列生成式として認識されます。
 - 書式 (1) は、配列の要素数を指定して配列を生成する式です。要素数は `[ ]` 内に指定された値となり、各要素の初期状態は変数・フィールドの初期値と同じ扱いとなります。
   - 配列をフィールドの初期値として生成した場合、各要素の初期値はフィールドと同じになります。
@@ -24,7 +26,8 @@ Java における配列は、配列全体としてみた場合はクラスに準
 
 配列はそれ全体を変数として宣言することができます。
 
-- 書式: `Type [ ] array [= expr] ;` (`Type`: 要素型、`array`: 配列の変数名、`expr`: 初期値) 
+- 書式: `Type [ ] array [= expr] ;`
+  - `Type`: 要素型、`array`: 配列の変数名、`expr`: 初期値 
 - 基本データ型 `Type` は配列の各要素のデータ型を表し、具体的にはプリミティブ型またはクラスとなります。基本データ型と配列演算子 `[ ]` が組み合わさることで配列の変数宣言文として認識されます。
 - 初期値 `expr` は配列生成式または既存の配列となります。`expr` が表す配列の基本データ型は、配列の変数宣言文の基本データ型 `Type` と一致している必要があります。
 - 配列の変数宣言文は、ローカル変数宣言文としても、フィールド定義 (初期化を含む) としても使用することができます。
@@ -33,7 +36,8 @@ Java における配列は、配列全体としてみた場合はクラスに準
 
 配列アクセス式を使用すると、配列の各要素に対して読み取りまたは書き込みができるようになります。
 
-- 書式: `array [ index ]` (`array`: 配列の変数名、`index`: 添字)
+- 書式: `array [ index ]`
+  - `array`: 配列の変数名、`index`: 添字
 - 添字 `index` は `0` から始まり、要素数 - 1 までの間で指定します。添字が負数、または要素数 - 1 を超えた場合には Java VM が非チェック例外 `ArrayIndexOutOfBoundsException` をスローします。Visual Basic と Python では添字の範囲を自由に設定できますが、Java では言語仕様で添字の開始は `0`、終了は 要素数 - 1 と決められています (C と JavaScript の配列の添字も、Java と同じ仕様です)。
 - 変数名と添字の組み合わせにより、基本データ型の変数として扱うことができるようになります。
 
@@ -41,7 +45,8 @@ Java における配列は、配列全体としてみた場合はクラスに準
 
 Java の配列には `length` フィールドが組み込まれており、生成された配列の要素数を取得できるようになっています。
 
-- 書式: `array . length` (`array`: 配列の変数名)
+- 書式: `array . length`
+  - `array`: 配列の変数名
 - `array . length` は読み取り専用です。
 - `array . length` の値は要素数 (`int` 型) です。このことから、配列の添字には `0` から `array . length - 1` までの範囲の数値 (`int` 型) を使用できることがわかります。
 - 初期化していない `array . length` を読み取ろうとすると、Java VM が非チェック例外 `NullPointerException` をスローします。
@@ -95,14 +100,17 @@ Java SE の標準 API には "Java Collections Framework" と呼ばれる、主�
 
 コレクションのインスタンス生成式は以下のようになります。
 
-- 書式 (1): `new ClassName < T > ( [ args ] )` (`ClassName`: クラス名、`T`: 型パラメータ、`args`: コンストラクタ引数)
-- 書式 (2): `new ClassName <> ( [ args ] )` (`ClassName`: クラス名、`args`: コンストラクタ引数)
+- 書式 (1): `new ClassName < T > ( [ args ] )`
+  - `ClassName`: クラス名、`T`: 型パラメータ、`args`: コンストラクタ引数
+- 書式 (2): `new ClassName <> ( [ args ] )`
+  - `ClassName`: クラス名、`args`: コンストラクタ引数
 - 書式 (1) はコレクションのインスタンス生成式の基本形です。
 - 書式 (2) は、適用する型パラメータが明らかである場合の略式表記で、型パラメータを省略して代わりにダイヤモンド演算子 `<>` を記述します。確実に書式 (2) を適用できるケースは、インスタンス生成式を変数宣言文に記述する場合です (左辺式である変数のデータ型が型パラメータを明示するため)。
 
 また、コレクションの変数宣言文は以下のようになります。
 
-- 書式: `ClassName < T > var [ = expr ] ;` (`ClassName`: クラス名、`T`: 型パラメータ、`expr`: インスタンス生成式または既存のコレクション)
+- 書式: `ClassName < T > var [ = expr ] ;`
+  - `ClassName`: クラス名、`T`: 型パラメータ、`expr`: インスタンス生成式または既存のコレクション
 - クラス名は、実際にはコレクションを表すインタフェース (`List`、`Set`、`Deque`、`Map` など) を指定する場合がほとんどです。実装クラスを指定するケースは、独自のメソッドを使用したい場合に限られます (実際にはほとんどありません)。
 
 コレクションのインスタンス生成式、変数宣言文、ダイヤモンド演算子の使用例を以下に示します。
@@ -119,7 +127,7 @@ List<String> list1 = new ArrayList<String>();
 List<String> list2 = new ArrayList<>();
 ```
 
-【バージョン】 ダイヤモンド演算子は Java SE 7 で導入された記法です。Java はダイヤモンド演算子から適切な型パラメータを導くために型推論という仕組みを用いていますが、Java SE 7 の型推論は限定的であり、そのためダイヤモンド演算子を使用できない場面が多くありました。Java SE 8 では [12 章](chapter12.md)で取り上げるラムダ式を導入する際に型推論の全面的な見直しが行われた結果、インスタンス生成式が使用できるほとんどの場所でダイヤモンド演算子が適用できるよう改善されています。
+ダイヤモンド演算子は Java SE 7 で導入された記法です。Java はダイヤモンド演算子から適切な型パラメータを導くために型推論という仕組みを用いていますが、Java SE 7 の型推論は限定的であり、そのためダイヤモンド演算子を使用できない場面が多くありました。Java SE 8 では [12 章](chapter12.md)で取り上げるラムダ式を導入する際に型推論の全面的な見直しが行われた結果、インスタンス生成式が使用できるほとんどの場所でダイヤモンド演算子が適用できるよう改善されています。
 
 ### 9.2.4. コレクションの実装と選び方
 
@@ -235,7 +243,8 @@ for (String s : set) {
 
 拡張 for 文については 5 章でも取り上げましたが、この章で解説します。拡張 for 文の書式は以下の通りとなります。
 
-- 書式: `for ( T var : expr ) stmt` (`T`: データ型、`var`: ローカル変数名、`expr`: `Iterable` 実装のインスタンスまたは配列)
+- 書式: `for ( T var : expr ) stmt`
+  - `T`: データ型、`var`: ローカル変数名、`expr`: `Iterable` 実装のインスタンスまたは配列
 - `expr` が `T` クラスのイテレータを返す `Iterable` 実装か、または `T` 型の配列の場合に限って使用できます。
 - `expr` を評価して取得した要素を `var` に代入し、`stmt` を実行する処理を、`expr` のすべての要素に対して順番に実行します。
 - 拡張 for 文が、if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、`stmt` には if 文以外を指定します。そうでない場合は任意の文を指定できます。
@@ -278,7 +287,7 @@ for (int index = 0; index < expr.length; index++) {
 
 #### 9.2.7.1. リスト操作 (list のみ)
 
-`List` では、`Collection` の各メソッドに加え、以下のリスト操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/List.html) を参照してください。
+`List` では、`Collection` の各メソッドに加え、以下のリスト操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント (java.util.List)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/List.html) を参照してください。
 
 |メソッド名                    |説明|
 |-----------------------------|----------------|
@@ -291,7 +300,7 @@ for (int index = 0; index < expr.length; index++) {
 
 #### 9.2.7.2. キュー操作 (Queue および Deque)
 
-`Queue` および `Deque` では、`Collection` の各メソッドに加え、以下のキュー操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント (Queue)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Queue.html) または [Java SE 標準 API のドキュメント (Deque)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
+`Queue` および `Deque` では、`Collection` の各メソッドに加え、以下のキュー操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント (Queue)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Queue.html) または [Java SE 標準 API のドキュメント (java.util.Deque)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
 
 |メソッド名           |説明|
 |--------------------|----------------|
@@ -304,7 +313,7 @@ for (int index = 0; index < expr.length; index++) {
 
 #### 9.2.7.3. スタック操作 (Deque のみ)
 
-`Deque` では、`Collection` の各メソッドに加え、以下のスタック操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
+`Deque` では、`Collection` の各メソッドに加え、以下のスタック操作メソッドが追加されています。詳細は [Java SE 標準 API のドキュメント (java.util.Deque)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Deque.html) を参照してください。
 
 |メソッド名       |説明|
 |----------------|----------------|
@@ -314,7 +323,7 @@ for (int index = 0; index < expr.length; index++) {
 
 ### 9.2.8. Map の主なメソッド
 
-`Map` では以下のスタック操作メソッドが用意されています。`Map` は `Collection` のサブインタフェースではないためメソッドに共通性がないことに注意してください。詳細は [Java SE 標準 API のドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Map.html) を参照してください。
+`Map` では以下のスタック操作メソッドが用意されています。`Map` は `Collection` のサブインタフェースではないためメソッドに共通性がないことに注意してください。詳細は [Java SE 標準 API のドキュメント (java.util.Map)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Map.html) を参照してください。
 
 |メソッド名               |説明|
 |------------------------|----------------|
@@ -335,9 +344,7 @@ for (int index = 0; index < expr.length; index++) {
 
 ### 9.3.1. Arrays クラス
 
-`Arrays` クラスは配列の操作に便利なユーティリティ・クラスです。配列の操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Arrays` クラスのメソッドを利用することを強く推奨します。`Arrays` クラスの詳細は [Java SE 標準 API ドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html) を参照してください。
-
-http://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html
+`Arrays` クラスは配列の操作に便利なユーティリティ・クラスです。配列の操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Arrays` クラスのメソッドを利用することを強く推奨します。`Arrays` クラスの詳細は [Java SE 標準 API ドキュメント (java.util.Arrays)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html) を参照してください。
 
 |メソッド名     |説明|
 |--------------|--------|
@@ -363,11 +370,11 @@ http://docs.oracle.com/javase/jp/8/docs/api/java/util/Arrays.html
 
 `sort`、`setAll` は逐次処理で実行されますが、`parallelSort`、`parallelSetAll` は並列処理で実行されます。扱う要素数が多く CPU パワーにも余裕がある場合は並列処理を、扱う要素数が少ないか CPU パワーに余裕がない場合は逐次処理を選択するのが効率的です。通常使用する範囲では逐次処理で問題はありません。
 
->【バージョン】 `setAll`,`parallelSetAll`, `parallelSort` は Java SE 8 で追加されたメソッドで、[12 章](chapter12.md)で取り上げるラムダ式を活用しています。
+>`setAll`,`parallelSetAll`, `parallelSort` は Java SE 8 で追加されたメソッドで、[12 章](chapter12.md)で取り上げるラムダ式を活用しています。
 
 ### 9.3.2. Collections クラス
 
-`Collections` クラスはコレクションの操作に便利なユーティリティ・クラスです。コレクションをデータ構造とするならば、`Collecions` クラスは汎用的なアルゴリズムに相当するものです。コレクションの操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Collections` クラスのメソッドを利用することを強く推奨します。`Collections` クラスの詳細は [Java SE 標準 API ドキュメント](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html) を参照してください。
+`Collections` クラスはコレクションの操作に便利なユーティリティ・クラスです。コレクションをデータ構造とするならば、`Collecions` クラスは汎用的なアルゴリズムに相当するものです。コレクションの操作は繰り返し構文を用いて実装することも可能ですが、Java SE 標準 API として用意され、テストも十分に行われている `Collections` クラスのメソッドを利用することを強く推奨します。`Collections` クラスの詳細は [Java SE 標準 API ドキュメント (java.util.Collections)](https://docs.oracle.com/javase/jp/8/docs/api/java/util/Collections.html) を参照してください。
 
 |メソッド名         |対象        |説明|
 |------------------|------------|----------------------------------------------------|

@@ -2,7 +2,8 @@
 
 ## 5.1. if 文
 
-- 書式: `if ( expr ) stmt` (`expr`: 論理型、`stmt`: 文)
+- 書式: `if ( expr ) stmt`
+  - `expr`: 論理型、`stmt`: 文
 - 条件式 `expr` の値が `true` のとき `stmt` を実行します。それ以外の場合は何も行いません。
 - `stmt` には任意の文を指定できます。
 - if 文は、C、C++、JavaScript および Python の if 文、Visual Basic の If...Then 構文に相当します。
@@ -30,7 +31,8 @@ if 文とブロックの組み合わせは、他にも if-else 文、while 文�
 
 ## 5.2. if-else 文
 
-- 書式: `if ( expr ) stmt1 else stmt2` (`expr`: 論理型、`stmt1` `stmt2`: 文)
+- 書式: `if ( expr ) stmt1 else stmt2`
+  - `expr`: 論理型、`stmt1` `stmt2`: 文
 - 条件式 `expr` の値が `true` のとき `stmt1` を、`false` のとき `stmt2` を実行します。
 - `stmt1` には if 文 (もしくは if 文が連なる文) 以外を指定します。
 - `stmt2` には任意の文を指定できます。
@@ -102,7 +104,8 @@ else
 
 ## 5.3. while 文
 
-- 書式: `while ( expr ) stmt` (`expr`: 論理型、`stmt`: 文)
+- 書式: `while ( expr ) stmt`
+  - `expr`: 論理型、`stmt`: 文
 - 条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
 - while 文が、if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、`stmt` には if 文以外を指定します。そうでない場合は任意の文を指定できます。
 
@@ -110,7 +113,8 @@ while 文は、C、C++ および JavaScript の while 文と同じで、Python �
 
 ## 5.4. do-while 文
 
-- 書式: `do stmt while ( expr ) ;` (`expr`: 論理型、`stmt`: 文)
+- 書式: `do stmt while ( expr ) ;`
+  - `expr`: 論理型、`stmt`: 文
 - 最初に `stmt` を実行し、その後は条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。
 - `stmt` には任意の文を指定できます。
 
@@ -125,7 +129,8 @@ while ( expr ) stmt
 
 ## 5.5. for 文
 
-- 書式: `for ( [init] ; [expr] ; [update] ) stmt` (`init`: 式のリスト/ローカル変数定義式、`expr`: 論理型、`update`: 式のリスト、`stmt`: 文)
+- 書式: `for ( [init] ; [expr] ; [update] ) stmt`
+  - `init`: 式のリスト/ローカル変数定義式、`expr`: 論理型、`update`: 式のリスト、`stmt`: 文
 - 最初に `init` を評価します。その後は条件式 `expr` の値が `true` の間だけ `stmt` を繰り返し実行します。毎回の `stmt` 実行後に `update` を評価します。
 - `init` は式のリストまたはローカル変数宣言式を指定することができます。ローカル変数宣言式を指定した場合は、for 文内でのみ使用可能なローカル変数を宣言することができます。
 - for 文は指定回数繰り返しによく使用されます (`init` でループカウンタを宣言、`expr` にでループカウンタの上限を設定、`update` にカウント処理を記述)。
@@ -146,7 +151,8 @@ Java の for 文は、C、C++ および JavaScript の for 文とほぼ同じで
 
 ## 5.6. 拡張 for 文
 
-- 書式: `for ( T var : expr ) stmt` (`T`: データ型、`var`: ローカル変数名、`expr`: `Iterable` 実装のインスタンスまたは配列)
+- 書式: `for ( T var : expr ) stmt`
+  - `T`: データ型、`var`: ローカル変数名、`expr`: `Iterable` 実装のインスタンスまたは配列
 - `expr` が `T` クラスのイテレータを返す `Iterable` 実装か、または `T` 型の配列の場合に限って使用できます。
 - `expr` を評価して取得した要素を `var` に代入し、`stmt` を実行する処理を、`expr` のすべての要素に対して順番に実行します。
 - 拡張 for 文が、if-else 文 `if ( expr ) stmt1 else stmt2` の `stmt1` に該当する場合には、`stmt` には if 文以外を指定します。そうでない場合は任意の文を指定できます。

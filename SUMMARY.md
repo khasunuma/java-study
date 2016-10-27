@@ -1,4 +1,4 @@
-# README
+# Java プログラミング速習テキスト 目次
 
 - [序章 : Java の学習を始めるに当たって](docs/chapter00.md)
 - [1 章 : Java プログラミングの基礎的事項](docs/chapter01.md)
