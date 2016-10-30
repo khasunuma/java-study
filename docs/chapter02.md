@@ -2,7 +2,7 @@
 
 この章では、Java アプリケーションの開発に必要な JDK (Java Development Kit) とその他の開発ツールの使い方についてみてゆきます。Java のプログラミングに最低限必要なものは、JDK とソースファイルを作成するためのテキストエディタの 2 つだけですが、実際の Java アプリケーションは多数のソースファイルから構成されるため、ソースファイルをまとめてコンパイルするためのビルドツールの助けを借りるのが現実的な方法です。
 
-最近では開発に必要なエディタ、コンパイラ、ビルドツール、デバッガなどが一体になった「統合開発環境 (IDE)」が普及し、統合開発環境だけでソースファイルの作成からアプリケーションの実行までのすべてを行うことができるようになりました。統合開発環境を使用すると JDK の存在を意識することなくスムーズに開発を行うことができる反面、その裏側で JDK やビルドツールが何をしているのかが見えなくなってしまいます。そこでこの章では、簡単なサンプルを通じて JDK とビルドツールの使い方を説明した上で、主要な統合開発環境について紹介してゆきます。
+最近では開発に必要なエディタ、コンパイラ、ビルドツール、デバッガなどが一体になった「統合開発環境 (IDE)」が普及し、統合開発環境だけでソースファイルの作成からアプリケーションの実行までのすべてを行うことができます。統合開発環境を使用すると JDK の存在を意識することなくスムーズに開発を行うことができる反面、その裏側で JDK やビルドツールが何をしているのかが見えなくなってしまいます。そこでこの章では、簡単なサンプルを通じて JDK とビルドツールの使い方を説明した上で、主要な統合開発環境について紹介してゆきます。
 
 ## 2.1. JRE と JDK
 
@@ -22,25 +22,25 @@ Oracle JRE/JDK と IBM Java はプロプライエタリ・ライセンスでの�
 
 JRE は Java アプリケーションの実行に必要な最小限のツールを備えています。JRE に含まれるツールとしては `java`、`jjs`、`keytool` などがあります。
 
-- [`java`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/java.html) : Java アプリケーションを起動します。一般に Java VM と呼ばれているものはこのツールを指します。JRE のツールでは最も使用頻度が高く、必ず押さえておきたいツールです。なお、Windows 版 JRE にはコマンドプロンプトを起動することなく実行するための `javaw.exe` が含まれています。
+- [`java`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/java.html) : Java アプリケーションを起動します。一般に「Java VM」と呼ばれているものはこのツールを指します。JRE のツールでは最も使用頻度が高く、必ず押さえておきたいツールです。なお、Windows 版 JRE にはコマンドプロンプトを起動することなく実行するための `javaw.exe` が含まれています。
 - [`jjs`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jjs.html) : Nashorn エンジンを起動します。Nashorn とは Java VM 上で動作する JavaScript の実行環境です。Java アプリケーションでは Nashorn エンジン経由で JavaScript を実行可能 (その逆も可) ですが、`jjs` ツールで Nashorn 単体を起動することができます。
 - [`keytool`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/keytool.html) : 暗号化鍵、X.509 証明書チェーン、および信頼できる証明書を含むキーストア (データベース) を管理します。SSL/TLS 通信のセットアップで使用することがあるかもしれません。
 
 ### 2.1.2. JDK (Java Development Kit)
 
-JDK は Java アプリケーションの開発に必要なツールキットで、JRE が備えるすべてのツールに加え、`javac`、`javadoc`、`native2ascii`、`jar`、`javapackager` などが含まれます。
+JDK は Java アプリケーションの開発に必要なツールキットで、JRE が備えるすべてのツールに加え、`javac`、`javadoc`、`native2ascii`、`jar` などが含まれます。
 
-- [`javac`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javac.html) : Java クラスとインタフェースの定義を読み取り、それらをバイト・コードとクラス・ファイルにコンパイルします。いわゆる「Java コンパイラ」です。言うまでもなく JDK の中核をなすツールです。
-- [`javadoc`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javadoc.html) : Javaソース・ファイルから、API ドキュメントの HTML ページを生成します。Java のソースコードにはドキュメンテーション・コメント (Javadoc コメント) と呼ばれる特殊なコメントを記述することが可能で、それをもとに API ドキュメントを生成するのが `javadoc` ツールです。Maven などのビルドツールや統合開発環境は `javadoc` ツールを自動で実行する機能を持っています。
-- [`native2ascii`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/native2ascii.html) : サポートされている任意の文字エンコーディングの文字を含むファイルを、ASCII または Unicode (あるいはその両方) のエスケープ文字を含むファイルに変換すること、またはその逆を行うことで、ローカライズ可能なアプリケーションを作成します。`native2ascii` ツールはアプリケーションの設定などを記述する「プロパティファイル」で日本語などを使用する際には必携のツールでしたが、現在では統合開発環境で同等の処理を肩代わりできること、さらにはプロパティファイルの UTF-8 エンコーディング対応により `native2ascii` ツールを介することなく直接日本語などを記述できることから、利用頻度は減少しています。
-- [`jar`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jar.html) : Java Archive (JAR) ファイルを操作します。コンパイル後に生成されたクラスファイルなどをメタ情報とともに ZIP アーカイブにする (またはその逆) ために使用します。直接使用する機会はあまりありませんが、Maven などのビルドツールや統合開発環境からは頻繁に `jar` ツールを起動するため、使用頻度自体は高いツールです。
-- [`javapackager`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javapackager.html) : Java アプリケーションのパッケージ化と署名に関連するタスクを実行します。Windows、Mac または Linux の実行可能パッケージ (Windows の場合は .exe) を生成し、インストーラまで作成してくれる優れものです。パッケージには専用の JRE が含まれるため、別途 JRE/JDK を用意する必要がなくなるメリットもあります。JavaFX で開発した GUI アプリケーションを配布する際によく使われます。
-- [`jcmd`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jcmd.html) : 実行中の Java VM に診断コマンド要求を送信します。実行中の Java VM の一覧表示、Java VM の状態や各種診断情報、Java Flight Recorder による Java VM の状態監視などを行います。JDK には古くから様々な監視・診断ツールが含まれていましたが、`jcmd` ツールはそれらを統合したような位置づけです。Java Flight Recorder は Oracle の有償サポート契約の下で使用可能となり、管理ツールである Java Mission Control と連携して動作します。
-- [`jvisualvm`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jvisualvm.html) : Java アプリケーションのモニタリング、トラブルシューティングおよびプロファイリングを視覚的に行います。JDK の中では数少ない GUI のツールであり実行負荷は大きいですが、その効果も絶大です。Oracle の有償サポート契約がある場合にはさらに高機能な Java Mission Control が使用可能となります。
+- [`javac`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javac.html) : Java のソースファイルを読み取り、クラスファイルにコンパイルします。いわゆる「Java コンパイラ」です。言うまでもなく JDK の中核をなすツールです。
+- [`javadoc`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javadoc.html) : Javaのソースファイルから、API ドキュメントの HTML ページを生成します。Java のソースコードにはドキュメンテーション・コメント (Javadoc コメント) と呼ばれる特殊なコメントを記述することが可能で、それをもとに API ドキュメントを生成するのが `javadoc` ツールです。Maven などのビルドツールや統合開発環境は `javadoc` ツールを自動で実行する機能を持っています。
+- [`native2ascii`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/native2ascii.html) : 任意の文字エンコードのファイルを、ASCII 文字と Unicode エスケープ文字で構成されるファイルに変換したり、またはその逆を行います。`native2ascii` ツールの主な用途はプロパティ・ファイルにおける非 ASCII 文字の利用です。文字エンコードを ISO-8859-1 (Latin-1) にしなければならないプロパティ・ファイルでは、日本語文字などの非 ASCII 文字は Unicode エスケープ文字に変換しなければなりませんが、はじめから Unicode エスケープ文字で記述するのは困難であるため、日本語文字などを含むソース・ファイルを作成して `native2ascii` ツールで所定の形式に変換する方法を採ります。現在では同等の処理を統合開発環境で肩代わりできるようになったことと、プロパティ・ファイルの仕様が拡張され UTF-8 エンコードを選択すれば直接日本語などの非 ASCII 文字を記述できるようになったため、`native2ascii` ツールの利用頻度は減少しています。
+- [`jar`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jar.html) : Java Archive (JAR) ファイルを操作します。`javac` ツールで生成されたクラスファイルなどにメタ情報を含めて ZIP アーカイブしたり、その逆を行います。`jar` ツールを直接使用する機会はそれほど多くありませんが、Maven などのビルドツールや統合開発環境から呼び出されるツールのため、実際には `javac` ツールに次いで使用頻度の高いツールです。
+- [`javapackager`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/javapackager.html) : Java アプリケーションから Windows、Mac または Linux の実行可能パッケージ (Windows の場合は .exe) とそのインストーラを作成するツールです。実行可能パッケージには専用の JRE が含まれるため、別途 JRE/JDK を用意することなくアプリケーションを配布できるメリットがあります。当初は `javafxpackager` という名前の JavaFX (GUI) アプリケーションの配布用ツールとして作られ、その後 Java SE 汎用ツールとして改良され現在に至ります。
+- [`jcmd`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jcmd.html) : 実行中の Java VM の一覧表示、Java VM の状態や各種診断情報の取得、Java Flight Recorder による Java VM の状態監視などを行うツールです。JDK には古くから様々な監視・診断ツールが含まれていましたが、`jcmd` ツールはそれらを統合する位置づけのツールとなります。Java Flight Recorder は Oracle の有償サポート契約の下で使用可能となるツールで、GUI 管理ツールである Java Mission Control (`jmc` ツール) と連携して動作します。
+- [`jvisualvm`](https://docs.oracle.com/javase/jp/8/docs/technotes/tools/windows/jvisualvm.html) : Java アプリケーションのモニタリング、トラブルシューティングおよびプロファイリングを視覚的に行うツールです。JDK の中では数少ない GUI のツールのため実行時の負荷は大きいのですが、Java アプリケーションを視覚的にモニタリングできることによる効果は絶大です。Oracle の有償サポート契約がある場合にはさらに高機能な GUI のモニタリング・ツールである Java Mission Control (`jmc` ツール) が使用可能となります。
 
 ## 2.2. Java アプリケーション開発の手順
 
-ここからは、JDK と Maven を用いた Java アプリケーションの開発手順について説明します。はじめに JDK のみで開発する方法を示し、続いて JDK と Maven による開発を示します。この節では、開発/実行環境が Windows であるものと仮定し、ユーザーのホームディレクトリ (フォルダ) を %USERPROFILE% と表記します。
+ここからは、JDK と Maven を用いた Java アプリケーションの開発手順について説明します。はじめに JDK のみで開発する方法を示し、続いて JDK と Maven による開発を示します。以下、開発および実行環境が Windows と仮定し、ユーザーのホームディレクトリ (フォルダ) を %USERPROFILE% と表記します。
 
 ### 2.2.1. プロジェクトの作成
 
@@ -57,7 +57,7 @@ JDK は Java アプリケーションの開発に必要なツールキットで�
 - ソースディレクトリ - `%USERPROFILE%\workspace\src\main\java`
 - 出力ディレクトリ - `%USERPROFILE%\workspace\target\classes`
 
-最初に作業ディレクトリを準備し、続けてプロジェクト、ソースディレクトリを作成します。
+最初に作業ディレクトリを準備し、続けてプロジェクト、ソース・ディレクトリを作成します。
 
 ```
 CD %USERPROFILE%

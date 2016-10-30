@@ -23,10 +23,12 @@ Java の例外オブジェクトは `Throwable` クラスとそのサブクラ�
 
 処理中にエラーその他が発生する場合、throw 文を用いて例外オブジェクトをスローすることができます。
 
-- 書式: `throw expr ;` (`expr`: 例外オブジェクトの生成式)
+- 書式: `throw expr ;`
+  - `expr`: 例外オブジェクトの生成式
 
 ```java
-throw new IllegalArgumentException();  // 引数に不正な値が渡された
+// 引数に不正な値が渡された
+throw new IllegalArgumentException();
 ```
 
 アプリケーションで throw 文を記述する場合、その多くは引数の妥当性チェック (バリデーション) でのエラーであり、必然的に非チェック例外 (具体的には `RuntimeException` のサブクラス) が多くなりますが、ファイル操作時などでチェック例外 (`IOException`) をスローする場合もあります (`IOException` のスローについては、アプリケーションから呼び出す Java 標準 API がスローする場合が大半を占めます)。

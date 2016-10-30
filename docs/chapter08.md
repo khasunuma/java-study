@@ -66,9 +66,8 @@ package package_name ;
 
 先に示した `Runnable` インタフェースを実装した例を以下に示します。
 
-(例) `Runnable` インタフェースを実装する
-
 ```java
+// Runnable インタフェースを実装した MyRunnable クラスを定義する
 public class MyRunnable implements Runnable {
     public void run() {  // メソッドのスコープは必ず public になる
         System.out.println("Hello, world");
@@ -104,33 +103,30 @@ public interface Serializable {
 インタフェースを用いてメソッド内でクラスの実装を行う「匿名クラス」という構文があります。以下に匿名クラスによるインスタンス生成を行って、それを別スレッドで非同期実行する例を示します。
 
 ```java
-public void runAfter() {
-    ...
-    // 匿名クラスによるインスタンス生成
-    Runnable runnable = new Runnable() {
-        public void run() {
-            ...
-        }
-    };
+// 匿名クラスによるインスタンス生成
+Runnable runnable = new Runnable() {
+    public void run() {
+        // 非同期実行すべき処理
+        ...
+    }
+};
 
-    // runnable を別スレッドで非同期実行する
-    CompletableFuture.runAsync(runnable);
-    ...
-}
+// runnable を別スレッドで非同期実行する
+new Thread(runnable).start();
+...
 ```
 
 上記の例はメソッド本文で匿名クラスを使用しましたが、以下のように呼び出すメソッドの引数でも匿名クラスを使用することができます。
 
 ```java
-public void runAfter() {
-    ...
-    // Runnable の匿名クラスでインスタンスを生成し、別スレッドで非同期実行する
-    CompletableFuture.runAsync(new Runnable() {
-        public void run() {
-            ...
-        }
-    } );
-}
+// Runnable の匿名クラスでインスタンスを生成し、別スレッドで非同期実行する
+new Thread(new Runnable() {
+    public void run() {
+        // 非同期実行すべき処理
+        ...
+    }
+} ).start();
+```
 
 一般に、匿名クラスは以下の書式で使用します。
 

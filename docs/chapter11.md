@@ -21,7 +21,7 @@ Java ではファイル操作を簡略化するために "NIO.2" と呼ばれる
 
 バイト・ストリームの中心となるのが、入力用の `InputStream` クラスと出力用の `OutputStream` クラスです。これらのクラスには入出力の対象に依存しない共通のメソッドが用意されています。`InputStream`、`OutputStream` とも、データのやり取りの対象となるのは原則として `byte` 型の配列です (これがバイト・ストリームと呼ばれる所以です)。
 
-ファイル入出力におけるこれらの具象クラスは `FileInputStream` クラスと `FileOutputStream` クラスになります。これらは主にバイナリファイルの入出力を行うために用意されています。主なメソッドを以下に示しますが、読み取り用メソッドと書き込み用メソッドが対になっていることに注目してください。
+ファイル入出力におけるこれらの具象クラスは `FileInputStream` クラスと `FileOutputStream` クラスになります。これらは主にバイナリ・ファイルの入出力を行うために用意されています。主なメソッドを以下に示しますが、読み取り用メソッドと書き込み用メソッドが対になっていることに注目してください。
 
 |操作                     |`InputStream`           |`OutputStream`          |
 |-------------------------|------------------------|------------------------|
@@ -178,7 +178,7 @@ Path path = Paths.get("C", "eclipse", "eclipse.ini");
 
 ### 11.3.1. try-catch 文を用いたファイルの読み込み
 
-テキストファイルを 1 行単位で読み込み、何らかの処理を行うメソッドの例を以下に示します。これが Java におけるファイル読み込みの基本形となりますが、現在では次節に示すように try-with-resources 文を使用したほうがよいでしょう。
+テキスト・ファイルを 1 行単位で読み込み、何らかの処理を行うメソッドの例を以下に示します。これが Java におけるファイル読み込みの基本形となりますが、現在では次節に示すように try-with-resources 文を使用したほうがよいでしょう。
 
 ```java
 public void readFile(Path path) throws IOException {
@@ -256,5 +256,5 @@ public void writeFile(Path path, List<String> lines) throws IOException {
 
 `readAllLines`/`readAllBytes` および `write` メソッドは大きなファイルの読み書きを想定したものではありませんが、`List` または `byte` 配列を用いて一括でファイルの読み書きができるため、小さなファイルを数多く処理しなければならない場合に威力を発揮します。
 
-【補足】 `Files` クラスのメソッドを用いてファイルの読み書きを行う際には `Charset` で文字エンコードをするようになっています。Windows 環境では Shift_JIS (Microsoft CP 932) : `Charset.forName("Windows-31J")` または UTF-8 : `Charset.forName("UTF-8")` を指定することが多いでしょう。文字エンコードの指定は Java SE 7 では必須ですが、Java SE 8 では省略可能です (省略時は UTF-8 とみなされます)。
+【補足】 `Files` クラスのメソッドを用いてファイルの読み書きを行う際には `Charset` で文字エンコードを指定するようになっています。Windows 環境では Shift_JIS (Microsoft CP 932) : `Charset.forName("Windows-31J")` または UTF-8 : `Charset.forName("UTF-8")` を指定することが多いでしょう。文字エンコードの指定は Java SE 7 では必須ですが、Java SE 8 では省略可能です (省略時は UTF-8 とみなされます)。
 
