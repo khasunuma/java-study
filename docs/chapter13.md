@@ -420,16 +420,25 @@ Date and Time API はすべて変更不可能 (イミュータブル) なイン�
 ```java
 // リゾルバを STRICT にしてフォーマッタを生成する
 DateTimeFormatter formatter = DateTimeFormatter.withResolverStyle(ResolverStyle.STRICT).ofPattern("uuuu/MM/dd");
+
+// 日付文字列をパースして LocalDate を生成する
+LocalDate date = LocalDate.parse("2016/11/03", formatter);
 ```
 
-`STRICT` はパターン文字列自体も厳密にチェックします。以下のコードはパターン文字列 "yyyy/MM/dd" のフォーマッタを 2 つ生成するコードですが、`formatter1` の生成には成功するものの、`formatter2` を生成しようとするとエラーとなってしまいます。なぜ `formatter2` の生成だけエラーになってしまうのでしょうか？
+`STRICT` はパターン文字列自体も厳密にチェックします。以下のコードはパターン文字列 "yyyy/MM/dd" のフォーマッタを 2 つ生成するコードですが、`formatter1` でパースすると `LocalDate` のインスタンスが生成されるのに対して、`formatter2` でパースしようとするとエラーになってしまいます。なぜ `formatter2` の場合だけエラーになってしまうのでしょうか？
 
 ```java
 // リゾルバを既定値 (SMART) でフォーマッタを生成する
 DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-// リゾルバを STRICT にしてフォーマッタを生成する → エラー！
+// 日付文字列をパースして LocalDate を生成する
+LocalDate date1 = LocalDate.parse("2016/11/03", formatter);
+
+// リゾルバを STRICT にしてフォーマッタを生成する
 DateTimeFormatter formatter2 = DateTimeFormatter.withResolverStyle(ResolverStyle.STRICT).ofPattern("yyyy/MM/dd");
+
+// 日付文字列をパースして LocalDate を生成する → エラー！
+LocalDate date2 = LocalDate.parse("2016/11/03", formatter);
 ```
 
 `DateTimeFormatter` のパターン文字で「年」を表すものとして、`y` と `u` の 2 種類があります。仕様では、`y` は時代 (era) を表す `G` との組み合わせが必須となっており、年を単独で表すには `u` を使う必要があります。ただし、リゾルバが `LENIENT` の場合はパターンに `y` が存在する場合に `G` が含まれていなくても無視する動作となり、`SMART` の場合も `y` に関する既定の動作は `LENIENT` と同一になります。しかし、`STRICT` の場合はパターンを厳密にチェックするため、`y` が存在する場合に `G` が含まれていないと無効なパターンと判断してエラーとなるのです。
