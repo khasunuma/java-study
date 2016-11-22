@@ -156,14 +156,14 @@ javac [オプション] <ソース・ファイル>
 作成したアプリケーションを `java` ツールで実行するには、`-cp` オプションでクラス・パスに出力ディレクトリを設定し、main メソッドがあるクラスを指定します。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 java -cp classes app.Hello
 ```
 
 `java` ツールの -cp オプションを省略するとカレント・ディレクトリがクラス・パスとみなされるため、上記の実行コマンドは以下のように置き換えることもできます。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 CD classes
 java app.Hello
 ```
@@ -175,7 +175,7 @@ java app.Hello
 JAR ファイルを作成するには、以下のように `jar` ツールを使用します。 
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 jar cf hello.jar -C classes
 ```
 
@@ -208,7 +208,7 @@ JAR ファイル作成後のディレクトリ・ツリーは以下のように�
 JAR ファイルにアプリケーションのクラスが存在する場合は、`java` ツールの `-cp` オプションでクラス・パスに JAR ファイルを設定し、main メソッドが存在するクラスを指定してアプリケーションを実行します。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 java -cp hello.jar app.Hello
 ```
 
@@ -225,7 +225,7 @@ Main-Class: app.Hello
 次に、`jar` ツールでマニフェスト・ファイルを指定して JAR ファイルを作成します。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 jar cfm hello.jar manifest.mf -C classes
 ```
 
@@ -259,7 +259,7 @@ jar cfm <JAR ファイル> <マニフェスト・ファイル> -C <出力フォ�
 実行可能 JAR ファイルは、以下のように `java` ツールの `-jar` オプションを用いて実行することができます。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 java -jar hello.jar
 ```
 
@@ -415,14 +415,14 @@ mvn compile
 作成したアプリケーションを `java` ツールで実行するには、`-cp` オプションでクラス・パスに出力ディレクトリを設定し、main メソッドがあるクラスを指定します。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 java -cp classes app.Hello
 ```
 
 `java` ツールの -cp オプションを省略するとカレント・ディレクトリがクラス・パスとみなされるため、上記の実行コマンドは以下のように置き換えることもできます。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 CD classes
 java app.Hello
 ```
@@ -460,7 +460,7 @@ JAR ファイル作成後のディレクトリ・ツリーは以下のように�
 JAR ファイルに格納したアプリケーションを `java` ツールで実行するには、`-cp` オプションでクラス・パスに JAR ファイルを設定し、main メソッドがあるクラスを指定します。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 java -cp hello-1.0-SNAPSHOT.jar app.Hello
 ```
 
@@ -508,7 +508,7 @@ Maven で実行可能 JAR ファイルを作成するには、`pom.xml` に必�
 実行可能 JAR ファイルは、以下のように `java` ツールの `-jar` オプションを用いて実行することができます。
 
 ```
-CD %USERPROFILE%\hello\target
+CD %USERPROFILE%\workspace\hello\target
 java -jar hello-1.0-SNAPSHOT.jar
 ```
 
